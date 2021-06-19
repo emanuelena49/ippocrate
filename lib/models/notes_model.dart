@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 class Note {
-  int id;
+  late int id;
   String title = "";
   String content = "";
-  String color;
+  late String color;
 }
 
 class NotesModel extends ChangeNotifier {
   int stackIndex = 0;
   List<Note> noteList = [];
-  Note noteBeingEdited;
-  String color;
+  late Note noteBeingEdited;
+  late String color;
 
   void setStackIndex(int inStackIndex){
     stackIndex = inStackIndex;

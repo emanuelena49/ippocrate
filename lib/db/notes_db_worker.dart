@@ -55,7 +55,7 @@ class NotesDBworker extends DBWorker<Note> {
   Future<List<Note>> getAll() async {
     Database db = await getDB();
     var recs = await db.query("notes");
-    var list = recs.isEmpty ? [] : recs.map((m) => fromMap(m)).toList();
+    List<Note> list = recs.isEmpty ? [] : recs.map((m) => fromMap(m)).toList();
     return list;
   }
 

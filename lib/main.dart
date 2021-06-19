@@ -24,6 +24,5 @@ class MyApp extends StatelessWidget {
         body: Notes(),
       ),
     );
-
   }
 }

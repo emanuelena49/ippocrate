@@ -38,8 +38,8 @@ class NotesEntry extends StatelessWidget{
               title: TextFormField(
                 decoration: InputDecoration(hintText: "Title"),
                 initialValue: notesModel.noteBeingEdited == null ? null : notesModel.noteBeingEdited.title,
-                validator: (String inValue){
-                  if(inValue.length==0){
+                validator: (String? inValue){
+                  if(inValue!= null && inValue!.length==0){
                     return "Please enter a title";
                   }
                   return null;
@@ -56,8 +56,8 @@ class NotesEntry extends StatelessWidget{
                 keyboardType: TextInputType.multiline,
                 maxLines: 4,
                 initialValue: notesModel.noteBeingEdited == null ? null : notesModel.noteBeingEdited.content,
-                validator: (String inValue){
-                  if(inValue.length==0){
+                validator: (String? inValue){
+                  if(inValue!= null && inValue!.length==0){
                     return "Please enter content";
                   }
                   return null;
@@ -153,7 +153,7 @@ class NotesEntry extends StatelessWidget{
 
   void _save(BuildContext context) async {
 
-    if(!_formKey.currentState.validate()){
+    if(!_formKey.currentState!.validate()){
       return;
     }
 

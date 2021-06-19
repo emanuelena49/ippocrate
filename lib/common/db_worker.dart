@@ -7,7 +7,7 @@ class _DBManager {
 
   _DBManager._();
   static final _DBManager dbManager = _DBManager._();
-  Database _db;
+  late Database _db;
 
   Future<Database> _getDB({bool forceInit: false}) async {
     if(_db==null){
@@ -59,4 +59,67 @@ abstract class DBWorker<T> {
 
   /// remove an object from the db
   Future delete(int objectId);
+}
+
+abstract class HasId {
+  int? id;
+}
+
+/// A generic interface between a certain data type [T] and the database.
+/// It automatizes some actions (if you set some parameters)
+abstract class AdvancedDBWorker<K extends HasId> extends DBWorker<HasId> {
+
+  /// the name of a single object of the table (ex. "medicine")
+  String get objectName;
+
+  /// the name of the entire table (ex. "medicines").
+  /// by default, is [objectName] + "s"
+  String get tableName => "${objectName}s";
+
+  /// the name of the field used as id (ex. "medicines").
+  /// by default, is [objectName] + "s"
+  String get objectIdName => "${objectName}_id";
+
+  @override
+  K fromMap(Map<String, dynamic> map);
+
+  @override
+  Map<String, dynamic> toMap(object);
+
+  @override
+  Future<K> get(int objectId) async {
+    Database db = await getDB();
+    var rec = await db.query(tableName,
+        where: "$objectIdName = ?", whereArgs: [objectId]);
+    return fromMap(rec.first);
+  }
+
+  @override
+  Future<List<K>> getAll() async {
+    Database db = await getDB();
+    var recs = await db.query(tableName);
+
+    List<K> list = [];
+    recs.forEach((element) {
+      list.add(fromMap(element));
+    });
+
+    return list;
+  }
+
+  @override
+  Future update(HasId object) async {
+    Database db = await getDB();
+    return await db.update(tableName, toMap(object),
+        where: "$objectIdName = ?",
+        whereArgs: [object.id!]);
+  }
+
+  @override
+  Future delete(int objectId) async {
+    Database db = await getDB();
+    return await db.delete(tableName,
+        where: "$objectIdName = ?",
+        whereArgs: [objectId]);
+  }
 }
