@@ -1,50 +1,37 @@
+import 'package:ippocrate/common/db_worker.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../common/utils.dart' as utils;
 import '../models/notes_model.dart';
 
-class NotesDBworker {
+class NotesDBworker extends DBWorker<Note> {
 
   NotesDBworker._();
   static final NotesDBworker notesDBworker = NotesDBworker._();
 
-  Database _db;
-
-  Future<Database> _getDB() async {
-    if(_db==null){
-      String path = join(utils.docsDir.path, "notes.db");
-      _db = await openDatabase(path, version: 1,
-        onCreate: (Database inDB, int inVersion) async {
-          await inDB.execute("CREATE TABLE IF NOT EXISTS notes ("
-          "id INTEGER PRIMARY KEY,"
-          "title TEXT,"
-          "content TEXT,"
-          "color TEXT)");
-        });
-    }
-    return _db;
-  }
-
-  Note noteFromMap(Map inMap){
+  @override
+  Note fromMap(Map<String, dynamic> map) {
     Note note = Note();
-    note.id = inMap["id"];
-    note.title = inMap["title"];
-    note.content = inMap["content"];
-    note.color = inMap["color"];
+    note.id = map["id"];
+    note.title = map["title"];
+    note.content = map["content"];
+    note.color = map["color"];
     return note;
   }
 
-  Map<String, dynamic> noteToMap(Note inNote) {
+  @override
+  Map<String, dynamic> toMap(Note object) {
     Map<String, dynamic> map = Map<String, dynamic>();
-    map["id"] = inNote.id;
-    map["title"] = inNote.title;
-    map["content"] = inNote.content;
-    map["color"] = inNote.color;
+    map["id"] = object.id;
+    map["title"] = object.title;
+    map["content"] = object.content;
+    map["color"] = object.color;
     return map;
   }
 
+  @override
   Future create(Note inNote) async {
-    Database db = await _getDB();
+    Database db = await getDB();
     var val = await db.rawQuery("SELECT MAX(id) + 1 AS id FROM notes");
     int id = val.first["id"];
     if (id==null){
@@ -57,27 +44,33 @@ class NotesDBworker {
     );
   }
 
+  @override
   Future<Note> get(int inID) async {
-    Database db = await _getDB();
+    Database db = await getDB();
     var rec = await db.query("notes", where: "id = ?", whereArgs: [inID]);
-    return noteFromMap(rec.first);
+    return fromMap(rec.first);
   }
 
-  Future<List> getAll() async {
-    Database db = await _getDB();
+  @override
+  Future<List<Note>> getAll() async {
+    Database db = await getDB();
     var recs = await db.query("notes");
-    var list = recs.isEmpty ? [] : recs.map((m) => noteFromMap(m)).toList();
+    var list = recs.isEmpty ? [] : recs.map((m) => fromMap(m)).toList();
     return list;
   }
 
+  @override
   Future update(Note inNote) async {
-    Database db = await _getDB();
-    return await db.update("notes", noteToMap(inNote), where: "id = ?", whereArgs: [inNote.id]);
+    Database db = await getDB();
+    return await db.update("notes", toMap(inNote), where: "id = ?", whereArgs: [inNote.id]);
   }
 
+  @override
   Future delete(int inID) async {
-    Database db = await _getDB();
+    Database db = await getDB();
     return await db.delete("notes", where: "id = ?", whereArgs: [inID]);
   }
+
+
 
 }

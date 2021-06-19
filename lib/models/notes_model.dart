@@ -9,7 +9,7 @@ class Note {
 
 class NotesModel extends ChangeNotifier {
   int stackIndex = 0;
-  List noteList = [];
+  List<Note> noteList = [];
   Note noteBeingEdited;
   String color;
 

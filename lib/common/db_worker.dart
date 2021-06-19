@@ -16,11 +16,15 @@ class _DBManager {
       String path = join(utils.docsDir.path, "ippocrate.db");
 
       // get sql for db creation
-      String initQuery = await rootBundle.loadString('assets/ippocrate.sql');
+      String initQuery = (await rootBundle.loadString('assets/ippocrate.sql'))
+          .replaceAll("\n", "").replaceAll("\r", "");
 
       _db = await openDatabase(path, version: 1,
-          onCreate: (Database inDB, int inVersion) async {
+          onOpen: (Database inDB) async {
             await inDB.execute(initQuery);
+          },
+          onCreate: (Database inDB, int inVersion) async {
+            // await inDB.execute(initQuery);
           });
     }
     return _db;
@@ -32,11 +36,11 @@ abstract class DBWorker<T> {
 
   /// Get a built db to operate on it
   Future<Database> getDB() async {
-    return _DBManager.dbManager._getDB();
+    return await _DBManager.dbManager._getDB();
   }
 
   /// build an instance of T from a (db) map
-  T formMap(Map<String, dynamic> map);
+  T fromMap(Map<String, dynamic> map);
 
   /// build an (db format) map from an instance of T
   Map<String, dynamic> toMap(T object);
@@ -47,9 +51,12 @@ abstract class DBWorker<T> {
   /// get the object which has a certain id
   Future<T> get(int objectId);
 
+  /// get a list of all the objects
+  Future<List<T>> getAll();
+
   /// update an object in the db
-  Future<T> update(T object);
+  Future update(T object);
 
   /// remove an object from the db
-  Future<T> delete(int objectId);
+  Future delete(int objectId);
 }
