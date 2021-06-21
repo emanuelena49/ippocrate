@@ -55,7 +55,7 @@ class NotesList extends StatelessWidget {
                 tileColor: color,
                 onTap: () async {
                   notesModel.noteBeingEdited = await NotesDBworker.notesDBworker.get(note.id);
-                  notesModel.setNoteColor(notesModel.noteBeingEdited.color);
+                  notesModel.setNoteColor(notesModel.noteBeingEdited!.color);
                   notesModel.setStackIndex(1);
                 },
               ),

@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -7,28 +10,57 @@ class _DBManager {
 
   _DBManager._();
   static final _DBManager dbManager = _DBManager._();
-  late Database _db;
+  Database? _db;
 
   Future<Database> _getDB({bool forceInit: false}) async {
+
     if(_db==null){
 
       // path of sqlite db
       String path = join(utils.docsDir.path, "ippocrate.db");
 
-      // get sql for db creation
-      String initQuery = (await rootBundle.loadString('assets/ippocrate.sql'))
-          .replaceAll("\n", "").replaceAll("\r", "");
+      if (true) {
+
+        var x = File(path);
+        if (await x.exists()) {
+          await x.delete();
+        }
+      }
+
+      bool isInit = false;
+
+      _runInitQuery(Database db) async {
+
+        // get sql for db creation
+        String initQuery = (await rootBundle.loadString('assets/ippocrate.sql'))
+            .replaceAll("\n", "").replaceAll("\r", "");
+
+        List queries = initQuery.split(';');
+
+        queries.forEach((q) async {
+
+          if (q != "")  await db.execute(q);
+        });
+      }
 
       _db = await openDatabase(path, version: 1,
           onOpen: (Database inDB) async {
-            await inDB.execute(initQuery);
+
+            if(!isInit) await _runInitQuery(inDB);
+
+            var r = await inDB.query('sqlite_master', columns: ['type', 'name']);
+            debugPrint(r.toString());
           },
           onCreate: (Database inDB, int inVersion) async {
-            // await inDB.execute(initQuery);
+
+            await _runInitQuery(inDB);
+            isInit = true;
           });
     }
-    return _db;
+    return _db!;
   }
+
+
 }
 
 /// A generic interface between a certain data type [T] and the database.
@@ -97,6 +129,8 @@ abstract class AdvancedDBWorker<K extends HasId> extends DBWorker<HasId> {
   @override
   Future<List<K>> getAll() async {
     Database db = await getDB();
+    debugPrint(tableName);
+    var rec2 = await db.query('notes');
     var recs = await db.query(tableName);
 
     List<K> list = [];

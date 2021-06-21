@@ -37,15 +37,15 @@ class NotesEntry extends StatelessWidget{
               leading: Icon(Icons.title),
               title: TextFormField(
                 decoration: InputDecoration(hintText: "Title"),
-                initialValue: notesModel.noteBeingEdited == null ? null : notesModel.noteBeingEdited.title,
+                initialValue: notesModel.noteBeingEdited == null ? null : notesModel.noteBeingEdited!.title,
                 validator: (String? inValue){
-                  if(inValue!= null && inValue!.length==0){
+                  if(inValue!= null && inValue.length==0){
                     return "Please enter a title";
                   }
                   return null;
                 },
                 onChanged: (String inValue){
-                  notesModel.noteBeingEdited.title = inValue;
+                  notesModel.noteBeingEdited!.title = inValue;
                 },
               ),
             ),
@@ -55,15 +55,15 @@ class NotesEntry extends StatelessWidget{
                 decoration: InputDecoration(hintText: "Content"),
                 keyboardType: TextInputType.multiline,
                 maxLines: 4,
-                initialValue: notesModel.noteBeingEdited == null ? null : notesModel.noteBeingEdited.content,
+                initialValue: notesModel.noteBeingEdited == null ? null : notesModel.noteBeingEdited!.content,
                 validator: (String? inValue){
-                  if(inValue!= null && inValue!.length==0){
+                  if(inValue!= null && inValue.length==0){
                     return "Please enter content";
                   }
                   return null;
                 },
                 onChanged: (String inValue){
-                  notesModel.noteBeingEdited.content = inValue;
+                  notesModel.noteBeingEdited!.content = inValue;
                 },
               ),
             ),
@@ -84,7 +84,7 @@ class NotesEntry extends StatelessWidget{
                       ),
                     ),
                     onTap: (){
-                      notesModel.noteBeingEdited.color = "red";
+                      notesModel.noteBeingEdited!.color = "red";
                       notesModel.setNoteColor("red");
                     },
                   ),
@@ -102,7 +102,7 @@ class NotesEntry extends StatelessWidget{
                       ),
                     ),
                     onTap: (){
-                      notesModel.noteBeingEdited.color = "blue";
+                      notesModel.noteBeingEdited!.color = "blue";
                       notesModel.setNoteColor("blue");
                     },
                   ),
@@ -120,7 +120,7 @@ class NotesEntry extends StatelessWidget{
                       ),
                     ),
                     onTap: (){
-                      notesModel.noteBeingEdited.color = "yellow";
+                      notesModel.noteBeingEdited!.color = "yellow";
                       notesModel.setNoteColor("yellow");
                     },
                   ),
@@ -138,7 +138,7 @@ class NotesEntry extends StatelessWidget{
                       ),
                     ),
                     onTap: (){
-                      notesModel.noteBeingEdited.color = "grey";
+                      notesModel.noteBeingEdited!.color = "grey";
                       notesModel.setNoteColor("grey");
                     },
                   ),
@@ -159,10 +159,10 @@ class NotesEntry extends StatelessWidget{
 
     //_formKey.currentState.save();
 
-    if(notesModel.noteBeingEdited.id==null){
-      await NotesDBworker.notesDBworker.create(notesModel.noteBeingEdited);
+    if(notesModel.noteBeingEdited!.id==null){
+      await NotesDBworker.notesDBworker.create(notesModel.noteBeingEdited!);
     } else {
-      await NotesDBworker.notesDBworker.update(notesModel.noteBeingEdited);
+      await NotesDBworker.notesDBworker.update(notesModel.noteBeingEdited!);
     }
 
     notesModel.loadData(NotesDBworker.notesDBworker);

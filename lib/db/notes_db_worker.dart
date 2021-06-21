@@ -33,7 +33,7 @@ class NotesDBworker extends DBWorker<Note> {
   Future create(Note inNote) async {
     Database db = await getDB();
     var val = await db.rawQuery("SELECT MAX(id) + 1 AS id FROM notes");
-    int id = val.first["id"];
+    int? id = val.first["id"] as int?;
     if (id==null){
       id = 1;
     }

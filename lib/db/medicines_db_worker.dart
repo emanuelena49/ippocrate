@@ -18,28 +18,25 @@ class MedicinesDBWorker extends AdvancedDBWorker<Medicine> {
         "INSERT INTO $tableName "
             "(name, from_date, to_date, n_intakes_per_day, notes) "
             "VALUES (?, ?, ?, ?, ?)",
-        [medicine.name, medicine.interval.start.toString(),
-          medicine.interval.end.toString(), medicine.notes]
+        [medicine.name, medicine.fromDate.toString(),
+          medicine.toDate.toString(), medicine.notes]
     );
   }
 
   @override
   Medicine fromMap(Map<String, dynamic> map) {
 
-    DateTimeRange interval = DateTimeRange(
-        start: DateTime.parse(map["from_date"]),
-        end: DateTime.parse(map["to_date"]),
-    );
+    String? toDateStr = map["to_date"];
 
     return Medicine(
         id: map[objectIdName],
         name: map["name"],
-        interval: interval,
+        fromDate: DateTime.parse(map["from_date"]),
+        toDate: toDateStr!=null ? DateTime.parse(toDateStr) : null,
         notes: map["notes"],
         nIntakesPerDay: map["n_intakes_per_day"]
     );
   }
-
 
   @override
   Map<String, dynamic> toMap(medicine) {
@@ -48,8 +45,8 @@ class MedicinesDBWorker extends AdvancedDBWorker<Medicine> {
       objectIdName: medicine.id,
       "name": medicine.name,
       "notes": medicine.notes,
-      "from_date": medicine.interval.start.toString(),
-      "to_date": medicine.interval.end.toString(),
+      "from_date": medicine.fromDate.toString(),
+      "to_date": medicine.toDate.toString(),
       "n_intakes_per_day": medicine.nIntakesPerDay
     };
   }

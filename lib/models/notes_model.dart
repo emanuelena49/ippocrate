@@ -10,8 +10,8 @@ class Note {
 class NotesModel extends ChangeNotifier {
   int stackIndex = 0;
   List<Note> noteList = [];
-  late Note noteBeingEdited;
-  late String color;
+  Note? noteBeingEdited;
+  String? color;
 
   void setStackIndex(int inStackIndex){
     stackIndex = inStackIndex;

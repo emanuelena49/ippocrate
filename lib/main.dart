@@ -1,6 +1,7 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:ippocrate/screens/medicines_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'common/utils.dart' as utils;
 import 'screens/notes.dart';
@@ -15,14 +16,17 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
+    // if (true) return MedicinesScreen();
     return MaterialApp(
-      home: Scaffold(
+      home: MedicinesScreen()
+
+        /*
+      Scaffold(
         appBar: AppBar(
           title: Text("ippocrate"),
         ),
         body: Notes(),
-      ),
+      ),*/
     );
   }
 }
