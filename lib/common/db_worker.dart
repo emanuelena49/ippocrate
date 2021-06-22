@@ -38,7 +38,6 @@ class _DBManager {
         List queries = initQuery.split(';');
 
         queries.forEach((q) async {
-
           if (q != "")  await db.execute(q);
         });
       }

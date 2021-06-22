@@ -33,6 +33,7 @@ dependencies:
   provider: ^5.0.0
   flutter_slidable: ^0.6.0
   intl: ^0.17.0
+  date_time_picker: ^2.0.0
 
 
 

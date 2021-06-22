@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS medicines;
 
 CREATE TABLE medicines (
     medicine_id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
     notes TEXT,
     from_date DATE DEFAULT CURRENT_DATE,
     to_date DATE,
