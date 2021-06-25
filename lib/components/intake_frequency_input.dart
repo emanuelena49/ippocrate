@@ -63,76 +63,54 @@ class IntakeFrequencyInput extends StatelessWidget {
         value: intakeFrequencyInputModel,
         child: Consumer<IntakeFrequencyInputModel>(
           builder: (context, freqModel, child) {
-            return Column(
-              children: [
+            return Container(
+              margin: EdgeInsets.only(top: 20, bottom: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
 
-                Text("Ogni quanto devi assumerlo?"),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text("Ogni quanto devi assumerlo?"),
+                  ),
 
-                RadioListTile<IntakeFrequencyOption>(
-                  title: Text("1 VOLTA AL GIORNO"),
-                  value: IntakeFrequencyOption.ONCE_PER_DAY,
-                  groupValue: freqModel.currentOption,
-                  onChanged: (inValue) {
-                    if (inValue!=null) {
-                      freqModel.currentOption = inValue;
-                      freqModel.currentValue =
-                          IntakeFrequency.setNIntakesPerDay(1);
-                      freqModel.notify();
-                    }
-                  },
-                ),
+                  RadioListTile<IntakeFrequencyOption> (
+                    title: Text("1 VOLTA AL GIORNO"),
+                    // dense: true,
+                    value: IntakeFrequencyOption.ONCE_PER_DAY,
+                    groupValue: freqModel.currentOption,
+                    onChanged: (inValue) {
+                      if (inValue!=null) {
+                        freqModel.currentOption = inValue;
+                        freqModel.currentValue =
+                            IntakeFrequency.setNIntakesPerDay(1);
+                        freqModel.notify();
+                      }
+                    },
+                  ),
 
-                RadioListTile<IntakeFrequencyOption>(
-                  title: Text("1 VOLTA AL MESE"),
-                  value: IntakeFrequencyOption.ONCE_PER_MONTH,
-                  groupValue: freqModel.currentOption,
-                  onChanged: (inValue) {
-                    if (inValue!=null) {
-                      freqModel.currentOption = inValue;
-                      freqModel.currentValue =
-                          IntakeFrequency.setNIntakesPerDay(30);
-                      freqModel.notify();
-                    }
-                  },
-                ),
+                  RadioListTile<IntakeFrequencyOption> (
+                    title: Text("1 VOLTA AL MESE"),
+                    // dense: true,
+                    value: IntakeFrequencyOption.ONCE_PER_MONTH,
+                    groupValue: freqModel.currentOption,
+                    onChanged: (inValue) {
+                      if (inValue!=null) {
+                        freqModel.currentOption = inValue;
+                        freqModel.currentValue =
+                            IntakeFrequency.setNIntakesPerDay(30);
+                        freqModel.notify();
+                      }
+                    },
+                  ),
 
-                RadioListTile<IntakeFrequencyOption>(
-                  title: LimitedBox(
-                    maxHeight: 200.0,
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 50,
-                          child: TextFormField(
-                            textAlign: TextAlign.center,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                          ),
-                        ),
-                        Text(" VOLTE AL GIORNO"),
-                      ],
-                    ),
-                  ), 
-                  value: IntakeFrequencyOption.N_TIMES_PER_DAY,
-                  groupValue: freqModel.currentOption,
-                  onChanged: (inValue) {
-                    if (inValue!=null) {
-                      freqModel.currentOption = inValue;
-                      // todo: instead of assigning null, try to read the form
-                      freqModel.currentValue = null;
-                      freqModel.notify();
-                    }
-                  },
-                ),
-
-                RadioListTile<IntakeFrequencyOption>(
-                  title: LimitedBox(
-                    maxHeight: 200.0,
-                    child: Row(
-                      children: [
-                          Text("1 VOLTA OGNI "),
+                  RadioListTile<IntakeFrequencyOption> (
+                    // dense: true,
+                    title: LimitedBox(
+                      maxHeight: 64.0,
+                      child: Row(
+                        children: [
                           Container(
                             width: 50,
                             child: TextFormField(
@@ -141,24 +119,123 @@ class IntakeFrequencyInput extends StatelessWidget {
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly
                               ],
+                              initialValue: freqModel.currentValue!=null ?
+                                freqModel.currentValue!.nIntakesPerDay.toString() :
+                                "",
+                              validator: (inValue) {
+                                if (inValue == null && freqModel.currentOption==IntakeFrequencyOption.ONCE_EVERY_N_DAY) {
+                                  return "Questo campo non può essere lasciato vuoto";
+                                }
+
+                                int? valAsNum = int.tryParse(inValue!);
+                                if (valAsNum == null) {
+                                  return "Inserisci un numero intero";
+                                }
+
+                                if (valAsNum<1) {
+                                  return "Inserisciun numero maggiore o uguale a 1";
+                                }
+
+                                return null;
+                              },
+                              onChanged: (inValue) {
+                                try {
+
+                                  int valAsNum = int.parse(inValue);
+                                  freqModel.currentValue =
+                                      IntakeFrequency.setNIntakesPerDay(valAsNum);
+                                  freqModel.currentOption =
+                                      IntakeFrequencyOption.N_TIMES_PER_DAY;
+                                  freqModel.notify();
+                                } catch (e) {
+                                  debugPrint("ERROR, input is not a num: $inValue");
+                                }
+                              },
                             ),
                           ),
-                          Text(" GIORNI"),
+                          Text(" VOLTE AL GIORNO"),
                         ],
+                      ),
                     ),
+                    value: IntakeFrequencyOption.N_TIMES_PER_DAY,
+                    groupValue: freqModel.currentOption,
+                    onChanged: (inValue) {
+                      if (inValue!=null) {
+                        freqModel.currentOption = inValue;
+                        // todo: instead of assigning null, try to read the form
+                        freqModel.currentValue = null;
+                        freqModel.notify();
+                      }
+                    },
                   ),
-                  value: IntakeFrequencyOption.ONCE_EVERY_N_DAY,
-                  groupValue: freqModel.currentOption,
-                  onChanged: (inValue) {
-                    if (inValue!=null) {
-                      freqModel.currentOption = inValue;
-                      // todo: instead of assigning null, try to read the form
-                      freqModel.currentValue = null;
-                      freqModel.notify();
-                    }
-                  },
-                ),
-              ],
+
+                  RadioListTile<IntakeFrequencyOption> (
+                    // dense: true,
+                    title: LimitedBox(
+                      maxHeight: 64.0,
+                      child: Row(
+                        children: [
+                            Text("1 VOLTA OGNI "),
+                            Container(
+                              width: 50,
+                              child: TextFormField(
+                                textAlign: TextAlign.center,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                initialValue: freqModel.currentValue!=null ?
+                                  freqModel.currentValue!.nDaysBetweenIntakes.toString() :
+                                  "",
+                                validator: (inValue) {
+                                  if (inValue == null && freqModel.currentOption==IntakeFrequencyOption.ONCE_EVERY_N_DAY) {
+                                    return "Questo campo non può essere lasciato vuoto";
+                                  }
+
+                                  int? valAsNum = int.tryParse(inValue!);
+                                  if (valAsNum == null) {
+                                    return "Inserisci un numero intero";
+                                  }
+
+                                  if (valAsNum<1) {
+                                    return "Inserisciun numero maggiore o uguale a 1";
+                                  }
+
+                                  return null;
+                                },
+                                onChanged: (inValue) {
+                                  try {
+                                    int valAsNum = int.parse(inValue);
+
+                                    freqModel.currentValue =
+                                        IntakeFrequency.setNDaysBetweenIntakes(valAsNum);
+                                    freqModel.currentOption =
+                                        IntakeFrequencyOption.ONCE_EVERY_N_DAY;
+                                    freqModel.notify();
+
+                                  } catch (e) {
+                                    debugPrint("ERROR, input is not a num: $inValue");
+                                  }
+                                },
+                              ),
+                            ),
+                            Text(" GIORNI"),
+                          ],
+                      ),
+                    ),
+                    value: IntakeFrequencyOption.ONCE_EVERY_N_DAY,
+                    groupValue: freqModel.currentOption,
+                    onChanged: (inValue) {
+                      if (inValue!=null) {
+                        freqModel.currentOption = inValue;
+                        // todo: instead of assigning null, try to read the form
+                        freqModel.currentValue = null;
+                        freqModel.notify();
+                      }
+                    },
+                  ),
+                ],
+              ),
             );
           }
         ),

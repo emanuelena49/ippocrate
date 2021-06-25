@@ -3,8 +3,8 @@ import 'package:ippocrate/common/db_worker.dart';
 
 /// the intake frequency for a single medicine
 class IntakeFrequency {
-  int nIntakesPerDay;
-  int nDaysBetweenIntakes;
+  final int nIntakesPerDay;
+  final int nDaysBetweenIntakes;
 
   IntakeFrequency({this.nIntakesPerDay: 1, this.nDaysBetweenIntakes:1});
 
@@ -46,7 +46,7 @@ class MedicinesModel extends ChangeNotifier {
   bool isEditing = false;
   bool isNew = false;
 
-  loadData(dynamic inDatabaseWorker) async {
+  loadData(dynamic inDatabaseWorker, {bool notify: true}) async {
     loading = true;
     medicinesList = await inDatabaseWorker.getAll();
     loading = false;

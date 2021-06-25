@@ -43,13 +43,22 @@ class OneMedicineScreen extends StatelessWidget {
                           child: Text("conferma"),
                           onPressed: () async {
 
+                            // var x = medicinesModel.currentMedicine!;
+                            // var y = intakeFrequencyInputModel;
+
+                            // validate form
                             if(!formKey.currentState!.validate()){
                               return;
                             }
 
+                            // add intake frequency
+                            medicinesModel.currentMedicine!.intakeFrequency =
+                              intakeFrequencyInputModel.currentValue!;
+
                             MedicinesDBWorker db = MedicinesDBWorker();
                             var ok = await db.create(medicinesModel.currentMedicine!);
-                            await medicinesModel.loadData(db);
+                            await medicinesModel.loadData(db, notify: false);
+
                             Navigator.pop(context);
                           },
                         ),
@@ -119,15 +128,18 @@ class MedicineForm extends StatelessWidget {
                       initialDate: medicine.fromDate,
                       firstDate: DateTime.now(),
                       lastDate: DateTime(2100),
+                      decoration: const InputDecoration(
+                          errorMaxLines: 3),
+
                       onChanged: (val) {
-                        if (val != null) {
+                        if (val != null && val != "") {
                           medicine.fromDate = DateTime.parse(val);
                         }
                       },
                       validator: (val) {
 
                         // check it is not null
-                        if (val == null) {
+                        if (val == null || val == "") {
                           return "La data d'inizio non può essere nulla";
                         }
 
@@ -159,12 +171,15 @@ class MedicineForm extends StatelessWidget {
                         medicine.toDate!.toString() : "",
                         firstDate: DateTime.now(),
                         lastDate: DateTime(2100),
+                        decoration: const InputDecoration(
+                            errorMaxLines: 3),
                         onChanged: (val) {
-                          medicine.toDate = val!=null ? DateTime.parse(val) : null;
+                          medicine.toDate = (val != null && val != "") ?
+                          DateTime.parse(val) : null;
                         },
                         validator: (val) {
 
-                          if (val != null) {
+                          if (val != null && val != "") {
                             // check it is after the end date
                             DateTime newEnd = DateTime.parse(val);
                             if (medicine.fromDate.isAfter(newEnd)) {

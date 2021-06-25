@@ -18,7 +18,7 @@ class MedicinesDBWorker extends AdvancedDBWorker<Medicine> {
         "INSERT INTO $tableName "
             "(name, from_date, to_date, n_intakes_per_day, "
             "n_days_between_intakes, notes) "
-            "VALUES (?, ?, ?, ?, ?)",
+            "VALUES (?, ?, ?, ?, ?, ?)",
         [map["name"], map["from_date"], map["to_date"],
           map["n_intakes_per_day"], map["n_days_between_intakes"],
           map["notes"], ]
