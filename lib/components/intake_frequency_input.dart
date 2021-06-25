@@ -3,6 +3,8 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/services.dart';
 import 'package:ippocrate/models/medicines_model.dart';
 import 'package:provider/provider.dart';
 
@@ -20,8 +22,12 @@ class IntakeFrequencyInputModel extends ChangeNotifier {
   }
 }
 
+/// the object where it is stored the [IntakeFrequency] catched from
+/// the [IntakeFrequencyInput]
 IntakeFrequencyInputModel intakeFrequencyInputModel = IntakeFrequencyInputModel();
 
+/// An input which permits to make the user insert a [IntakeFrequency].
+/// The result, is saved in [intakeFrequencyInputModel]
 class IntakeFrequencyInput extends StatelessWidget {
 
   IntakeFrequencyInput() {
@@ -54,22 +60,24 @@ class IntakeFrequencyInput extends StatelessWidget {
 
     return ListTile(
       title: ChangeNotifierProvider.value(
-        value: medicinesModel,
-        child: Consumer<MedicinesModel>(
-          builder: (context, notesModel, child) {
+        value: intakeFrequencyInputModel,
+        child: Consumer<IntakeFrequencyInputModel>(
+          builder: (context, freqModel, child) {
             return Column(
               children: [
+
+                Text("Ogni quanto devi assumerlo?"),
 
                 RadioListTile<IntakeFrequencyOption>(
                   title: Text("1 VOLTA AL GIORNO"),
                   value: IntakeFrequencyOption.ONCE_PER_DAY,
-                  groupValue: intakeFrequencyInputModel.currentOption,
+                  groupValue: freqModel.currentOption,
                   onChanged: (inValue) {
                     if (inValue!=null) {
-                      intakeFrequencyInputModel.currentOption = inValue;
-                      intakeFrequencyInputModel.currentValue =
+                      freqModel.currentOption = inValue;
+                      freqModel.currentValue =
                           IntakeFrequency.setNIntakesPerDay(1);
-                      intakeFrequencyInputModel.notify();
+                      freqModel.notify();
                     }
                   },
                 ),
@@ -77,45 +85,79 @@ class IntakeFrequencyInput extends StatelessWidget {
                 RadioListTile<IntakeFrequencyOption>(
                   title: Text("1 VOLTA AL MESE"),
                   value: IntakeFrequencyOption.ONCE_PER_MONTH,
-                  groupValue: intakeFrequencyInputModel.currentOption,
+                  groupValue: freqModel.currentOption,
                   onChanged: (inValue) {
                     if (inValue!=null) {
-                      intakeFrequencyInputModel.currentOption = inValue;
-                      intakeFrequencyInputModel.currentValue =
+                      freqModel.currentOption = inValue;
+                      freqModel.currentValue =
                           IntakeFrequency.setNIntakesPerDay(30);
-                      intakeFrequencyInputModel.notify();
+                      freqModel.notify();
                     }
                   },
                 ),
 
                 RadioListTile<IntakeFrequencyOption>(
-                  title: Text("N VOLTE AL GIORNO"),
+                  title: LimitedBox(
+                    maxHeight: 200.0,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 50,
+                          child: TextFormField(
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                          ),
+                        ),
+                        Text(" VOLTE AL GIORNO"),
+                      ],
+                    ),
+                  ), 
                   value: IntakeFrequencyOption.N_TIMES_PER_DAY,
-                  groupValue: intakeFrequencyInputModel.currentOption,
+                  groupValue: freqModel.currentOption,
                   onChanged: (inValue) {
                     if (inValue!=null) {
-                      intakeFrequencyInputModel.currentOption = inValue;
+                      freqModel.currentOption = inValue;
                       // todo: instead of assigning null, try to read the form
-                      intakeFrequencyInputModel.currentValue = null;
-                      intakeFrequencyInputModel.notify();
+                      freqModel.currentValue = null;
+                      freqModel.notify();
                     }
                   },
                 ),
 
                 RadioListTile<IntakeFrequencyOption>(
-                  title: Text("1 VOLTA OGNI N GIORNI"),
+                  title: LimitedBox(
+                    maxHeight: 200.0,
+                    child: Row(
+                      children: [
+                          Text("1 VOLTA OGNI "),
+                          Container(
+                            width: 50,
+                            child: TextFormField(
+                              textAlign: TextAlign.center,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                            ),
+                          ),
+                          Text(" GIORNI"),
+                        ],
+                    ),
+                  ),
                   value: IntakeFrequencyOption.ONCE_EVERY_N_DAY,
-                  groupValue: intakeFrequencyInputModel.currentOption,
+                  groupValue: freqModel.currentOption,
                   onChanged: (inValue) {
                     if (inValue!=null) {
-                      intakeFrequencyInputModel.currentOption = inValue;
+                      freqModel.currentOption = inValue;
                       // todo: instead of assigning null, try to read the form
-                      intakeFrequencyInputModel.currentValue = null;
-                      intakeFrequencyInputModel.notify();
+                      freqModel.currentValue = null;
+                      freqModel.notify();
                     }
                   },
                 ),
-
               ],
             );
           }

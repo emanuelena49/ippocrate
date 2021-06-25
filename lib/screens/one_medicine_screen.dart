@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:ippocrate/components/intake_frequency_input.dart';
 import 'package:ippocrate/db/medicines_db_worker.dart';
 import 'package:ippocrate/models/medicines_model.dart';
 import 'package:ippocrate/screens/medicines_screen.dart';
@@ -105,6 +106,87 @@ class MedicineForm extends StatelessWidget {
 
           // intake interval
           ListTile(
+            title: LimitedBox(
+              maxHeight: 200,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 150,
+                    child: DateTimePicker(
+                      type: DateTimePickerType.date,
+                      dateLabelText: 'Da ',
+                      initialDate: medicine.fromDate,
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2100),
+                      onChanged: (val) {
+                        if (val != null) {
+                          medicine.fromDate = DateTime.parse(val);
+                        }
+                      },
+                      validator: (val) {
+
+                        // check it is not null
+                        if (val == null) {
+                          return "La data d'inizio non può essere nulla";
+                        }
+
+                        // check it is after the end date
+                        DateTime newStart = DateTime.parse(val);
+                        if (medicine.toDate != null &&
+                            medicine.toDate!.isBefore(newStart)) {
+                          return "La data d'inizio non può venire dopo quella di fine";
+                        }
+
+                        return null;
+                      },
+                      onSaved: (val) {
+
+                        if (val != null) {
+                          medicine.fromDate = DateTime.parse(val);
+                        }
+                      },
+                    ),
+                  ),
+
+                  Container(
+                    width: 150,
+                    // margin: EdgeInsets.only(right: 20),
+                    child: DateTimePicker(
+                        type: DateTimePickerType.date,
+                        dateLabelText: "a ",
+                        initialValue: medicine.toDate != null ?
+                        medicine.toDate!.toString() : "",
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime(2100),
+                        onChanged: (val) {
+                          medicine.toDate = val!=null ? DateTime.parse(val) : null;
+                        },
+                        validator: (val) {
+
+                          if (val != null) {
+                            // check it is after the end date
+                            DateTime newEnd = DateTime.parse(val);
+                            if (medicine.fromDate.isAfter(newEnd)) {
+                              return "La data di fine non può venire prima di quella d'inizio";
+                            }
+                          }
+
+                          return null;
+                        },
+                        onSaved: (val) {
+                          medicine.toDate = val!=null ? DateTime.parse(val) : null;
+                        },
+                      ),
+                  ),
+                ],
+
+              ),
+            ),
+          ),
+
+          /*
+          ListTile(
             title: DateTimePicker(
               type: DateTimePickerType.date,
               dateLabelText: 'Da ',
@@ -168,11 +250,11 @@ class MedicineForm extends StatelessWidget {
               },
             ),
           ),
+          */
 
-          // intake frequency options
-          ListTile(
-            title: Text("...todo intake freq options..."),
-          ),
+
+          // intake frequency input
+          IntakeFrequencyInput(),
 
           // notes input
           ListTile(
