@@ -1,6 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:ippocrate/common/db_worker.dart';
 
+/// the intake frequency for a single medicine
+class IntakeFrequency {
+  int nIntakesPerDay;
+  int nDaysBetweenIntakes;
+
+  IntakeFrequency({this.nIntakesPerDay: 1, this.nDaysBetweenIntakes:1});
+
+  factory IntakeFrequency.setNIntakesPerDay(nIntakes) {
+    return IntakeFrequency(nIntakesPerDay: nIntakes);
+  }
+
+  factory IntakeFrequency.setNDaysBetweenIntakes(nIntakes) {
+    return IntakeFrequency(nDaysBetweenIntakes: nIntakes);
+  }
+}
+
 /// a single medicine
 class Medicine extends HasId {
   int? id;
@@ -8,14 +24,15 @@ class Medicine extends HasId {
   String? notes;
   DateTime fromDate;
   DateTime? toDate;
-  late int nIntakesPerDay;
+  late IntakeFrequency intakeFrequency;
 
   Medicine({
     this.id, required this.name,
     required this.fromDate, this.toDate,
-    this.notes, int? nIntakesPerDay: 1,
+    this.notes, IntakeFrequency? intakeFrequency,
   }) {
-    this.nIntakesPerDay = nIntakesPerDay!=null ? nIntakesPerDay : 1;
+    this.intakeFrequency = intakeFrequency!=null ? intakeFrequency :
+        IntakeFrequency.setNIntakesPerDay(1);
   }
 }
 
@@ -40,19 +57,16 @@ class MedicinesModel extends ChangeNotifier {
     currentMedicine = medicine;
     isEditing = editing;
     isNew = false;
-    notifyListeners();
   }
 
   startNewMedicineCreation() {
     currentMedicine = Medicine(name: "", fromDate: DateTime.now());
     isEditing = isNew = true;
-    notifyListeners();
   }
 
   unsetMedicine() {
     currentMedicine = null;
     isEditing = isNew = false;
-    notifyListeners();
   }
 
   notify() {

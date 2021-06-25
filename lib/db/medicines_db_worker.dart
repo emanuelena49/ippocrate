@@ -16,10 +16,12 @@ class MedicinesDBWorker extends AdvancedDBWorker<Medicine> {
 
     return await db.rawInsert(
         "INSERT INTO $tableName "
-            "(name, from_date, to_date, n_intakes_per_day, notes) "
+            "(name, from_date, to_date, n_intakes_per_day, "
+            "n_days_between_intakes, notes) "
             "VALUES (?, ?, ?, ?, ?)",
-        [map["name"], map["from_date"],
-          map["to_date"], map["n_intakes_per_day"], map["notes"], ]
+        [map["name"], map["from_date"], map["to_date"],
+          map["n_intakes_per_day"], map["n_days_between_intakes"],
+          map["notes"], ]
     );
   }
 
@@ -36,7 +38,10 @@ class MedicinesDBWorker extends AdvancedDBWorker<Medicine> {
           DateTime.parse(toDateStr) :
           null,
         notes: map["notes"],
-        nIntakesPerDay: map["n_intakes_per_day"]
+        intakeFrequency: IntakeFrequency(
+            nIntakesPerDay: map["n_intakes_per_day"],
+            nDaysBetweenIntakes: map["n_days_between_intakes"],
+        ),
     );
   }
 
@@ -49,7 +54,8 @@ class MedicinesDBWorker extends AdvancedDBWorker<Medicine> {
       "notes": medicine.notes,
       "from_date": medicine.fromDate.toString(),
       "to_date": medicine.toDate!=null ? medicine.toDate.toString() : null,
-      "n_intakes_per_day": medicine.nIntakesPerDay
+      "n_intakes_per_day": medicine.intakeFrequency.nIntakesPerDay,
+      "n_days_between_intakes": medicine.intakeFrequency.nDaysBetweenIntakes,
     };
   }
 }

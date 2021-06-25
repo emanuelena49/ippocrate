@@ -33,13 +33,15 @@ class _DBManager {
 
         // get sql for db creation
         String initQuery = (await rootBundle.loadString('assets/ippocrate.sql'))
-            .replaceAll("\n", "").replaceAll("\r", "");
+            .replaceAll("\n", "").replaceAll("\r", "").trim();
 
         List queries = initQuery.split(';');
 
-        queries.forEach((q) async {
+        for (String q in queries) {
           if (q != "")  await db.execute(q);
-        });
+        }
+
+        return;
       }
 
       _db = await openDatabase(path, version: 1,

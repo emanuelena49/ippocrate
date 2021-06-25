@@ -157,7 +157,7 @@ class AllMedicinesListItem extends StatelessWidget {
   }
 }
 
-String getIntervalText(medicine) {
+String getIntervalText(Medicine medicine) {
 
   DateTime from = medicine.fromDate;
   DateTime? to = medicine.toDate;
@@ -183,12 +183,26 @@ String getIntervalText(medicine) {
   return label;
 }
 
-String getIntakesPerDayText(medicine) {
-  if (medicine.nIntakesPerDay == 1) {
-    return "1 VOLTA AL GIORNO";
+String getIntakesPerDayText(Medicine medicine) {
+
+  int nIntakesPerDay = medicine.intakeFrequency.nIntakesPerDay;
+  int nDaysBetweenIntakes = medicine.intakeFrequency.nDaysBetweenIntakes;
+
+  String pt1="", pt2="";
+
+  if (nIntakesPerDay == 1) {
+    pt1 = "1 VOLTA";
   } else {
-    return "${medicine.nIntakesPerDay} VOLTE AL GIORNO";
+    pt1 = "$nIntakesPerDay VOLTE";
   }
+
+  if (nDaysBetweenIntakes == 1) {
+    pt2 = " AL GIORNO";
+  } else {
+    pt2 = " OGNI $nDaysBetweenIntakes GIORNI";
+  }
+
+  return pt1 + pt2;
 }
 
 
