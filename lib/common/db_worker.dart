@@ -120,19 +120,32 @@ abstract class AdvancedDBWorker<K extends HasId> extends DBWorker<HasId> {
   Map<String, dynamic> toMap(object);
 
   @override
-  Future<K> get(int objectId) async {
+  Future<K> get(int objectId, {String? customQuery}) async {
     Database db = await getDB();
-    var rec = await db.query(tableName,
-        where: "$objectIdName = ?", whereArgs: [objectId]);
+
+    var rec;
+    if (customQuery == null) {
+      rec = await db.query(tableName,
+          where: "$objectIdName = ?", whereArgs: [objectId]);
+    } else {
+      rec = await db.rawQuery(customQuery);
+    }
+
     return fromMap(rec.first);
   }
 
   @override
-  Future<List<K>> getAll() async {
+  Future<List<K>> getAll({String? customQuery}) async {
+
     Database db = await getDB();
-    debugPrint(tableName);
-    var rec2 = await db.query('notes');
-    var recs = await db.query(tableName);
+
+    var recs;
+
+    if (customQuery == null) {
+      recs = await db.query(tableName);
+    } else {
+      recs = await db.rawQuery(customQuery);
+    }
 
     List<K> list = [];
     recs.forEach((element) {

@@ -43,7 +43,7 @@ class OneMedicineScreen extends StatelessWidget {
                           child: Text("conferma"),
                           onPressed: () async {
 
-                            // var x = medicinesModel.currentMedicine!;
+                            //    var x = medicinesModel.currentMedicine!;
                             // var y = intakeFrequencyInputModel;
 
                             // validate form

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ippocrate/common/db_worker.dart';
+import 'package:ippocrate/db/medicines_db_worker.dart';
 
 /// the intake frequency for a single medicine
 class IntakeFrequency {
@@ -46,7 +47,7 @@ class MedicinesModel extends ChangeNotifier {
   bool isEditing = false;
   bool isNew = false;
 
-  loadData(dynamic inDatabaseWorker, {bool notify: true}) async {
+  loadData(MedicinesDBWorker inDatabaseWorker, {bool notify: true}) async {
     loading = true;
     medicinesList = await inDatabaseWorker.getAll();
     loading = false;
