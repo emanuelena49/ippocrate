@@ -5,8 +5,8 @@ import 'package:ippocrate/models/medicines_model.dart';
 /// (ex. "DA ... A ...")
 String getIntervalText(Medicine medicine) {
 
-  DateTime from = medicine.fromDate;
-  DateTime? to = medicine.toDate;
+  DateTime from = medicine.startDate;
+  DateTime? to = medicine.endDate;
 
   DateFormat format = DateFormat('dd/MM');
 

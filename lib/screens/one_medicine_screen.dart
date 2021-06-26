@@ -122,7 +122,7 @@ class MedicineForm extends StatelessWidget {
                     child: DateTimePicker(
                       type: DateTimePickerType.date,
                       dateLabelText: 'Da ',
-                      initialDate: medicine.fromDate,
+                      initialDate: medicine.startDate,
                       firstDate: DateTime.now(),
                       lastDate: DateTime(2100),
                       decoration: const InputDecoration(
@@ -130,7 +130,7 @@ class MedicineForm extends StatelessWidget {
 
                       onChanged: (val) {
                         if (val != null && val != "") {
-                          medicine.fromDate = DateTime.parse(val);
+                          medicine.startDate = DateTime.parse(val);
                         }
                       },
                       validator: (val) {
@@ -142,8 +142,8 @@ class MedicineForm extends StatelessWidget {
 
                         // check it is after the end date
                         DateTime newStart = DateTime.parse(val);
-                        if (medicine.toDate != null &&
-                            medicine.toDate!.isBefore(newStart)) {
+                        if (medicine.endDate != null &&
+                            medicine.endDate!.isBefore(newStart)) {
                           return "La data d'inizio non può venire dopo quella di fine";
                         }
 
@@ -152,7 +152,7 @@ class MedicineForm extends StatelessWidget {
                       onSaved: (val) {
 
                         if (val != null) {
-                          medicine.fromDate = DateTime.parse(val);
+                          medicine.startDate = DateTime.parse(val);
                         }
                       },
                     ),
@@ -164,14 +164,14 @@ class MedicineForm extends StatelessWidget {
                     child: DateTimePicker(
                         type: DateTimePickerType.date,
                         dateLabelText: "a ",
-                        initialValue: medicine.toDate != null ?
-                        medicine.toDate!.toString() : "",
+                        initialValue: medicine.endDate != null ?
+                        medicine.endDate!.toString() : "",
                         firstDate: DateTime.now(),
                         lastDate: DateTime(2100),
                         decoration: const InputDecoration(
                             errorMaxLines: 3),
                         onChanged: (val) {
-                          medicine.toDate = (val != null && val != "") ?
+                          medicine.endDate = (val != null && val != "") ?
                           DateTime.parse(val) : null;
                         },
                         validator: (val) {
@@ -179,7 +179,7 @@ class MedicineForm extends StatelessWidget {
                           if (val != null && val != "") {
                             // check it is after the end date
                             DateTime newEnd = DateTime.parse(val);
-                            if (medicine.fromDate.isAfter(newEnd)) {
+                            if (medicine.startDate.isAfter(newEnd)) {
                               return "La data di fine non può venire prima di quella d'inizio";
                             }
                           }
@@ -187,7 +187,7 @@ class MedicineForm extends StatelessWidget {
                           return null;
                         },
                         onSaved: (val) {
-                          medicine.toDate = val!=null ? DateTime.parse(val) : null;
+                          medicine.endDate = val!=null ? DateTime.parse(val) : null;
                         },
                       ),
                   ),

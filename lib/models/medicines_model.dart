@@ -23,13 +23,13 @@ class Medicine extends HasId {
   int? id;
   String name;
   String? notes;
-  DateTime fromDate;
-  DateTime? toDate;
+  DateTime startDate;
+  DateTime? endDate;
   late IntakeFrequency intakeFrequency;
 
   Medicine({
     this.id, required this.name,
-    required this.fromDate, this.toDate,
+    required this.startDate, this.endDate,
     this.notes, IntakeFrequency? intakeFrequency,
   }) {
     this.intakeFrequency = intakeFrequency!=null ? intakeFrequency :
@@ -61,7 +61,7 @@ class MedicinesModel extends ChangeNotifier {
   }
 
   startNewMedicineCreation() {
-    currentMedicine = Medicine(name: "", fromDate: DateTime.now());
+    currentMedicine = Medicine(name: "", startDate: DateTime.now());
     isEditing = isNew = true;
   }
 

@@ -33,8 +33,8 @@ class MedicinesDBWorker extends AdvancedDBWorker<Medicine> {
     return Medicine(
         id: map[objectIdName],
         name: map["name"],
-        fromDate: DateTime.parse(map["from_date"]),
-        toDate: (toDateStr != null && toDateStr!="") ?
+        startDate: DateTime.parse(map["from_date"]),
+        endDate: (toDateStr != null && toDateStr!="") ?
           DateTime.parse(toDateStr) :
           null,
         notes: map["notes"],
@@ -52,8 +52,8 @@ class MedicinesDBWorker extends AdvancedDBWorker<Medicine> {
       objectIdName: medicine.id,
       "name": medicine.name,
       "notes": medicine.notes,
-      "from_date": medicine.fromDate.toString(),
-      "to_date": medicine.toDate!=null ? medicine.toDate.toString() : null,
+      "from_date": medicine.startDate.toString(),
+      "to_date": medicine.endDate!=null ? medicine.endDate.toString() : null,
       "n_intakes_per_day": medicine.intakeFrequency.nIntakesPerDay,
       "n_days_between_intakes": medicine.intakeFrequency.nDaysBetweenIntakes,
     };
