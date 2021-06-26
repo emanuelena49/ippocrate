@@ -5,7 +5,10 @@ import 'package:ippocrate/models/medicines_model.dart';
 import 'package:intl/intl.dart';
 import 'package:ippocrate/services/datetime.dart';
 
-
+/// A daily intake for [Medicine]. It is the "concrete" representation,
+/// so the single set of intakes for one day.
+/// The user can perform the intakes until he reach the limit
+/// set in [Medicine.intakeFrequency].
 class MedicineIntake extends HasId {
   int? id;
   final Medicine medicine;
@@ -34,6 +37,8 @@ class MedicineIntake extends HasId {
   }
 }
 
+/// A model with a list of [MedicineIntake]s. It permits you
+/// to load data according to several parameters
 class MedicineIntakesModel extends ChangeNotifier {
 
   List<MedicineIntake> intakes = [];
@@ -43,6 +48,9 @@ class MedicineIntakesModel extends ChangeNotifier {
   Medicine? medicine;
   bool onlyNotDone = false;
 
+  /// load the data from a db. You can specify a [day] (today is default),
+  /// a [medicine] and a bool param [onlyNotDone] to filter only elements
+  /// which [MedicineIntake.getMissingIntakes] is > 0.
   loadData(MedicineIntakesDBWorker inDatabaseWorker, {DateTime? day,
     Medicine? medicine, bool onlyNotDone: false}) async {
 
@@ -60,3 +68,5 @@ class MedicineIntakesModel extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+MedicineIntakesModel medicineIntakesModel = new MedicineIntakesModel();
