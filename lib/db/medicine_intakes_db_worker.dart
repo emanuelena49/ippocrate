@@ -42,7 +42,7 @@ class MedicineIntakesDBWorker extends AdvancedDBWorker<MedicineIntake> {
   }
 
   @override
-  String get objectName => "medicine_intakes";
+  String get objectName => "medicine_intake";
 
   @override
   Future create(HasId medicineIntake) async {
@@ -50,12 +50,17 @@ class MedicineIntakesDBWorker extends AdvancedDBWorker<MedicineIntake> {
     var map = toMap(medicineIntake);
     Database db = await getDB();
 
-    return await db.rawInsert(
+    var ok = await db.rawInsert(
         "INSERT INTO $tableName "
             "(medicine_id, intake_date, n_intakes_done) "
-            "VALUES (?, ?, ?, )",
+            "VALUES (?, ?, ?)",
         [map["medicine_id"], map["intake_date"], map["n_intakes_done"],]
     );
+
+    // get last row id and save it as medicineIntake id
+    medicineIntake.id = await getLastId();
+
+    return ok;
   }
 
   @override
@@ -114,7 +119,7 @@ class MedicineIntakesDBWorker extends AdvancedDBWorker<MedicineIntake> {
     return {
       objectIdName: medicineIntake.id,
       "medicine_id": medicineIntake.medicine.id,
-      "intake_date": medicineIntake.day,
+      "intake_date": medicineIntake.day.toString(),
       "n_intakes_done": medicineIntake.nIntakesDone,
     };
   }

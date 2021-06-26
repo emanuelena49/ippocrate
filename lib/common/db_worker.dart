@@ -170,4 +170,10 @@ abstract class AdvancedDBWorker<K extends HasId> extends DBWorker<HasId> {
         where: "$objectIdName = ?",
         whereArgs: [objectId]);
   }
+
+  Future<int> getLastId() async {
+    Database db = await getDB();
+    return (await db.rawQuery("SELECT last_insert_rowid()"))
+        .first["last_insert_rowid()"] as int;
+  }
 }

@@ -3,8 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ippocrate/components/intake_frequency_input.dart';
+import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/db/medicines_db_worker.dart';
+import 'package:ippocrate/models/medicine_intakes_model.dart';
 import 'package:ippocrate/models/medicines_model.dart';
+import 'package:ippocrate/services/generate_intakes_from_medicine.dart';
 import 'package:ippocrate/services/ui_medicines_texts.dart';
 import 'package:provider/provider.dart';
 
@@ -48,13 +51,32 @@ class OneMedicineScreen extends StatelessWidget {
                               return;
                             }
 
+                            var medicine = medicinesModel.currentMedicine!;
+
                             // add intake frequency
-                            medicinesModel.currentMedicine!.intakeFrequency =
+                            medicine.intakeFrequency =
                               intakeFrequencyInputModel.currentValue!;
 
+                            // insert the new element
                             MedicinesDBWorker db = MedicinesDBWorker();
-                            var ok = await db.create(medicinesModel.currentMedicine!);
-                            await medicinesModel.loadData(db, notify: false);
+                            var ok = await db.create(medicine);
+
+                            // generate the intakes
+                            List<MedicineIntake> intakes =
+                              generateIntakesFromMedicine(medicine,
+                              endDate: medicine.endDate!=null ?
+                              medicine.endDate :
+                              DateTime.now().add(Duration(days: 100)));
+
+                            // save them
+                            MedicineIntakesDBWorker dbIntakes =
+                              MedicineIntakesDBWorker();
+                            for (var i in intakes) {
+                              await dbIntakes.create(i);
+                            }
+
+                            // var x = await dbIntakes.getAll();
+                            // debugPrint(x.toString());
 
                             Navigator.pop(context);
                           },

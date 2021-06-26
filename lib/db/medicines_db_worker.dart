@@ -10,11 +10,11 @@ class MedicinesDBWorker extends AdvancedDBWorker<Medicine> {
 
   @override
   Future create(medicine) async {
-    Database db = await getDB();
 
     var map = toMap(medicine);
 
-    return await db.rawInsert(
+    Database db = await getDB();
+    var ok = await db.rawInsert(
         "INSERT INTO $tableName "
             "(name, from_date, to_date, n_intakes_per_day, "
             "n_days_between_intakes, notes) "
@@ -23,6 +23,11 @@ class MedicinesDBWorker extends AdvancedDBWorker<Medicine> {
           map["n_intakes_per_day"], map["n_days_between_intakes"],
           map["notes"], ]
     );
+
+    // get last row id and save it as medicine id
+    medicine.id = await getLastId();
+
+    return ok;
   }
 
   @override
