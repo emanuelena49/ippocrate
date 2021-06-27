@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
+import 'package:ippocrate/services/ui_medicines_texts.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 class AllMedicineIntakesList extends StatelessWidget {
@@ -61,68 +63,68 @@ class AllMedicinesIntakesListItem extends StatelessWidget {
 
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       elevation: 4,
-      color: Colors.lightGreenAccent,
+      color: intake.getMissingIntakes()>1 ?
+        Colors.greenAccent :
+        Colors.white54,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+        child: Column(
+          children: [
 
-      child: Text("..."),
+            // Medicine name
+            Text(
+              intake.medicine.name,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+
+            // medicine time range
+            Text(
+              getIntervalText(intake.medicine),
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
+
+            SizedBox(height: 24,),
+
+            // notes preview
+            Container(
+                height: 52,
+                child: Text(
+                  intake.medicine.notes != null ? intake.medicine.notes! : "",
+                  overflow: TextOverflow.ellipsis,
+                ),
+            ),
+
+            // intakes done + do intake now button
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    getRemainingMedicineIntakes(intake),
+                    style: Theme.of(context).textTheme.headline6,
+                  )
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // TODO: animate prendi ora button
+                    },
+                    child: Text("PRENDI ADESSO"),
+                    style: intake.getMissingIntakes()>1 ?
+                        ElevatedButton.styleFrom(
+                          primary: Colors.black54,
+                        ) :
+                        ElevatedButton.styleFrom(
+                          primary: Colors.grey,
+                        ),
+                  ),
+                ),
+              ],
+            ),
+
+          ],
+        ),
+      ),
     );
   }
 }
 
-/* Slidable(
-        actionPane: SlidableScrollActionPane(),
-        actionExtentRatio: .25,
-        secondaryActions: [
-          IconSlideAction(
-            caption: "Rimuovi",
-            color: Colors.red,
-            icon: Icons.delete,
-            onTap: (){
-
-            },
-          ),
-        ],
-        child: GestureDetector(
-          onTap: (){},
-          onLongPress: (){},
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-
-                // name and menu icon
-                Row(
-                  // crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(child: Text(medicine.name, style: Theme.of(context).textTheme.headline5, )),
-                    Icon(
-                        Icons.more_horiz
-                    )
-                  ],
-                ),
-
-                SizedBox(height: 5,),
-
-                // interval + number of intakes
-                Text(
-                  getIntakesPerDayText(medicine) + ", " + getIntervalText(medicine),
-                  style: Theme.of(context).textTheme.subtitle1,
-                ),
-
-                Container(
-                    height: 25,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          medicine.notes != null ? medicine.notes! : "",
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    )
-                ),
-              ],
-            ),
-          ),
-        ),
-      ), */

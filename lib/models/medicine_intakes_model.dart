@@ -52,19 +52,39 @@ class MedicineIntakesModel extends ChangeNotifier {
   /// a [medicine] and a bool param [onlyNotDone] to filter only elements
   /// which [MedicineIntake.getMissingIntakes] is > 0.
   loadData(MedicineIntakesDBWorker inDatabaseWorker, {DateTime? day,
-    Medicine? medicine, bool onlyNotDone: false}) async {
+    Medicine? medicine, bool onlyNotDone: false, bool notify: true}) async {
 
-    loading = false;
+    loading = true;
 
+    // save settings
     this.day = day;
     this.medicine = medicine;
     this.onlyNotDone = onlyNotDone;
 
+    // get intakes from db according to settings
     intakes = await inDatabaseWorker.getDailyIntakes(
         day: day, medicine: medicine, onlyNotDone: onlyNotDone);
 
+    // sort
+    sortByRemainingIntakes(notify: false);
+
     loading = false;
 
+    if (notify) notifyListeners();
+  }
+
+  /// Sort the current list by [MedicineIntake.getMissingIntakes]
+  /// (decreasing order)
+  sortByRemainingIntakes({notify: true}) {
+
+    intakes.sort((MedicineIntake a, MedicineIntake b)
+      // (decreasing order)
+      => b.getMissingIntakes().compareTo(a.getMissingIntakes()));
+
+    if (notify) notifyListeners();
+  }
+
+  notify() {
     notifyListeners();
   }
 }

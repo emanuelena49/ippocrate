@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:ippocrate/models/medicine_intakes_model.dart';
 import 'package:ippocrate/models/medicines_model.dart';
 
 /// Get the text which describes the intake interval of a [Medicine]
@@ -52,3 +53,33 @@ String getIntakesPerDayText(Medicine medicine) {
 
   return pt1 + pt2;
 }
+
+/// Get the text which describes how many [MedicineIntake] should be done today
+/// (ex. "RIMANENTI OGGI: 2 (su 3)")
+String getRemainingMedicineIntakes(MedicineIntake intake) {
+
+  int nIntakesPerDay = intake.medicine.intakeFrequency.nIntakesPerDay;
+  int nIntakesRemaining = intake.getMissingIntakes();
+
+  return "RIMANENTI OGGI: $nIntakesRemaining (su $nIntakesPerDay)";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

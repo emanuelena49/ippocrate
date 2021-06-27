@@ -91,7 +91,12 @@ class AllMedicinesListItem extends StatelessWidget {
                 Row(
                   // crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(child: Text(medicine.name, style: Theme.of(context).textTheme.headline5, )),
+                    Expanded(
+                        child: Text(
+                          medicine.name,
+                          style: Theme.of(context).textTheme.headline5,
+                        )
+                    ),
                     Icon(
                         Icons.more_horiz
                     )
