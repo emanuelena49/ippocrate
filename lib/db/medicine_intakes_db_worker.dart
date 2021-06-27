@@ -19,7 +19,7 @@ class MedicineIntakesDBWorker extends AdvancedDBWorker<MedicineIntake> {
     } else {
       day = getPureDate(day);
     }
-    query += "WHERE intake_date=${day.toString()} ";
+    query += "WHERE intake_date='${day.toString()}' ";
 
     // include eventual medicine limitation
     if (medicine != null) {

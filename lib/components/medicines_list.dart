@@ -6,11 +6,13 @@ import 'package:ippocrate/models/medicines_model.dart';
 import 'package:ippocrate/services/ui_medicines_texts.dart';
 import 'package:provider/provider.dart';
 
-class AllMedicineList extends StatelessWidget {
+
+/// The list with all [Medicine]s.
+class AllMedicinesList extends StatelessWidget {
 
   late MedicinesDBWorker medicinesDb;
 
-  AllMedicineList() {
+  AllMedicinesList() {
     // load all the medicines
     medicinesDb = MedicinesDBWorker();
     medicinesModel.loadData(medicinesDb);
@@ -18,31 +20,52 @@ class AllMedicineList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return ChangeNotifierProvider.value(
       value: medicinesModel,
       child: Consumer<MedicinesModel>(
         builder: (context, notesModel, child){
 
-          return medicinesModel.loading ?
+          // if model is still loading, I display a loading icon
+          if (medicinesModel.loading) {
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircularProgressIndicator()
+              ],
+            );
+          }
 
-              // if model is still loading, I
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator()
-                ],
-              ) :
+          // if list is empty, I display a proper message as list item
+          if (medicinesModel.medicinesList.length == 0) {
+            return ListView(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(50),
+                  child: Text(
+                    "Nessun medicinale",
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                )
+              ],
+            );
+          }
 
-              ListView.builder(
+          // regular list
+          return Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: ListView.builder(
                 itemCount: medicinesModel.medicinesList.length,
                 itemBuilder: (context, index) {
 
                   // single item of the list
-                  return AllMedicinesListItem(
+                  return _MedicinesListItem(
                       medicine: medicinesModel.medicinesList[index]
                   );
                 }
-              );
+            ),
+          );
         },
       ),
     );
@@ -50,11 +73,11 @@ class AllMedicineList extends StatelessWidget {
 }
 
 /// A single item of a list of medicines
-class AllMedicinesListItem extends StatelessWidget {
+class _MedicinesListItem extends StatelessWidget {
 
   Medicine medicine;
 
-  AllMedicinesListItem({required this.medicine});
+  _MedicinesListItem({required this.medicine});
 
   @override
   Widget build(BuildContext context) {
@@ -62,8 +85,8 @@ class AllMedicinesListItem extends StatelessWidget {
     return Card(
 
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-      elevation: 4,
-      color: Colors.lightGreenAccent,
+      elevation: 8,
+      color: Colors.greenAccent,
 
       child: Slidable(
         actionPane: SlidableScrollActionPane(),
@@ -82,7 +105,7 @@ class AllMedicinesListItem extends StatelessWidget {
           onTap: (){},
           onLongPress: (){},
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            padding: const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -97,9 +120,7 @@ class AllMedicinesListItem extends StatelessWidget {
                           style: Theme.of(context).textTheme.headline5,
                         )
                     ),
-                    Icon(
-                        Icons.more_horiz
-                    )
+                    // Icon(Icons.more_horiz)
                   ],
                 ),
 

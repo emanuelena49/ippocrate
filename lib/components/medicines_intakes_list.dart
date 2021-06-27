@@ -6,11 +6,13 @@ import 'package:ippocrate/services/ui_medicines_texts.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
-class AllMedicineIntakesList extends StatelessWidget {
+
+/// A list of all the [MedicineIntake]s which should be done today.
+class MedicineIntakesList extends StatelessWidget {
 
   late MedicineIntakesDBWorker intakesDb;
 
-  AllMedicineList() {
+  MedicineIntakesList() {
     // load all the medicines
     intakesDb = MedicineIntakesDBWorker();
     medicineIntakesModel.loadData(intakesDb);
@@ -23,25 +25,45 @@ class AllMedicineIntakesList extends StatelessWidget {
       child: Consumer<MedicineIntakesModel>(
         builder: (context, notesModel, child){
 
-          return medicineIntakesModel.loading ?
+          // if model is still loading, I display a loading icon
+          if (medicineIntakesModel.loading) {
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircularProgressIndicator()
+              ],
+            );
+          }
 
-          // if model is still loading, I
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CircularProgressIndicator()
-            ],
-          ) :
+          // if list is empty, I display a proper message as list item
+          if (medicineIntakesModel.intakes.length == 0) {
+            return ListView(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(50),
+                  child: Text(
+                      "Nessun medicinale da assumere oggi!",
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headline5,
+                  ),
+                )
+              ],
+            );
+          }
 
-          ListView.builder(
-              itemCount: medicineIntakesModel.intakes.length,
-              itemBuilder: (context, index) {
+          // regular list
+          return Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: ListView.builder(
+                itemCount: medicineIntakesModel.intakes.length,
+                itemBuilder: (context, index) {
 
-                // single item of the list
-                return AllMedicinesIntakesListItem(
-                    intake: medicineIntakesModel.intakes[index]
-                );
-              }
+                  // single item of the list
+                  return _MedicinesIntakesListItem(
+                      intake: medicineIntakesModel.intakes[index]
+                  );
+                }
+            ),
           );
         },
       ),
@@ -50,49 +72,52 @@ class AllMedicineIntakesList extends StatelessWidget {
 }
 
 /// A single item of a list of medicines
-class AllMedicinesIntakesListItem extends StatelessWidget {
+class _MedicinesIntakesListItem extends StatelessWidget {
 
   MedicineIntake intake;
 
-  AllMedicinesIntakesListItem({required this.intake});
+  _MedicinesIntakesListItem({required this.intake});
 
   @override
   Widget build(BuildContext context) {
 
     return Card(
 
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-      elevation: 4,
-      color: intake.getMissingIntakes()>1 ?
+      margin: const EdgeInsets.symmetric(vertical: 7, horizontal: 8),
+      elevation: 8,
+      color: intake.getMissingIntakes()>0 ?
         Colors.greenAccent :
         Colors.white54,
+
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+        padding: const EdgeInsets.all(12),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
             // Medicine name
             Text(
               intake.medicine.name,
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headline5,
+              overflow: TextOverflow.ellipsis,
             ),
 
             // medicine time range
             Text(
               getIntervalText(intake.medicine),
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.subtitle2,
             ),
 
-            SizedBox(height: 24,),
+            SizedBox(height: 10,),
 
             // notes preview
-            Container(
-                height: 52,
-                child: Text(
-                  intake.medicine.notes != null ? intake.medicine.notes! : "",
-                  overflow: TextOverflow.ellipsis,
-                ),
+            Text(
+              intake.medicine.notes != null ? intake.medicine.notes! : "",
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
             ),
+
+            SizedBox(height: 15,),
 
             // intakes done + do intake now button
             Row(
@@ -100,7 +125,7 @@ class AllMedicinesIntakesListItem extends StatelessWidget {
                 Expanded(
                   child: Text(
                     getRemainingMedicineIntakes(intake),
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Theme.of(context).textTheme.subtitle1,
                   )
                 ),
                 Expanded(
@@ -109,7 +134,7 @@ class AllMedicinesIntakesListItem extends StatelessWidget {
                       // TODO: animate prendi ora button
                     },
                     child: Text("PRENDI ADESSO"),
-                    style: intake.getMissingIntakes()>1 ?
+                    style: intake.getMissingIntakes()>0 ?
                         ElevatedButton.styleFrom(
                           primary: Colors.black54,
                         ) :

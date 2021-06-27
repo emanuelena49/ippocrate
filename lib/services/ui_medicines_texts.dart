@@ -61,7 +61,7 @@ String getRemainingMedicineIntakes(MedicineIntake intake) {
   int nIntakesPerDay = intake.medicine.intakeFrequency.nIntakesPerDay;
   int nIntakesRemaining = intake.getMissingIntakes();
 
-  return "RIMANENTI OGGI: $nIntakesRemaining (su $nIntakesPerDay)";
+  return "RIMANENTI: $nIntakesRemaining (su $nIntakesPerDay)";
 }
 
 
