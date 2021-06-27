@@ -18,6 +18,7 @@ CREATE TABLE medicine_intakes (
     n_intakes_done INTEGER DEFAULT 0,
 
     FOREIGN KEY (medicine_id) REFERENCES medicines (medicine_id)
+    ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 INSERT INTO medicines (name, notes, n_intakes_per_day, n_days_between_intakes)

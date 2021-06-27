@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ippocrate/models/medicine_intakes_model.dart';
 import 'package:ippocrate/models/medicines_model.dart';
 import 'package:ippocrate/services/ui_medicines_texts.dart';
 
@@ -8,6 +9,8 @@ import 'package:ippocrate/services/ui_medicines_texts.dart';
 class MedicineReadOnly extends StatelessWidget {
 
   late Medicine medicine;
+  MedicineIntake? eventualIntake;
+
   @override
   Widget build(BuildContext context) {
 
@@ -24,18 +27,14 @@ class MedicineReadOnly extends StatelessWidget {
 
         SizedBox(height: 10,),
 
-        Text(
-          "Frequenza assunzioni e periodo",
-          style: Theme.of(context).textTheme.headline3,
-        ),
         // Intakes info + interval
         Text(
           getIntervalText(medicine),
-          style: Theme.of(context).textTheme.headline4,
+          style: Theme.of(context).textTheme.headline5,
         ),
         Text(
           getIntakesPerDayText(medicine),
-          style: Theme.of(context).textTheme.headline4,
+          style: Theme.of(context).textTheme.headline5,
         ),
 
         SizedBox(height: 20,)
