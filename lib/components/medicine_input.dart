@@ -36,7 +36,7 @@ class MedicineFormSubmitButton extends StatelessWidget {
 
         // add intake frequency
         medicine.intakeFrequency =
-        intakeFrequencyInputModel.currentValue!;
+          intakeFrequencyInputModel.currentValue!;
 
         // insert the new element
         MedicinesDBWorker dbMedicines = MedicinesDBWorker();

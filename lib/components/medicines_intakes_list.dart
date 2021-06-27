@@ -83,7 +83,7 @@ class _MedicinesIntakesListItem extends StatelessWidget {
 
     return Card(
 
-      margin: const EdgeInsets.symmetric(vertical: 7, horizontal: 8),
+      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
       elevation: 8,
       color: intake.getMissingIntakes()>0 ?
         Colors.greenAccent :

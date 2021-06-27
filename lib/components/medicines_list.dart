@@ -129,7 +129,7 @@ class _MedicinesListItem extends StatelessWidget {
                 // interval + number of intakes
                 Text(
                   getIntakesPerDayText(medicine) + ", " + getIntervalText(medicine),
-                  style: Theme.of(context).textTheme.subtitle1,
+                  style: Theme.of(context).textTheme.subtitle2,
                 ),
 
                 Container(

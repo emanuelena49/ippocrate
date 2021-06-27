@@ -17,6 +17,9 @@ class IntakeFrequencyInputModel extends ChangeNotifier {
   late IntakeFrequencyOption currentOption;
   IntakeFrequency? currentValue;
 
+  int? lastNDaysInserted = 1;
+  int? lastNPerDaysInserted = 1;
+
   notify() {
     notifyListeners();
   }
@@ -140,15 +143,16 @@ class IntakeFrequencyInput extends StatelessWidget {
                               },
                               onChanged: (inValue) {
                                 try {
-
                                   int valAsNum = int.parse(inValue);
                                   freqModel.currentValue =
                                       IntakeFrequency.setNIntakesPerDay(valAsNum);
+                                  freqModel.lastNPerDaysInserted = valAsNum;
                                   freqModel.currentOption =
                                       IntakeFrequencyOption.N_TIMES_PER_DAY;
                                   freqModel.notify();
                                 } catch (e) {
                                   debugPrint("ERROR, input is not a num: $inValue");
+                                  debugPrint(e.toString());
                                 }
                               },
                             ),
@@ -162,8 +166,13 @@ class IntakeFrequencyInput extends StatelessWidget {
                     onChanged: (inValue) {
                       if (inValue!=null) {
                         freqModel.currentOption = inValue;
-                        // todo: instead of assigning null, try to read the form
-                        freqModel.currentValue = null;
+
+                        if (freqModel.lastNPerDaysInserted != null) {
+                          freqModel.currentValue =
+                              IntakeFrequency.setNIntakesPerDay(
+                                  freqModel.lastNPerDaysInserted);
+                        }
+
                         freqModel.notify();
                       }
                     },
@@ -198,7 +207,7 @@ class IntakeFrequencyInput extends StatelessWidget {
                                   }
 
                                   if (valAsNum<1) {
-                                    return "Inserisciun numero maggiore o uguale a 1";
+                                    return "Inserisci un numero maggiore o uguale a 1";
                                   }
 
                                   return null;
@@ -209,12 +218,14 @@ class IntakeFrequencyInput extends StatelessWidget {
 
                                     freqModel.currentValue =
                                         IntakeFrequency.setNDaysBetweenIntakes(valAsNum);
+                                    freqModel.lastNDaysInserted = valAsNum;
                                     freqModel.currentOption =
                                         IntakeFrequencyOption.ONCE_EVERY_N_DAY;
                                     freqModel.notify();
 
                                   } catch (e) {
                                     debugPrint("ERROR, input is not a num: $inValue");
+                                    debugPrint(e.toString());
                                   }
                                 },
                               ),
@@ -223,13 +234,19 @@ class IntakeFrequencyInput extends StatelessWidget {
                           ],
                       ),
                     ),
+
                     value: IntakeFrequencyOption.ONCE_EVERY_N_DAY,
                     groupValue: freqModel.currentOption,
                     onChanged: (inValue) {
                       if (inValue!=null) {
                         freqModel.currentOption = inValue;
-                        // todo: instead of assigning null, try to read the form
-                        freqModel.currentValue = null;
+
+                        if (freqModel.lastNDaysInserted != null) {
+                          freqModel.currentValue =
+                              IntakeFrequency.setNDaysBetweenIntakes(
+                                  freqModel.lastNDaysInserted);
+                        }
+
                         freqModel.notify();
                       }
                     },
