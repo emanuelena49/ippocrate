@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/db/medicines_db_worker.dart';
+import 'package:ippocrate/models/medicine_intakes_model.dart';
 import 'package:ippocrate/models/medicines_model.dart';
 import 'package:ippocrate/screens/one_medicine_screen.dart';
 import 'package:ippocrate/services/ui_medicines_texts.dart';
@@ -255,6 +257,9 @@ Future deleteMedicine(BuildContext context, Medicine medicine) async {
                   ),
                 );
                 medicinesModel.loadData(medicineDb);
+
+                // (reload even intakes)
+                medicineIntakesModel.loadData(MedicineIntakesDBWorker());
               },
               child: Text("Si, Elimina"),
             ),
