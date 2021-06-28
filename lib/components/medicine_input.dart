@@ -1,6 +1,7 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/db/medicines_db_worker.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
@@ -14,6 +15,12 @@ final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 /// The button to submit the insertion/the edit of a [Medicine]. It handles
 /// all the save/update stuff. Place it inside a [Consumer]<[MedicinesModel]>.
 class MedicineFormSubmitButton extends StatelessWidget {
+
+  late Medicine initialValue;
+
+  MedicineFormSubmitButton() {
+    initialValue = medicinesModel.currentMedicine!.clone();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,22 +45,56 @@ class MedicineFormSubmitButton extends StatelessWidget {
         medicine.intakeFrequency =
           intakeFrequencyInputModel.currentValue!;
 
-        // insert the new element
+        // insert the new element or update existent
         MedicinesDBWorker dbMedicines = MedicinesDBWorker();
-        var ok = await dbMedicines.create(medicine);
+        if (medicinesModel.isNew) {
+          var ok = await dbMedicines.create(medicine);
+        } else {
+          var ok = await dbMedicines.update(medicine);
+        }
 
-        // generate the intakes
-        List<MedicineIntake> intakes = generateIntakesFromMedicine(
-            medicine,
-            endDate: medicine.endDate!=null ?
+
+        MedicineIntakesDBWorker dbIntakes = MedicineIntakesDBWorker();
+        bool generateNewIntakes = false;
+
+        // check if I should re-generate intakes
+        bool regenerateIntakes =
+          shouldIntakesBeRegenerated(initialValue, medicine);
+
+        if (!medicinesModel.isNew && regenerateIntakes) {
+
+          // if a medicine is not new and [...],
+          // I remove all related intakes (to rebuild them from sketch then)
+
+          List<MedicineIntake> intakes =
+            await dbIntakes.getAllMedicineIntakes(medicine);
+
+          for (var i in intakes) {
+            await dbIntakes.delete(i.id!);
+          }
+
+          // ok, I even have to generate new intakes
+          generateNewIntakes = true;
+
+        } else if (medicinesModel.isNew) {
+
+          // I have to generate new intakes because the item is new
+          generateNewIntakes = true;
+        }
+
+        // (eventually) generate the new intakes  and save them
+        if (generateNewIntakes) {
+
+          List<MedicineIntake> intakes = generateIntakesFromMedicine(
+              medicine,
+              endDate: medicine.endDate!=null ?
               medicine.endDate :
               DateTime.now().add(Duration(days: 100))
-        );
+          );
 
-        // save them
-        MedicineIntakesDBWorker dbIntakes = MedicineIntakesDBWorker();
-        for (var i in intakes) {
-          await dbIntakes.create(i);
+          for (var i in intakes) {
+            await dbIntakes.create(i);
+          }
         }
 
         // var x = await dbIntakes.getAll();
@@ -118,8 +159,9 @@ class MedicineForm extends StatelessWidget {
                     child: DateTimePicker(
                       type: DateTimePickerType.date,
                       dateLabelText: 'Da ',
+                      initialValue: medicine.startDate.toString(),
                       initialDate: medicine.startDate,
-                      firstDate: DateTime.now(),
+                      firstDate: medicine.startDate,
                       lastDate: DateTime(2100),
                       decoration: const InputDecoration(
                           errorMaxLines: 3),
@@ -162,8 +204,8 @@ class MedicineForm extends StatelessWidget {
                       type: DateTimePickerType.date,
                       dateLabelText: "a ",
                       initialValue: medicine.endDate != null ?
-                      medicine.endDate!.toString() : "",
-                      firstDate: DateTime.now(),
+                        medicine.endDate!.toString() : "",
+                      firstDate: medicine.startDate,
                       lastDate: DateTime(2100),
                       decoration: const InputDecoration(
                           errorMaxLines: 3),

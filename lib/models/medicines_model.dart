@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:ippocrate/common/clonable.dart';
 import 'package:ippocrate/common/db_worker.dart';
 import 'package:ippocrate/db/medicines_db_worker.dart';
 
 /// the intake frequency for a single medicine
-class IntakeFrequency {
+class IntakeFrequency implements Clonable {
   final int nIntakesPerDay;
   final int nDaysBetweenIntakes;
 
@@ -16,10 +17,23 @@ class IntakeFrequency {
   factory IntakeFrequency.setNDaysBetweenIntakes(nIntakes) {
     return IntakeFrequency(nDaysBetweenIntakes: nIntakes);
   }
+
+  /// Check if this and another [IntakeFrequency] are the same
+  bool compare(IntakeFrequency frequency) {
+    return (frequency.nIntakesPerDay == nIntakesPerDay &&
+        frequency.nDaysBetweenIntakes == nDaysBetweenIntakes) ? true : false;
+  }
+
+  @override
+  IntakeFrequency clone() {
+    return IntakeFrequency(
+        nIntakesPerDay: nIntakesPerDay,
+        nDaysBetweenIntakes: nDaysBetweenIntakes);
+  }
 }
 
 /// a single medicine
-class Medicine extends HasId {
+class Medicine extends HasId implements Clonable {
   int? id;
   String name;
   String? notes;
@@ -35,6 +49,20 @@ class Medicine extends HasId {
     this.intakeFrequency = intakeFrequency!=null ? intakeFrequency :
         IntakeFrequency.setNIntakesPerDay(1);
   }
+
+  @override
+  Medicine clone({bool includeId: false}) {
+
+    var m = Medicine(name: name, startDate: startDate, endDate: endDate,
+        notes: notes, intakeFrequency: intakeFrequency.clone());
+
+    if (includeId) {
+      m.id = id;
+    }
+
+    return m;
+  }
+
 }
 
 /// A container for all [Medicine]s, it notify the UI when something change

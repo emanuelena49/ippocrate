@@ -41,6 +41,13 @@ class MedicineIntakesDBWorker extends AdvancedDBWorker<MedicineIntake> {
     return intakes;
   }
 
+  Future<List<MedicineIntake>> getAllMedicineIntakes(Medicine medicine) async {
+    return getAll(
+        customQuery: "SELECT * from $tableName NATURAL JOIN medicines "
+            "WHERE medicine_id=${medicine.id}"
+    );
+  }
+
   @override
   String get objectName => "medicine_intake";
 

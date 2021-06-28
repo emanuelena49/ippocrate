@@ -21,10 +21,15 @@ class _DBManager {
 
       if (true) {
 
-        var x = File(path);
-        if (await x.exists()) {
-          await x.delete();
+        try {
+          var x = File(path);
+          if (await x.exists()) {
+            await x.delete();
+          }
+        } catch (e) {
+          debugPrint(e.toString());
         }
+
       }
 
       bool isInit = false;

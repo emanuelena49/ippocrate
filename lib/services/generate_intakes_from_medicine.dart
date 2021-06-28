@@ -37,3 +37,29 @@ List<MedicineIntake> generateIntakesFromMedicine(Medicine medicine,
 
   return intakes;
 }
+
+bool shouldIntakesBeRegenerated(Medicine initialValue, Medicine actualValue) {
+
+  // check if frequency changed
+  if (!initialValue.intakeFrequency.compare(actualValue.intakeFrequency)) {
+    return true;
+  }
+
+  // check if start dates changed
+  if (initialValue.startDate.compareTo(actualValue.startDate) !=0 ) {
+    return true;
+  }
+
+  // check if end dates changed (1)
+  if (initialValue.endDate == null && actualValue.endDate != null) {
+    return true;
+  }
+
+  // check if end dates changed (2)
+  if (initialValue.endDate != null && actualValue.endDate != null &&
+      initialValue.endDate!.compareTo(actualValue.endDate!)!=0) {
+    return true;
+  }
+
+  return false;
+}

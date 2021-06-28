@@ -102,7 +102,7 @@ class IntakeFrequencyInput extends StatelessWidget {
                       if (inValue!=null) {
                         freqModel.currentOption = inValue;
                         freqModel.currentValue =
-                            IntakeFrequency.setNIntakesPerDay(30);
+                            IntakeFrequency.setNDaysBetweenIntakes(30);
                         freqModel.notify();
                       }
                     },
