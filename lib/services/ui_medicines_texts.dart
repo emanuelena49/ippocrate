@@ -1,6 +1,8 @@
 import 'package:intl/intl.dart';
+import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
 import 'package:ippocrate/models/medicines_model.dart';
+import 'package:ippocrate/services/datetime.dart';
 
 /// Get the text which describes the intake interval of a [Medicine]
 /// (ex. "DA ... A ...")
@@ -64,6 +66,53 @@ String getRemainingMedicineIntakes(MedicineIntake intake) {
   return "RIMANENTI: $nIntakesRemaining (su $nIntakesPerDay)";
 }
 
+String getNoIntakeText(Medicine medicine, List<MedicineIntake> allIntakes) {
+
+  String txt = "Nessuna assunzione prevista per oggi";
+
+  DateTime today = getTodayDate();
+  DateTime startDate = medicine.startDate;
+  DateTime? endDate = medicine.endDate;
+  int nDaysBetweenIntakes = medicine.intakeFrequency.nDaysBetweenIntakes;
+
+  // parse last and next intake
+  MedicineIntake? lastIntake, nextIntake;
+  for (var i in allIntakes) {
+
+    if (i.day.isBefore(today)) {
+      lastIntake = i;
+    }
+
+    if (i.day.isAfter(today)) {
+      nextIntake = i;
+      break;
+    }
+  }
+
+  // add (eventual) last intake text
+  if (lastIntake != null) {
+    txt += "Ultima assunzione: ";
+    int diffLastToday = today.difference(lastIntake.day).inDays;
+    if (diffLastToday == 1) {
+      txt += "ieri";
+    } else {
+      txt += "$diffLastToday giorni fa";
+    }
+  }
+
+  // add (eventual) next intake text
+  if (nextIntake != null) {
+    txt += "Prossima assunzione: ";
+    int diffTodayNext = nextIntake.day.difference(today).inDays;
+    if (diffTodayNext == 1) {
+      txt += "domani";
+    } else {
+      txt += "tra $diffTodayNext giorni";
+    }
+  }
+
+  return txt;
+}
 
 
 

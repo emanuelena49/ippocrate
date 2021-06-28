@@ -73,6 +73,22 @@ class MedicineIntakesModel extends ChangeNotifier {
     if (notify) notifyListeners();
   }
 
+  loadAllMedicineData(MedicineIntakesDBWorker inDatabaseWorker,
+      Medicine medicine, {bool notify: true}) async {
+
+    loading = true;
+    this.day = null;
+    this.medicine = medicine;
+    this.onlyNotDone = false;
+
+    // get intakes from db
+    intakes = await inDatabaseWorker.getAllMedicineIntakes(medicine);
+
+    loading = false;
+
+    if (notify) notifyListeners();
+  }
+
   /// Sort the current list by [MedicineIntake.getMissingIntakes]
   /// (decreasing order)
   sortByRemainingIntakes({notify: true}) {

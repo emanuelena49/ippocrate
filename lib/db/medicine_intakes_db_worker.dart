@@ -26,6 +26,8 @@ class MedicineIntakesDBWorker extends AdvancedDBWorker<MedicineIntake> {
       query += "AND medicine_id=${medicine.id}";
     }
 
+    query += " ORDER BY intake_date";
+
     // get all intakes according to query
     List<MedicineIntake> intakes = await getAll(customQuery: query);
 
@@ -44,7 +46,7 @@ class MedicineIntakesDBWorker extends AdvancedDBWorker<MedicineIntake> {
   Future<List<MedicineIntake>> getAllMedicineIntakes(Medicine medicine) async {
     return getAll(
         customQuery: "SELECT * from $tableName NATURAL JOIN medicines "
-            "WHERE medicine_id=${medicine.id}"
+            "WHERE medicine_id=${medicine.id} ORDER BY intake_date"
     );
   }
 
