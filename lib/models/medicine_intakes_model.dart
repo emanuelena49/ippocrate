@@ -30,7 +30,7 @@ class MedicineIntake extends HasId {
 
   doOneIntake() {
     if (getMissingIntakes() > 0) {
-      nIntakesDone--;
+      nIntakesDone++;
     } else {
       throw Exception("You can't perform an intake if zero are missing");
     }

@@ -38,6 +38,9 @@ List<MedicineIntake> generateIntakesFromMedicine(Medicine medicine,
   return intakes;
 }
 
+
+/// Given an [initialValue] and an [actualValue] for a [Medicine],
+/// decide if related [MedicineIntake] should be re-generated.
 bool shouldIntakesBeRegenerated(Medicine initialValue, Medicine actualValue) {
 
   // check if frequency changed

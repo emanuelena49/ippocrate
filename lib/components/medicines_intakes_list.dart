@@ -60,7 +60,8 @@ class MedicineIntakesList extends StatelessWidget {
 
                   // single item of the list
                   return _MedicinesIntakesListItem(
-                      intake: medicineIntakesModel.intakes[index]
+                    intake: medicineIntakesModel.intakes[index],
+                    intakesDb: intakesDb,
                   );
                 }
             ),
@@ -75,8 +76,9 @@ class MedicineIntakesList extends StatelessWidget {
 class _MedicinesIntakesListItem extends StatelessWidget {
 
   MedicineIntake intake;
+  MedicineIntakesDBWorker intakesDb;
 
-  _MedicinesIntakesListItem({required this.intake});
+  _MedicinesIntakesListItem({required this.intake, required this.intakesDb});
 
   @override
   Widget build(BuildContext context) {
@@ -129,19 +131,23 @@ class _MedicinesIntakesListItem extends StatelessWidget {
                   )
                 ),
                 Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // TODO: animate prendi ora button
-                    },
-                    child: Text("PRENDI ADESSO"),
-                    style: intake.getMissingIntakes()>0 ?
-                        ElevatedButton.styleFrom(
-                          primary: Colors.black54,
-                        ) :
-                        ElevatedButton.styleFrom(
-                          primary: Colors.grey,
-                        ),
-                  ),
+                  child: intake.getMissingIntakes()>0 ?
+
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (intake.getMissingIntakes()>0) {
+
+                          // perform one intake and save it
+                          intake.doOneIntake();
+                          await intakesDb.update(intake);
+                          medicineIntakesModel.loadData(intakesDb);
+                        }
+                      },
+                      child: Text("PRENDI ADESSO"),
+                      style: ElevatedButton.styleFrom(primary: Colors.black54,)
+                    ) :
+
+                  Text("Assunzioni completate", textAlign: TextAlign.center,)
                 ),
               ],
             ),
