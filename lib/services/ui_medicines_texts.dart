@@ -66,9 +66,9 @@ String getRemainingMedicineIntakes(MedicineIntake intake) {
   return "RIMANENTI: $nIntakesRemaining (su $nIntakesPerDay)";
 }
 
-String getNoIntakeText(Medicine medicine, List<MedicineIntake> allIntakes) {
+List<String> getNoIntakeText(Medicine medicine, List<MedicineIntake> allIntakes) {
 
-  String txt = "Nessuna assunzione prevista per oggi";
+  List<String> txt = ["Nessuna assunzione prevista per oggi"];
 
   DateTime today = getTodayDate();
   DateTime startDate = medicine.startDate;
@@ -91,24 +91,28 @@ String getNoIntakeText(Medicine medicine, List<MedicineIntake> allIntakes) {
 
   // add (eventual) last intake text
   if (lastIntake != null) {
-    txt += "Ultima assunzione: ";
+    String t = "Ultima assunzione: ";
     int diffLastToday = today.difference(lastIntake.day).inDays;
     if (diffLastToday == 1) {
-      txt += "ieri";
+      t += "ieri";
     } else {
-      txt += "$diffLastToday giorni fa";
+      t += "$diffLastToday giorni fa";
     }
+
+    txt.add(t);
   }
 
   // add (eventual) next intake text
   if (nextIntake != null) {
-    txt += "Prossima assunzione: ";
+    String t = "\nProssima assunzione: ";
     int diffTodayNext = nextIntake.day.difference(today).inDays;
     if (diffTodayNext == 1) {
-      txt += "domani";
+      t += "domani";
     } else {
-      txt += "tra $diffTodayNext giorni";
+      t += "tra $diffTodayNext giorni";
     }
+
+    txt.add(t);
   }
 
   return txt;

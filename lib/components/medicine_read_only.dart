@@ -49,7 +49,7 @@ class _MedicineHeading extends StatelessWidget {
               // medicine name
               Text(
                 this.medicine.name,
-                style: Theme.of(context).textTheme.headline1,
+                style: Theme.of(context).textTheme.headline5,
               ),
 
               SizedBox(height: 5,),
@@ -142,7 +142,11 @@ class _IntakesRow extends StatelessWidget {
                 ),
               ],
             ) :
-            Text(getNoIntakeText(medicine, intakesModel.intakes));
+
+              Column(
+                children: getNoIntakeText(medicine, intakesModel.intakes)
+                      .map((t) => Text(t)).toList(),
+              );
         }
       )
     );

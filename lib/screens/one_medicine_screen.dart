@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ippocrate/components/intake_frequency_input.dart';
 import 'package:ippocrate/components/medicine_input.dart';
+import 'package:ippocrate/components/medicine_read_only.dart';
 import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/db/medicines_db_worker.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
@@ -40,12 +41,14 @@ class OneMedicineScreen extends StatelessWidget {
 
                       // normal screen actions
                       IconButton(
-                        icon: Icon(Icons.more),
+                        icon: Icon(Icons.more_vert),
                         onPressed: () {},
                       )
                 ],
               ),
-              body: MedicineForm(),
+              body: medicinesModel.isEditing ?
+                MedicineForm() :
+                MedicineReadOnly(),
             );
           }
         )

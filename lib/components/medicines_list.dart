@@ -208,7 +208,7 @@ class _MedicineItemMenu extends StatelessWidget {
 }
 
 Future viewMedicine(BuildContext context, Medicine medicine) async {
-  medicinesModel.viewMedicine(medicine);
+  medicinesModel.viewMedicine(medicine, editing: false);
   Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => OneMedicineScreen()),
