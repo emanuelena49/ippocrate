@@ -9,6 +9,8 @@ import 'package:ippocrate/screens/one_medicine_screen.dart';
 import 'package:ippocrate/services/ui_medicines_texts.dart';
 import 'package:provider/provider.dart';
 
+import 'delete_medicine.dart';
+
 
 /// The list with all [Medicine]s.
 class AllMedicinesList extends StatelessWidget {
@@ -166,47 +168,6 @@ class _MedicinesListItem extends StatelessWidget {
   }
 }
 
-class _MedicineItemMenu extends StatelessWidget {
-
-  Medicine medicine;
-  _MedicineItemMenu({required this.medicine});
-
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton(
-      icon: Icon(Icons.more_horiz),
-      iconSize: 32,
-      onSelected: (selection) {
-        switch(selection) {
-          case "view":
-            viewMedicine(context, medicine);
-            break;
-          case "edit":
-            editMedicine(context, medicine);
-            break;
-          case "delete":
-            deleteMedicine(context, medicine);
-            break;
-        }
-      },
-      itemBuilder: (BuildContext context) => <PopupMenuItem> [
-        PopupMenuItem(
-          value: "view",
-          child: Text("Visualizza"),
-        ),
-        PopupMenuItem(
-          value: "edit",
-          child: Text("Modifica"),
-        ),
-        PopupMenuItem(
-          value: "delete",
-          child: Text("Elimina"),
-        ),
-      ],
-    );
-  }
-}
-
 Future viewMedicine(BuildContext context, Medicine medicine) async {
   medicinesModel.viewMedicine(medicine, editing: false);
   Navigator.push(
@@ -224,47 +185,3 @@ Future editMedicine(BuildContext context, Medicine medicine) async {
   );
 }
 
-Future deleteMedicine(BuildContext context, Medicine medicine) async {
-  return showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext inAlertContext){
-        return AlertDialog(
-          title: Text("Rimuovi medicinale"),
-          content: Text("Sei sicuro di voler eliminare il medicinale ${medicine.name}?"),
-          actions: [
-            ElevatedButton(
-              onPressed: (){
-                Navigator.of(inAlertContext).pop();
-              },
-              child: Text("No"),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-
-                // delete all intakes
-                // (no need, i set ON DELETE CASCADE in SQL)
-
-                // delete the medicine
-                var medicineDb = MedicinesDBWorker();
-                await medicineDb.delete(medicine.id!);
-                Navigator.of(inAlertContext).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    backgroundColor: Colors.red,
-                    duration: Duration(seconds: 2),
-                    content: Text("Medicinale eliminato"),
-                  ),
-                );
-                medicinesModel.loadData(medicineDb);
-
-                // (reload even intakes)
-                medicineIntakesModel.loadData(MedicineIntakesDBWorker());
-              },
-              child: Text("Si, Elimina"),
-            ),
-          ],
-        );
-      }
-  );
-}

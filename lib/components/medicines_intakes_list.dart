@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
+import 'package:ippocrate/models/medicines_model.dart';
+import 'package:ippocrate/screens/one_medicine_screen.dart';
 import 'package:ippocrate/services/ui_medicines_texts.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
@@ -91,68 +93,77 @@ class _MedicinesIntakesListItem extends StatelessWidget {
         Colors.greenAccent :
         Colors.white54,
 
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      child: GestureDetector(
+        onTap: () {
+          medicinesModel.viewMedicine(intake.medicine, editing: false);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => OneMedicineScreen()),
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
 
-            // Medicine name
-            Text(
-              intake.medicine.name,
-              style: Theme.of(context).textTheme.headline5,
-              overflow: TextOverflow.ellipsis,
-            ),
+              // Medicine name
+              Text(
+                intake.medicine.name,
+                style: Theme.of(context).textTheme.headline5,
+                overflow: TextOverflow.ellipsis,
+              ),
 
-            // medicine time range
-            Text(
-              getIntervalText(intake.medicine),
-              style: Theme.of(context).textTheme.subtitle2,
-            ),
+              // medicine time range
+              Text(
+                getIntervalText(intake.medicine),
+                style: Theme.of(context).textTheme.subtitle2,
+              ),
 
-            SizedBox(height: 10,),
+              SizedBox(height: 10,),
 
-            // notes preview
-            Text(
-              intake.medicine.notes != null ? intake.medicine.notes! : "",
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-            ),
+              // notes preview
+              Text(
+                intake.medicine.notes != null ? intake.medicine.notes! : "",
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
 
-            SizedBox(height: 15,),
+              SizedBox(height: 15,),
 
-            // intakes done + do intake now button
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    getRemainingMedicineIntakes(intake),
-                    style: Theme.of(context).textTheme.subtitle1,
-                  )
-                ),
-                Expanded(
-                  child: intake.getMissingIntakes()>0 ?
+              // intakes done + do intake now button
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      getRemainingMedicineIntakes(intake),
+                      style: Theme.of(context).textTheme.subtitle1,
+                    )
+                  ),
+                  Expanded(
+                    child: intake.getMissingIntakes()>0 ?
 
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (intake.getMissingIntakes()>0) {
+                      ElevatedButton(
+                        onPressed: () async {
+                          if (intake.getMissingIntakes()>0) {
 
-                          // perform one intake and save it
-                          intake.doOneIntake();
-                          await intakesDb.update(intake);
-                          medicineIntakesModel.loadData(intakesDb);
-                        }
-                      },
-                      child: Text("PRENDI ADESSO"),
-                      style: ElevatedButton.styleFrom(primary: Colors.black54,)
-                    ) :
+                            // perform one intake and save it
+                            intake.doOneIntake();
+                            await intakesDb.update(intake);
+                            medicineIntakesModel.loadData(intakesDb);
+                          }
+                        },
+                        child: Text("PRENDI ADESSO"),
+                        style: ElevatedButton.styleFrom(primary: Colors.black54,)
+                      ) :
 
-                  Text("Assunzioni completate", textAlign: TextAlign.center,)
-                ),
-              ],
-            ),
+                    Text("Assunzioni completate", textAlign: TextAlign.center,)
+                  ),
+                ],
+              ),
 
-          ],
+            ],
+          ),
         ),
       ),
     );

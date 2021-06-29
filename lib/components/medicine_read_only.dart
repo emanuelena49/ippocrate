@@ -7,6 +7,8 @@ import 'package:ippocrate/services/datetime.dart';
 import 'package:ippocrate/services/ui_medicines_texts.dart';
 import 'package:provider/provider.dart';
 
+import 'delete_medicine.dart';
+
 
 // TODO: build wireframe and make
 class MedicineReadOnly extends StatelessWidget {
@@ -154,6 +156,50 @@ class _IntakesRow extends StatelessWidget {
               );
         }
       )
+    );
+  }
+}
+
+class MedicineMenuButton extends StatelessWidget {
+
+  Medicine medicine;
+  MedicineMenuButton({required this.medicine});
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton(
+      icon: Icon(Icons.more_vert),
+      iconSize: 32,
+      onSelected: (selection) async {
+        switch(selection) {
+          case "view":
+            // viewMedicine(context, medicine);
+            break;
+          case "edit":
+            medicinesModel.viewMedicine(medicine, editing: true);
+            medicinesModel.notify();
+            break;
+          case "delete":
+            await deleteMedicine(context, medicine);
+            // close the page
+            Navigator.of(context).pop();
+            break;
+        }
+      },
+      itemBuilder: (BuildContext context) => <PopupMenuItem> [
+        /* PopupMenuItem(
+          value: "view",
+          child: Text("Visualizza"),
+        ), */
+        PopupMenuItem(
+          value: "edit",
+          child: Text("Modifica"),
+        ),
+        PopupMenuItem(
+          value: "delete",
+          child: Text("Elimina"),
+        ),
+      ],
     );
   }
 }

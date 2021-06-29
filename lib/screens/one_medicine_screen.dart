@@ -40,10 +40,7 @@ class OneMedicineScreen extends StatelessWidget {
                       ) :
 
                       // normal screen actions
-                      IconButton(
-                        icon: Icon(Icons.more_vert),
-                        onPressed: () {},
-                      )
+                      MedicineMenuButton(medicine: medicinesModel.currentMedicine!)
                 ],
               ),
               body: medicinesModel.isEditing ?
