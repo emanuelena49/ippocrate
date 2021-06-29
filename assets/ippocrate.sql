@@ -21,14 +21,18 @@ CREATE TABLE medicine_intakes (
     ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-INSERT INTO medicines (name, notes, n_intakes_per_day, n_days_between_intakes)
-VALUES ("Medicina 1", "Note per medicina 1", 2, 1),
-("Medicina 2", "Note per medicina 2", 1, 30),
-("Medicina 3", NULL, 1, 1);
+CREATE TABLE appointments (
+    appointment_id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    notes TEXT,
+    periodicity_days_interval INT
+);
 
-CREATE TABLE IF NOT EXISTS notes (
-    id INTEGER PRIMARY KEY,
-    title TEXT,
-    content TEXT,
-    color TEXT
+CREATE TABLE appointment_instances (
+    appointment_instance_id INTEGER PRIMARY KEY,
+    appointment_id INTEGER NOT NULL,
+    appointment_datetime DATE NOT NULL,
+
+    FOREIGN KEY (appointment_id) REFERENCES appointments (appointment_id)
+    ON UPDATE CASCADE ON DELETE CASCADE
 );

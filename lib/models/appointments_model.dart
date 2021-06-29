@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:ippocrate/common/db_worker.dart';
 import 'package:ippocrate/services/datetime.dart';
 
@@ -21,4 +22,10 @@ class Appointment implements HasId {
   bool isPeriodic() {
     return periodicityDaysInterval==null ? false : true;
   }
+}
+
+class AppointmentsModel extends ChangeNotifier {
+
+  List<Appointment> appointments = [];
+  bool loading = false;
 }
