@@ -83,23 +83,23 @@ class _IntakesRow extends StatelessWidget {
 
   _IntakesRow({required this.medicine}) {
     intakesDb = MedicineIntakesDBWorker();
-    medicineIntakesModel.loadAllMedicineData(intakesDb, medicine);
+    medicineIntakesModel2.loadAllMedicineData(intakesDb, medicine);
   }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
-        value: medicineIntakesModel,
+        value: medicineIntakesModel2,
         child: Consumer<MedicineIntakesModel>(
-        builder: (context, intakesModel, child) {
+        builder: (context, intakesModel2, child) {
 
-          if (intakesModel.loading) {
+          if (intakesModel2.loading) {
             return SizedBox(height: 10,);
           }
 
           DateTime today = getTodayDate();
 
-          for (var i in intakesModel.intakes) {
+          for (var i in intakesModel2.intakes) {
             if (i.day.isAtSameMomentAs(today)) {
               // found today's intake
               eventualIntake = i;
@@ -131,7 +131,12 @@ class _IntakesRow extends StatelessWidget {
                             // perform one intake and save it
                             eventualIntake!.doOneIntake();
                             await intakesDb.update(eventualIntake!);
+
+                            intakesModel2.loadAllMedicineData(intakesDb, medicine);
+
+                            // (update main model)
                             medicineIntakesModel.loadData(intakesDb);
+
                           }
                         },
                         child: Text("PRENDI ADESSO"),
@@ -144,7 +149,7 @@ class _IntakesRow extends StatelessWidget {
             ) :
 
               Column(
-                children: getNoIntakeText(medicine, intakesModel.intakes)
+                children: getNoIntakeText(medicine, intakesModel2.intakes)
                       .map((t) => Text(t)).toList(),
               );
         }

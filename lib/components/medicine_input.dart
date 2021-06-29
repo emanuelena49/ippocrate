@@ -6,6 +6,7 @@ import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/db/medicines_db_worker.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
 import 'package:ippocrate/models/medicines_model.dart';
+import 'package:ippocrate/services/datetime.dart';
 import 'package:ippocrate/services/generate_intakes_from_medicine.dart';
 
 import 'intake_frequency_input.dart';
@@ -161,7 +162,8 @@ class MedicineForm extends StatelessWidget {
                       dateLabelText: 'Da ',
                       initialValue: medicine.startDate.toString(),
                       initialDate: medicine.startDate,
-                      firstDate: medicine.startDate,
+                      firstDate: medicine.startDate.isBefore(getTodayDate()) ?
+                        medicine.startDate : getTodayDate(),
                       lastDate: DateTime(2100),
                       decoration: const InputDecoration(
                           errorMaxLines: 3),
@@ -205,7 +207,8 @@ class MedicineForm extends StatelessWidget {
                       dateLabelText: "a ",
                       initialValue: medicine.endDate != null ?
                         medicine.endDate!.toString() : "",
-                      firstDate: medicine.startDate,
+                      firstDate: medicine.startDate.isBefore(getTodayDate()) ?
+                        medicine.startDate : getTodayDate(),
                       lastDate: DateTime(2100),
                       decoration: const InputDecoration(
                           errorMaxLines: 3),

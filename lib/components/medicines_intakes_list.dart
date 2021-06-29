@@ -23,10 +23,10 @@ class MedicineIntakesList extends StatelessWidget {
     return ChangeNotifierProvider.value(
       value: medicineIntakesModel,
       child: Consumer<MedicineIntakesModel>(
-        builder: (context, notesModel, child){
+        builder: (context, intakesModel, child){
 
           // if model is still loading, I display a loading icon
-          if (medicineIntakesModel.loading) {
+          if (intakesModel.loading) {
             return Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -36,7 +36,7 @@ class MedicineIntakesList extends StatelessWidget {
           }
 
           // if list is empty, I display a proper message as list item
-          if (medicineIntakesModel.intakes.length == 0) {
+          if (intakesModel.intakes.length == 0) {
             return ListView(
               children: [
                 Padding(
@@ -55,12 +55,12 @@ class MedicineIntakesList extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.only(top: 8),
             child: ListView.builder(
-                itemCount: medicineIntakesModel.intakes.length,
+                itemCount: intakesModel.intakes.length,
                 itemBuilder: (context, index) {
 
                   // single item of the list
                   return _MedicinesIntakesListItem(
-                    intake: medicineIntakesModel.intakes[index],
+                    intake: intakesModel.intakes[index],
                     intakesDb: intakesDb,
                   );
                 }
