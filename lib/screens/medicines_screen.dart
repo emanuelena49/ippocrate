@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ippocrate/components/bottom_bar.dart';
 import 'package:ippocrate/components/medicines_intakes_list.dart';
 import 'package:ippocrate/components/medicines_list.dart';
 import 'package:ippocrate/models/medicines_model.dart';
@@ -62,6 +63,8 @@ class MedicinesScreen extends StatelessWidget {
 
           ],
         ),
+
+        bottomNavigationBar: MyBottomBar(),
       ),
     );
 

@@ -1,5 +1,7 @@
 DROP TABLE IF EXISTS medicine_intakes;
 DROP TABLE IF EXISTS medicines;
+DROP TABLE IF EXISTS appointment_instances;
+DROP TABLE IF EXISTS appointments;
 
 CREATE TABLE medicines (
     medicine_id INTEGER PRIMARY KEY,
