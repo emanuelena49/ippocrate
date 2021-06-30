@@ -110,3 +110,5 @@ MedicineIntakesModel medicineIntakesModel = new MedicineIntakesModel();
 
 // (I use this one only for one medicinal queries)
 MedicineIntakesModel medicineIntakesModel2 = new MedicineIntakesModel();
+
+// TODO: implement a more elegant solution

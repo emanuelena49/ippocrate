@@ -79,7 +79,7 @@ class MedicinesModel extends ChangeNotifier {
     loading = true;
     medicinesList = await inDatabaseWorker.getAll();
     loading = false;
-    notifyListeners();
+    if (notify) notifyListeners();
   }
 
   viewMedicine(Medicine medicine, {bool editing: false}) {

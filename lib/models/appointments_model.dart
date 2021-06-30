@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:ippocrate/common/db_worker.dart';
+import 'package:ippocrate/db/appointments_db_worker.dart';
 import 'package:ippocrate/services/datetime.dart';
 
 /// An single appointment (type). It is the abstract representation of
@@ -28,4 +29,10 @@ class AppointmentsModel extends ChangeNotifier {
 
   List<Appointment> appointments = [];
   bool loading = false;
+
+  loadData(AppointmentsDBWorker appointmentsDBWorker) async {
+    loading = true;
+    appointments = await appointmentsDBWorker.getAll();
+    loading = false;
+  }
 }

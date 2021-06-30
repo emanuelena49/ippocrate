@@ -5,7 +5,14 @@ import 'package:sqflite/sqflite.dart';
 
 import 'appointments_db_worker.dart';
 
-class AppointmentIntancesDBWorker extends AdvancedDBWorker<AppointmentInstance> {
+class AppointmentInstancesDBWorker extends AdvancedDBWorker<AppointmentInstance> {
+
+  Future<List<AppointmentInstance>> getNextAppointments({required DateTime startDay}) async {
+    String query = "SELECT * FROM $tableName NATURAL JOIN appointments "
+        "WHERE appointment_datetime>='${startDay.toString()}' ";
+
+    return getAll(customQuery: query);
+  }
 
   @override
   String get objectName => "appointment_instance";
@@ -27,6 +34,27 @@ class AppointmentIntancesDBWorker extends AdvancedDBWorker<AppointmentInstance> 
     appointmentInstance.id = await getLastId();
 
     return ok;
+  }
+
+  @override
+  Future<AppointmentInstance> get(int objectId, {String? customQuery}) {
+
+    if (customQuery == null) {
+      customQuery = "SELECT * FROM $tableName NATURAL JOIN appointments "
+          "WHERE $objectIdName=$objectId";
+    }
+
+    return super.get(objectId, customQuery: customQuery!);
+  }
+
+  @override
+  Future<List<AppointmentInstance>> getAll({String? customQuery}) {
+
+    if (customQuery == null) {
+      customQuery = "SELECT * FROM $tableName NATURAL JOIN appointments ";
+    }
+
+    return super.getAll(customQuery: customQuery!);
   }
 
   @override
