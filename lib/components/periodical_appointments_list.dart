@@ -9,7 +9,7 @@ class PeriodicalAppointmentsList extends StatelessWidget {
 
   late AppointmentsDBWorker appointmentsDBWorker;
 
-  AllMedicinesList() {
+  PeriodicalAppointmentsList() {
     // load all the medicines
     appointmentsDBWorker = AppointmentsDBWorker();
     appointmentsModel.loadData(appointmentsDBWorker);
