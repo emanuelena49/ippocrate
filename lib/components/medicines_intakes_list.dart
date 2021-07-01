@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ippocrate/common/screens_model.dart';
 import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
 import 'package:ippocrate/models/medicines_model.dart';
@@ -96,10 +97,7 @@ class _MedicinesIntakesListItem extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           medicinesModel.viewMedicine(intake.medicine, editing: false);
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => OneMedicineScreen()),
-          );
+          screensModel.loadScreen(context, Screen.MEDICINES_ONE);
         },
         child: Padding(
           padding: const EdgeInsets.all(12),

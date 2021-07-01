@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ippocrate/common/screens_model.dart';
 import 'package:ippocrate/components/bottom_bar.dart';
 import 'package:ippocrate/components/medicines_intakes_list.dart';
 import 'package:ippocrate/components/medicines_list.dart';
@@ -42,15 +43,11 @@ class MedicinesScreen extends StatelessWidget {
                   ),
                   onPressed: () {
                     medicinesModel.startNewMedicineCreation();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => OneMedicineScreen()),
-                    );
+                    screensModel.loadScreen(context, Screen.MEDICINES_ONE);
                   }
               ),
             )
           ],
-
         ),
 
         body: TabBarView(

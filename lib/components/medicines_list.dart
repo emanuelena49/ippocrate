@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:ippocrate/common/screens_model.dart';
 import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/db/medicines_db_worker.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
@@ -170,18 +171,12 @@ class _MedicinesListItem extends StatelessWidget {
 
 Future viewMedicine(BuildContext context, Medicine medicine) async {
   medicinesModel.viewMedicine(medicine, editing: false);
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => OneMedicineScreen()),
-  );
+  screensModel.loadScreen(context, Screen.MEDICINES_ONE);
 }
 
 
 Future editMedicine(BuildContext context, Medicine medicine) async {
   medicinesModel.viewMedicine(medicine, editing: true);
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => OneMedicineScreen()),
-  );
+  screensModel.loadScreen(context, Screen.MEDICINES_ONE);
 }
 

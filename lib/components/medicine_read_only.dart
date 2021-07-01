@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ippocrate/common/screens_model.dart';
 import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
 import 'package:ippocrate/models/medicines_model.dart';
@@ -31,7 +32,7 @@ class MedicineMenuButton extends StatelessWidget {
           case "delete":
             await deleteMedicine(context, medicine);
             // close the page
-            Navigator.of(context).pop();
+            screensModel.back(context);
             break;
         }
       },
