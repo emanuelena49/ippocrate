@@ -36,3 +36,5 @@ class AppointmentsModel extends ChangeNotifier {
     loading = false;
   }
 }
+
+AppointmentsModel appointmentsModel = AppointmentsModel();

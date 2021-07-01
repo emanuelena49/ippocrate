@@ -44,7 +44,7 @@ class AppointmentInstancesDBWorker extends AdvancedDBWorker<AppointmentInstance>
           "WHERE $objectIdName=$objectId";
     }
 
-    return super.get(objectId, customQuery: customQuery!);
+    return super.get(objectId, customQuery: customQuery);
   }
 
   @override
@@ -54,7 +54,7 @@ class AppointmentInstancesDBWorker extends AdvancedDBWorker<AppointmentInstance>
       customQuery = "SELECT * FROM $tableName NATURAL JOIN appointments ";
     }
 
-    return super.getAll(customQuery: customQuery!);
+    return super.getAll(customQuery: customQuery);
   }
 
   @override
@@ -67,7 +67,7 @@ class AppointmentInstancesDBWorker extends AdvancedDBWorker<AppointmentInstance>
 
     return AppointmentInstance(
       id: map[objectIdName],
-      appointment: appointment!,
+      appointment: appointment,
       dateTime: DateTime.parse(map["appointment_datetime"])
     );
   }

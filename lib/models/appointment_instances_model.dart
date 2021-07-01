@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/cupertino.dart';
 import 'package:ippocrate/common/db_worker.dart';
 import 'package:ippocrate/db/appointment_instance_db_worker.dart';
