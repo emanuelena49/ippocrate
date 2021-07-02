@@ -9,7 +9,8 @@ class AppointmentInstancesDBWorker extends AdvancedDBWorker<AppointmentInstance>
 
   Future<List<AppointmentInstance>> getNextAppointments({required DateTime startDay}) async {
     String query = "SELECT * FROM $tableName NATURAL JOIN appointments "
-        "WHERE appointment_datetime>='${startDay.toString()}' ";
+        "WHERE appointment_datetime>='${startDay.toString()}' "
+        "ORDER BY appointment_datetime";
 
     return getAll(customQuery: query);
   }
@@ -51,7 +52,8 @@ class AppointmentInstancesDBWorker extends AdvancedDBWorker<AppointmentInstance>
   Future<List<AppointmentInstance>> getAll({String? customQuery}) {
 
     if (customQuery == null) {
-      customQuery = "SELECT * FROM $tableName NATURAL JOIN appointments ";
+      customQuery = "SELECT * FROM $tableName NATURAL JOIN appointments "
+          "ORDER BY appointment_datetime";
     }
 
     return super.getAll(customQuery: customQuery);

@@ -35,6 +35,19 @@ class AppointmentsModel extends ChangeNotifier {
     appointments = await appointmentsDBWorker.getAll();
     loading = false;
   }
+
+  /// After called [loadData], get only the periodical appointments
+  List<Appointment> getPeriodical() {
+    List<Appointment> periodicalAppointments = [];
+    appointments.forEach((appointment) {
+
+      if (appointment.isPeriodic()) {
+        periodicalAppointments.add(appointment);
+      }
+    });
+
+    return periodicalAppointments;
+  }
 }
 
 AppointmentsModel appointmentsModel = AppointmentsModel();
