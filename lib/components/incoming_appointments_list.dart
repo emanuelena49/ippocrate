@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ippocrate/db/appointment_instance_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
+import 'package:ippocrate/services/ui_appointments_texts.dart';
 import 'package:provider/provider.dart';
 
 
@@ -79,6 +81,71 @@ class _IncomingAppointmentsListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(appointmentInstance.appointment.name ?? "nessun nome");
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+      elevation: 8,
+      color: Colors.blue,
+      child: Slidable(
+        actionPane: SlidableScrollActionPane(),
+        actionExtentRatio: .25,
+        secondaryActions: [
+          IconSlideAction(
+            caption: "Modifica",
+            color: Colors.yellow,
+            icon: Icons.edit,
+            onTap: (){
+
+            },
+          ),
+          IconSlideAction(
+            caption: "Elimina",
+            color: Colors.red,
+            icon: Icons.delete,
+            onTap: (){
+
+            },
+          ),
+        ],
+        child: GestureDetector(
+          onTap: () {
+
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  appointmentInstance.appointment.name!,
+                  style: Theme.of(context).textTheme.headline5,
+                ),
+
+                SizedBox(height: 5,),
+
+                Text(
+                  getWhenAppointment(appointmentInstance),
+                  style: Theme.of(context).textTheme.subtitle2,
+                ),
+
+                Container(
+                    height: 35,
+                    padding: EdgeInsets.only(bottom: 5),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          appointmentInstance.notes != null ?
+                            appointmentInstance.notes! : "",
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    )
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

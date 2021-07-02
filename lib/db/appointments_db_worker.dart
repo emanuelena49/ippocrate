@@ -15,9 +15,9 @@ class AppointmentsDBWorker extends AdvancedDBWorker<Appointment> {
     Database db = await getDB();
     var ok = await db.rawInsert(
         "INSERT INTO $tableName "
-            "(name, notes, periodicity_days_interval)"
-            "VALUES (?, ?, ?)",
-        [map["name"], map["notes"], map["periodicity_days_interval"], ]
+            "(name, periodicity_days_interval)"
+            "VALUES (?, ?)",
+        [map["name"], map["periodicity_days_interval"], ]
     );
 
     // get last row id and save it as medicine id
@@ -32,7 +32,6 @@ class AppointmentsDBWorker extends AdvancedDBWorker<Appointment> {
     return Appointment(
       id: map[objectIdName],
       name: map["name"],
-      notes: map["notes"],
       periodicityDaysInterval: map["periodicity_days_interval"],
     );
   }
@@ -43,7 +42,6 @@ class AppointmentsDBWorker extends AdvancedDBWorker<Appointment> {
     return {
       objectIdName: appointment.id,
       "name": appointment.name,
-      "notes": appointment.notes,
       "periodicity_days_interval": appointment.periodicityDaysInterval,
     };
   }

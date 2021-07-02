@@ -11,12 +11,11 @@ class Appointment implements HasId {
   @override
   int? id;
   String? name;
-  String? notes;
 
   /// In case of periodicity, the (approximate) days between each appointment
   int? periodicityDaysInterval;
 
-  Appointment({this.id, this.name, this.notes, this.periodicityDaysInterval});
+  Appointment({this.id, this.name, this.periodicityDaysInterval});
 
   /// If this appointment should be repeated periodically, in detail every
   /// [periodicityDaysInterval] days

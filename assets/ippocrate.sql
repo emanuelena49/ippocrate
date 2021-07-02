@@ -26,7 +26,6 @@ CREATE TABLE medicine_intakes (
 CREATE TABLE appointments (
     appointment_id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
-    notes TEXT,
     periodicity_days_interval INT
 );
 
@@ -34,16 +33,18 @@ CREATE TABLE appointment_instances (
     appointment_instance_id INTEGER PRIMARY KEY,
     appointment_id INTEGER NOT NULL,
     appointment_datetime DATE NOT NULL,
+    notes TEXT,
+    done BOOL DEFAULT FALSE,
 
     FOREIGN KEY (appointment_id) REFERENCES appointments (appointment_id)
     ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-insert into appointments (name, notes)
-values ("controllo dentista", "controllo periodico dentista"),
-("visita medico di base", null);
+insert into appointments (name)
+values ("controllo dentista"),
+("visita medico di base");
 
-insert into appointment_instances (appointment_id, appointment_datetime)
-values (1, "2021-08-15 10:00:00"),
-(1, "2021-06-15 09:00:00"),
-(2, "2021-07-25 16:00:00");
+insert into appointment_instances (appointment_id, appointment_datetime, notes)
+values (1, "2021-08-15 10:00:00", "controllo periodico dentista. Ricordati di passare il filo"),
+(1, "2021-06-15 09:00:00", null),
+(2, "2021-07-25 16:00:00", null);

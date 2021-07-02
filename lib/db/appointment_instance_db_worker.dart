@@ -26,9 +26,10 @@ class AppointmentInstancesDBWorker extends AdvancedDBWorker<AppointmentInstance>
     Database db = await getDB();
     var ok = await db.rawInsert(
         "INSERT INTO $tableName "
-            "(medicine_id, appointment_datetime)"
-            "VALUES (?, ?)",
-        [ map["medicine_id"], map["appointment_datetime"], ]
+            "(medicine_id, appointment_datetime, notes)"
+            "VALUES (?, ?, ?, ?)",
+        [ map["medicine_id"], map["appointment_datetime"],
+          map["notes"], map["done"]]
     );
 
     // get last row id and save it as medicine id
@@ -70,7 +71,9 @@ class AppointmentInstancesDBWorker extends AdvancedDBWorker<AppointmentInstance>
     return AppointmentInstance(
       id: map[objectIdName],
       appointment: appointment,
-      dateTime: DateTime.parse(map["appointment_datetime"])
+      dateTime: DateTime.parse(map["appointment_datetime"]),
+      notes: map["notes"],
+      done: map["done"]=="TRUE" ? true : false,
     );
   }
 
@@ -80,7 +83,9 @@ class AppointmentInstancesDBWorker extends AdvancedDBWorker<AppointmentInstance>
     return {
       objectIdName: appointmentInstance.id,
       "medicine_id": appointmentInstance.appointment.id,
+      "notes": appointmentInstance.notes,
       "appointment_datetime": appointmentInstance.dateTime.toString(),
+      "done": appointmentInstance.done,
     };
   }
 }

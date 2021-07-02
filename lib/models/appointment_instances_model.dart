@@ -12,8 +12,11 @@ class AppointmentInstance implements HasId {
   int? id;
   DateTime? dateTime;
   Appointment appointment;
+  String? notes;
+  bool done;
 
-  AppointmentInstance({this.id, required this.appointment, this.dateTime});
+  AppointmentInstance({this.id, required this.appointment,
+    this.dateTime, this.notes, this.done = false});
 }
 
 /// The collection of incoming [AppointmentInstance]

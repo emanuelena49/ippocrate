@@ -146,7 +146,6 @@ class _MedicinesListItem extends StatelessWidget {
                   style: Theme.of(context).textTheme.subtitle2,
                 ),
 
-
                 Container(
                     height: 35,
                     padding: EdgeInsets.only(bottom: 5),
