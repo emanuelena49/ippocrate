@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:ippocrate/common/screens_model.dart';
 import 'package:ippocrate/db/appointment_instance_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/services/ui_appointments_texts.dart';
@@ -111,6 +112,9 @@ class _IncomingAppointmentsListItem extends StatelessWidget {
         child: GestureDetector(
           onTap: () {
 
+            incomingAppointmentsModel.viewAppointment(
+                appointmentInstance, edit: false);
+            screensModel.loadScreen(context, Screen.APPOINTMENTS_ONE);
           },
           child: Padding(
             padding: const EdgeInsets.all(12),
@@ -118,7 +122,7 @@ class _IncomingAppointmentsListItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  appointmentInstance.appointment.name!,
+                  appointmentInstance.appointment.name,
                   style: Theme.of(context).textTheme.headline5,
                 ),
 

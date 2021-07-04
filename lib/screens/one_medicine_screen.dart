@@ -21,19 +21,19 @@ class OneMedicineScreen extends StatelessWidget {
     return ChangeNotifierProvider.value(
         value: medicinesModel,
         child: Consumer<MedicinesModel>(
-          builder: (context, notesModel, child) {
+          builder: (context, medModel, child) {
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: Colors.black54,
                 title: Text(
-                  medicinesModel.isNew ?
+                    medModel.isNew ?
                     "Nuovo Medicinale" :
-                    medicinesModel.isEditing ?
+                    medModel.isEditing ?
                         "Modifica Medicinale" :
                         "Medicinale"
                 ),
                 actions: [
-                  medicinesModel.isEditing ?
+                  medModel.isEditing ?
                       // form confirm button
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
@@ -41,10 +41,12 @@ class OneMedicineScreen extends StatelessWidget {
                       ) :
 
                       // normal screen actions
-                      MedicineMenuButton(medicine: medicinesModel.currentMedicine!)
+                      MedicineMenuButton(medicine: medModel.currentMedicine!)
                 ],
               ),
-              body: medicinesModel.isEditing ?
+
+
+              body: medModel.isEditing ?
                 MedicineForm() :
                 MedicineReadOnly(),
 

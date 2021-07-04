@@ -148,7 +148,7 @@ class _PeriodicalAppointmentsListItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                appointment.name!,
+                appointment.name,
                 style: Theme.of(context).textTheme.headline5,
               ),
 

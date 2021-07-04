@@ -10,12 +10,12 @@ import 'package:ippocrate/services/datetime.dart';
 class Appointment implements HasId {
   @override
   int? id;
-  String? name;
+  String name;
 
   /// In case of periodicity, the (approximate) days between each appointment
   int? periodicityDaysInterval;
 
-  Appointment({this.id, this.name, this.periodicityDaysInterval});
+  Appointment({this.id, required this.name, this.periodicityDaysInterval});
 
   /// If this appointment should be repeated periodically, in detail every
   /// [periodicityDaysInterval] days

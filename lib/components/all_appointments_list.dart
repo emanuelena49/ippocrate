@@ -79,6 +79,6 @@ class _AllAppointmentsListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(appointmentInstance.appointment.name ?? "nessun nome");
+    return Text(appointmentInstance.appointment.name);
   }
 }

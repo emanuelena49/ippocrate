@@ -73,7 +73,8 @@ class MedicineReadOnly extends StatelessWidget {
         _MedicineNotes(medicine: medicine,),
         SizedBox(height: 25,),
 
-
+        // todo: Medicine notifications
+        SizedBox(height: 25,),
       ],
     );
   }
