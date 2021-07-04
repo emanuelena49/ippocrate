@@ -5,6 +5,8 @@ import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/models/appointments_model.dart';
 import 'package:ippocrate/services/ui_appointments_texts.dart';
 
+import 'delete_appointment.dart';
+
 class AppointmentMenuButton extends StatelessWidget {
   AppointmentInstance appointmentInstance;
 
@@ -26,7 +28,8 @@ class AppointmentMenuButton extends StatelessWidget {
             incomingAppointmentsModel.notify();
             break;
           case "delete":
-
+            await deleteAppointment(context, appointmentInstance);
+            screensModel.back(context);
             break;
         }
       },
