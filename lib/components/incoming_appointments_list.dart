@@ -36,8 +36,11 @@ class IncomingAppointmentsList extends StatelessWidget {
             );
           }
 
+          List<AppointmentInstance> incoming =
+            incAppModel.getIncomingAppointments();
+
           // if list is empty, I display a proper message as list item
-          if (incAppModel.incomingAppointments.length == 0) {
+          if (incoming.length == 0) {
             return ListView(
               children: [
                 Padding(
@@ -56,13 +59,12 @@ class IncomingAppointmentsList extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.only(top: 8),
             child: ListView.builder(
-                itemCount: incAppModel.incomingAppointments.length,
+                itemCount: incoming.length,
                 itemBuilder: (context, index) {
 
                   // single item of the list
                   return _IncomingAppointmentsListItem(
-                      appointmentInstance:
-                        incAppModel.incomingAppointments[index]
+                      appointmentInstance: incoming[index]
                   );
                 }
             ),

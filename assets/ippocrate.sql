@@ -44,11 +44,11 @@ insert into appointments (name)
 values ("controllo dentista");
 
 insert into appointments (name, periodicity_days_interval)
-values ("esami del sangue", 90),
- ("visita medico-sportiva", 365),
- ("visita medico di base", 100);
+values ("visita medico di base", 90),
+ ("visita medico-sportiva", 365);
 
 insert into appointment_instances (appointment_id, appointment_datetime, notes)
 values (1, "2021-08-15 10:00:00", "controllo periodico dentista. Ricordati di passare il filo"),
 (1, "2021-06-15 09:00:00", null),
-(2, "2021-07-25 16:00:00", null);
+(2, "2021-07-25 16:00:00", null),
+(2, "2021-06-25 16:00:00", null);

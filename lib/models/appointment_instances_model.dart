@@ -25,18 +25,55 @@ class IncomingAppointmentsModel extends ChangeNotifier {
   IncomingAppointmentsModel._();
   static final IncomingAppointmentsModel instance = IncomingAppointmentsModel._();
 
-  List<AppointmentInstance> incomingAppointments = [];
+  List<AppointmentInstance> allAppointments = [];
   AppointmentInstance? currentAppointment;
   bool loading = false;
   bool isNew = false;
   bool isEditing = false;
 
+  /// All the [AppointmentInstance] from [startDate]
+  /// (eventually filtered by [Appointment])
+  List<AppointmentInstance> getIncomingAppointments({DateTime? startDate,
+    Appointment? type}) {
+
+    if (startDate==null)  startDate = getTodayDate();
+
+    List<AppointmentInstance> output = [];
+
+    allAppointments.forEach((appInstance) {
+      if (!getPureDate(appInstance.dateTime).isBefore(startDate!) &&
+          (type==null || appInstance.appointment.id==type.id)) {
+        output.add(appInstance);
+      }
+    });
+
+    return output;
+  }
+
+  /// All the [AppointmentInstance] before [startDate]
+  /// (eventually filtered by [Appointment])
+  List<AppointmentInstance> getPastAppointments({DateTime? startDate,
+    Appointment? type}) {
+
+    if (startDate==null)  startDate = getTodayDate();
+
+    List<AppointmentInstance> output = [];
+
+    allAppointments.forEach((appInstance) {
+      if (getPureDate(appInstance.dateTime).isBefore(startDate!) &&
+          (type==null || appInstance.appointment.id==type.id)) {
+        output.add(appInstance);
+      }
+    });
+
+    return output;
+  }
+
   loadData(AppointmentInstancesDBWorker appointmentsIntancesDb, {notify: true}) async {
 
     loading = true;
 
-    incomingAppointments = await appointmentsIntancesDb.getNextAppointments(
-        startDay: getTodayDate());
+    allAppointments = await appointmentsIntancesDb.getAll();
 
     if (notify) notifyListeners();
     loading = false;

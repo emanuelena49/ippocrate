@@ -59,43 +59,46 @@ class PeriodicalAppointmentsList extends StatelessWidget {
             // distinguish already ok (it exists an incoming) and
             // not booked
 
-            List<AppointmentInstance> incomingAppointments =
-                incAppModel.incomingAppointments;
-
-            List<Map> okAppointments = [];
-            List<Map> notOkAppointments = [];
+            List<Map> bookedAppointments = [];
+            List<Map> notBookedAppointments = [];
 
             periodicals.forEach((appointment) {
 
               // look if have I got a next
-              bool ok = false;
               var incAppointment;
-              for (incAppointment in incomingAppointments) {
-                if (incAppointment.appointment.id == appointment.id) {
-                  ok = true;
-                  break;
-                }
+              var incAppointments =
+                incAppModel.getIncomingAppointments(type: appointment);
+
+              if (incAppointments.length>0) {
+                incAppointment = incAppointments.first;
               }
 
-              // todo: look if it exist a precendent
+              // look if have I got a prec (reverse order)
+              var pastAppointment;
+              var pastAppointments =
+                incAppModel.getPastAppointments(type: appointment);
 
-              // insert it in one or the other list
-              if (ok) {
-                okAppointments.add({
-                  "appointment": appointment,
-                  "nextInstance": incAppointment,
-                  "precInstance": null,
-                });
-              } else {
-                notOkAppointments.add({
+              if (pastAppointments.length>0) {
+                pastAppointment = pastAppointments.last;
+              }
+
+              // insert it in one or the other list (booked or not)
+              if (incAppointment==null) {
+                notBookedAppointments.add({
                   "appointment": appointment,
                   "nextInstance": null,
-                  "precInstance": null,
+                  "precInstance": pastAppointment,
+                });
+              } else {
+                bookedAppointments.add({
+                  "appointment": appointment,
+                  "nextInstance": incAppointment,
+                  "precInstance": pastAppointment,
                 });
               }
             });
 
-            List outputList = notOkAppointments + okAppointments;
+            List outputList = notBookedAppointments + bookedAppointments;
 
             // regular list
             return Padding(
