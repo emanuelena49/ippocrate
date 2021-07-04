@@ -17,6 +17,7 @@ class AppointmentInstance implements HasId {
 
   AppointmentInstance({this.id, required this.appointment,
     required this.dateTime, this.notes, this.done = false});
+
 }
 
 /// The collection of incoming [AppointmentInstance]
@@ -96,32 +97,3 @@ class IncomingAppointmentsModel extends ChangeNotifier {
 
 IncomingAppointmentsModel incomingAppointmentsModel =
   IncomingAppointmentsModel.instance;
-
-/// All the [AppointmentInstance] (past, present and future).
-/// They can be filtered in various way
-class AllAppointmentsModel extends ChangeNotifier {
-
-  AllAppointmentsModel._();
-  static final AllAppointmentsModel instance = AllAppointmentsModel._();
-
-  List<AppointmentInstance> allAppointments = [];
-  bool loading = false;
-  Appointment? type;
-  bool sortDecr = false;
-
-  loadData(AppointmentInstancesDBWorker appointmentsIntancesDb, {bool notify: true}) async {
-
-    loading = true;
-    allAppointments = await appointmentsIntancesDb.getAll();
-    loading = false;
-    if (notify) {
-      notifyListeners();
-    }
-  }
-
-  notify() {
-    notifyListeners();
-  }
-}
-
-AllAppointmentsModel allAppointmentsModel = AllAppointmentsModel.instance;

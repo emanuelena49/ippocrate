@@ -13,15 +13,15 @@ class AllAppointmentsList extends StatelessWidget {
   AllAppointmentsList() {
     // load all the medicines
     appointmentInstancesDb = AppointmentInstancesDBWorker();
-    allAppointmentsModel.loadData(appointmentInstancesDb);
+    incomingAppointmentsModel.loadData(appointmentInstancesDb);
   }
 
   @override
   Widget build(BuildContext context) {
 
     return ChangeNotifierProvider.value(
-      value: allAppointmentsModel,
-      child: Consumer<AllAppointmentsModel>(
+      value: incomingAppointmentsModel,
+      child: Consumer<IncomingAppointmentsModel>(
         builder: (context, allAppModel, child){
 
           // if model is still loading, I display a loading icon
