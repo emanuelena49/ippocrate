@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ippocrate/db/appointments_db_worker.dart';
+import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/models/appointments_model.dart';
+import 'package:ippocrate/services/ui_appointments_texts.dart';
 import 'package:provider/provider.dart';
 
 /// The list with all [AppointmentInstance]s.
@@ -20,51 +23,98 @@ class PeriodicalAppointmentsList extends StatelessWidget {
 
     return ChangeNotifierProvider.value(
       value: appointmentsModel,
-      child: Consumer<AppointmentsModel>(
-        builder: (context, appModel, child){
+      child: ChangeNotifierProvider.value(
+        value: incomingAppointmentsModel,
+        child: Consumer2<AppointmentsModel, IncomingAppointmentsModel>(
+          builder: (context, appModel, incAppModel, child){
 
-          // if model is still loading, I display a loading icon
-          if (appModel.loading) {
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                CircularProgressIndicator()
-              ],
-            );
-          }
+            // if model is still loading, I display a loading icon
+            if (appModel.loading || incAppModel.loading) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator()
+                ],
+              );
+            }
 
-          // if list is empty, I display a proper message as list item
-          if (appModel.appointments.length == 0) {
-            return ListView(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(50),
-                  child: Text(
-                    "Nessun appuntamento periodico trovato",
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headline5,
-                  ),
-                )
-              ],
-            );
-          }
+            List periodicals = appModel.getPeriodical();
 
-          // regular list
-          return Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: ListView.builder(
-                itemCount: appModel.appointments.length,
-                itemBuilder: (context, index) {
+            // if list is empty, I display a proper message as list item
+            if (periodicals.length == 0) {
+              return ListView(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(50),
+                    child: Text(
+                      "Nessun appuntamento periodico trovato",
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                  )
+                ],
+              );
+            }
 
-                  // single item of the list
-                  return _PeriodicalAppointmentsListItem(
-                      appointment:
-                        appModel.appointments[index]
-                  );
+            // distinguish already ok (it exists an incoming) and
+            // not booked
+
+            List<AppointmentInstance> incomingAppointments =
+                incAppModel.incomingAppointments;
+
+            List<Map> okAppointments = [];
+            List<Map> notOkAppointments = [];
+
+            periodicals.forEach((appointment) {
+
+              // look if have I got a next
+              bool ok = false;
+              var incAppointment;
+              for (incAppointment in incomingAppointments) {
+                if (incAppointment.appointment.id == appointment.id) {
+                  ok = true;
+                  break;
                 }
-            ),
-          );
-        },
+              }
+
+              // todo: look if it exist a precendent
+
+              // insert it in one or the other list
+              if (ok) {
+                okAppointments.add({
+                  "appointment": appointment,
+                  "nextInstance": incAppointment,
+                  "precInstance": null,
+                });
+              } else {
+                notOkAppointments.add({
+                  "appointment": appointment,
+                  "nextInstance": null,
+                  "precInstance": null,
+                });
+              }
+            });
+
+            List outputList = notOkAppointments + okAppointments;
+
+            // regular list
+            return Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: ListView.builder(
+                  itemCount: outputList.length,
+                  itemBuilder: (context, index) {
+
+                    // single item of the list
+                    return _PeriodicalAppointmentsListItem(
+                      appointment: outputList[index]["appointment"],
+                      nextInstance: outputList[index]["nextInstance"],
+                      precInstance: outputList[index]["precInstance"]
+                    );
+                  }
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -73,11 +123,74 @@ class PeriodicalAppointmentsList extends StatelessWidget {
 class _PeriodicalAppointmentsListItem extends StatelessWidget {
 
   late Appointment appointment;
+  AppointmentInstance? nextInstance, precInstance;
 
-  _PeriodicalAppointmentsListItem({required this.appointment});
+  _PeriodicalAppointmentsListItem({
+    required this.appointment, this.nextInstance, this.precInstance });
 
   @override
   Widget build(BuildContext context) {
-    return Text(appointment.name ?? "nessun nome");
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+      elevation: 8,
+      color: nextInstance==null ? Colors.blue : Colors.white54,
+
+      child: GestureDetector(
+        onTap: () {
+
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                appointment.name!,
+                style: Theme.of(context).textTheme.headline5,
+              ),
+
+              SizedBox(height: 25,),
+
+              Container(
+                height: 45,
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // display frequency
+                            Text(getPeriodicalAppointmentFrequency(appointment)),
+
+                            // eventually display last time
+                            precInstance!=null ?
+                              Text("(${getPastAppointmentTime(precInstance!)})") :
+                              SizedBox(height: 0,)
+                          ],
+                        )
+                    ),
+                    Expanded(
+                        child: nextInstance!=null ?
+                            Text(
+                                "Prossimo:\n${getWhenAppointment(nextInstance!)}"
+                            ) :
+                            ElevatedButton(
+                                onPressed: () {
+
+                                },
+                                child: Text("prenota ora"),
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.black54,)
+                            )
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

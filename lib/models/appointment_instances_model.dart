@@ -10,17 +10,20 @@ import 'package:ippocrate/services/datetime.dart';
 class AppointmentInstance implements HasId {
   @override
   int? id;
-  DateTime? dateTime;
+  DateTime dateTime;
   Appointment appointment;
   String? notes;
   bool done;
 
   AppointmentInstance({this.id, required this.appointment,
-    this.dateTime, this.notes, this.done = false});
+    required this.dateTime, this.notes, this.done = false});
 }
 
 /// The collection of incoming [AppointmentInstance]
 class IncomingAppointmentsModel extends ChangeNotifier {
+
+  IncomingAppointmentsModel._();
+  static final IncomingAppointmentsModel instance = IncomingAppointmentsModel._();
 
   List<AppointmentInstance> incomingAppointments = [];
   AppointmentInstance? currentAppointment;
@@ -55,11 +58,14 @@ class IncomingAppointmentsModel extends ChangeNotifier {
 }
 
 IncomingAppointmentsModel incomingAppointmentsModel =
-  IncomingAppointmentsModel();
+  IncomingAppointmentsModel.instance;
 
 /// All the [AppointmentInstance] (past, present and future).
 /// They can be filtered in various way
 class AllAppointmentsModel extends ChangeNotifier {
+
+  AllAppointmentsModel._();
+  static final AllAppointmentsModel instance = AllAppointmentsModel._();
 
   List<AppointmentInstance> allAppointments = [];
   bool loading = false;
@@ -81,4 +87,4 @@ class AllAppointmentsModel extends ChangeNotifier {
   }
 }
 
-AllAppointmentsModel allAppointmentsModel = AllAppointmentsModel();
+AllAppointmentsModel allAppointmentsModel = AllAppointmentsModel.instance;

@@ -85,7 +85,7 @@ class AppointmentInstancesDBWorker extends AdvancedDBWorker<AppointmentInstance>
       "medicine_id": appointmentInstance.appointment.id,
       "notes": appointmentInstance.notes,
       "appointment_datetime": appointmentInstance.dateTime.toString(),
-      "done": appointmentInstance.done,
+      "done": appointmentInstance.done ? "TRUE" : "FALSE",
     };
   }
 }

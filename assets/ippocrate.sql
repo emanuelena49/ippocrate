@@ -41,8 +41,12 @@ CREATE TABLE appointment_instances (
 );
 
 insert into appointments (name)
-values ("controllo dentista"),
-("visita medico di base");
+values ("controllo dentista");
+
+insert into appointments (name, periodicity_days_interval)
+values ("esami del sangue", 90),
+ ("visita medico-sportiva", 365),
+ ("visita medico di base", 100);
 
 insert into appointment_instances (appointment_id, appointment_datetime, notes)
 values (1, "2021-08-15 10:00:00", "controllo periodico dentista. Ricordati di passare il filo"),

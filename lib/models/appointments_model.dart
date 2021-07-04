@@ -26,6 +26,9 @@ class Appointment implements HasId {
 
 class AppointmentsModel extends ChangeNotifier {
 
+  AppointmentsModel._();
+  static final AppointmentsModel instance = AppointmentsModel._();
+
   List<Appointment> appointments = [];
   bool loading = false;
 
@@ -49,4 +52,4 @@ class AppointmentsModel extends ChangeNotifier {
   }
 }
 
-AppointmentsModel appointmentsModel = AppointmentsModel();
+AppointmentsModel appointmentsModel = AppointmentsModel.instance;
