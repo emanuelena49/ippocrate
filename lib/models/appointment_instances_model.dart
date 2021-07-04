@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:ippocrate/common/clonable.dart';
 import 'package:ippocrate/common/db_worker.dart';
 import 'package:ippocrate/db/appointment_instance_db_worker.dart';
 import 'package:ippocrate/models/appointments_model.dart';
@@ -7,9 +8,11 @@ import 'package:ippocrate/services/datetime.dart';
 
 /// It is the single, concrete instance of [Appointment]. It is the concrete
 /// appointment and it is characterized by a specific [dateTime].
-class AppointmentInstance implements HasId {
+class AppointmentInstance implements HasId, Clonable {
+
   @override
   int? id;
+
   DateTime dateTime;
   Appointment appointment;
   String? notes;
@@ -18,6 +21,15 @@ class AppointmentInstance implements HasId {
   AppointmentInstance({this.id, required this.appointment,
     required this.dateTime, this.notes, this.done = false});
 
+  @override
+  AppointmentInstance clone() {
+    return AppointmentInstance(
+        appointment: appointment,
+        dateTime: dateTime,
+        notes: notes,
+        done: done,
+    );
+  }
 }
 
 /// The collection of incoming [AppointmentInstance]

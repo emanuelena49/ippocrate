@@ -33,8 +33,11 @@ class IntakeFrequency implements Clonable {
 }
 
 /// a single medicine
-class Medicine extends HasId implements Clonable {
+class Medicine implements HasId, Clonable {
+
+  @override
   int? id;
+
   String name;
   String? notes;
   DateTime startDate;
@@ -62,7 +65,6 @@ class Medicine extends HasId implements Clonable {
 
     return m;
   }
-
 }
 
 /// A container for all [Medicine]s, it notify the UI when something change

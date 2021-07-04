@@ -6,6 +6,7 @@ import 'package:ippocrate/components/bottom_bar.dart';
 import 'package:ippocrate/components/incoming_appointments_list.dart';
 import 'package:ippocrate/components/periodical_appointments_list.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
+import 'package:ippocrate/models/appointments_model.dart';
 
 class AppointmentsScreen extends StatelessWidget {
 
@@ -41,7 +42,12 @@ class AppointmentsScreen extends StatelessWidget {
                       primary: Colors.green
                   ),
                   onPressed: () {
-                    // todo: start creation of new
+                    incomingAppointmentsModel.viewAppointment(
+                      AppointmentInstance(
+                          appointment: Appointment(name: ""),
+                          dateTime: DateTime.now()
+                      ), edit: true
+                    );
                     screensModel.loadScreen(context, Screen.APPOINTMENTS_ONE);
                   }
               ),

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ippocrate/components/appointment_instance_input.dart';
 import 'package:ippocrate/components/appointment_read_only.dart';
 import 'package:ippocrate/components/bottom_bar.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
@@ -38,7 +39,7 @@ class OneAppointmentScreen extends StatelessWidget {
 
 
             body: appModel.isEditing ?
-                Text("Appointment form") :
+                AppointmentInstanceForm() :
                 AppointmentReadOnly(),
 
             bottomNavigationBar: MyBottomBar(),
