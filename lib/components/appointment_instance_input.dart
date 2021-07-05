@@ -39,7 +39,7 @@ class AppointmentInstanceSubmitButton extends StatelessWidget {
 
         var appointmentInstance = incomingAppointmentsModel.currentAppointment!;
 
-        return;
+        // return;
 
         // insert or update the appointment type existent
         AppointmentsDBWorker dbAppointments = AppointmentsDBWorker();
@@ -89,7 +89,9 @@ class AppointmentInstanceForm extends StatelessWidget {
 
           // (enclose periodicy input in consumer to be
           // sure it refreshes when appointment type changes
-          Consumer<IncomingAppointmentsModel>(
+          AppointmentPeriodicityInput(
+            appointment: appointmentInstance.appointment,),
+          /*Consumer<IncomingAppointmentsModel>(
             builder: (context, incAppModel, windget) {
 
               var appointment = incAppModel.currentAppointment!.appointment;
@@ -97,7 +99,7 @@ class AppointmentInstanceForm extends StatelessWidget {
               return AppointmentPeriodicityInput(
                 appointment: appointment,);
             },
-          ),
+          ),*/
 
           NotesInput(
               obj: appointmentInstance,
@@ -122,6 +124,33 @@ class _AppointmentTypeInput extends StatelessWidget {
     _controller.text = this.appointmentIntstance.appointment.name;
   }
 
+  handleNewValue({String?  freeText, Appointment? selection}) {
+
+    if (selection != null) {
+      appointmentIntstance.appointment = selection;
+      return;
+    }
+
+    if (freeText==null) {
+      freeText = "";
+    }
+
+    var selected = options.where((o) => o.name==freeText);
+
+    if (selection!=null) {
+
+      // if user chose one of the proposed options, I assign it
+      // as appointment type
+      appointmentIntstance.appointment =
+          selected.first;
+    } else {
+
+      // if user typed free text, I create a new
+      appointmentIntstance.appointment =
+          Appointment(name: freeText);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -132,21 +161,7 @@ class _AppointmentTypeInput extends StatelessWidget {
             labelText: "Scopo appuntamento: "
           ),
           onChanged: (inValue) {
-
-            var selected = options.where((o) => o.name==inValue);
-
-            if (selected.isNotEmpty) {
-
-              // if user chose one of the proposed options, I assign it
-              // as appointment type
-              appointmentIntstance.appointment =
-                  selected.first;
-            } else {
-
-              // if user typed free text, I create a new
-              appointmentIntstance.appointment =
-                  Appointment(name: inValue);
-            }
+            handleNewValue(freeText: inValue);
           },
           onSubmitted: (val) {
 
@@ -165,8 +180,10 @@ class _AppointmentTypeInput extends StatelessWidget {
             title: Text(suggestion.name),
           );
         },
-        onSuggestionSelected: (Appointment suggestion) {
-          _controller.text = suggestion.name;
+        onSuggestionSelected: (Appointment selection) {
+          _controller.text = selection.name;
+          handleNewValue(selection: selection);
+          incomingAppointmentsModel.notify();
         },
         getImmediateSuggestions: true,
       ),
@@ -228,21 +245,25 @@ class AppointmentPeriodicityInput extends StatefulWidget {
 
   @override
   _AppointmentPeriodicityInputState createState() =>
-      _AppointmentPeriodicityInputState(appointment: appointment);
+      _AppointmentPeriodicityInputState();
 }
 
 class _AppointmentPeriodicityInputState extends State<AppointmentPeriodicityInput> {
 
   late _AppointmentPeriodicityOptions periodicity;
-  Appointment appointment;
+  late Appointment appointment;
 
-  _AppointmentPeriodicityInputState({required this.appointment}) {
-
+  /*
+  _AppointmentPeriodicityInputState() {
+    appointment = widget.appointment;
     periodicity = _calculatePeriodicity();
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
+
+    appointment = widget.appointment;
+    periodicity = _calculatePeriodicity();
 
     int? days = appointment.periodicityDaysInterval;
     int? months = (periodicity == _AppointmentPeriodicityOptions.ONCE_A_MONTH)
@@ -395,7 +416,7 @@ class _AppointmentPeriodicityInputState extends State<AppointmentPeriodicityInpu
                           keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly],
-                          initialValue: days!=null ? months.toString() : "",
+                          initialValue: days!=null ? days.toString() : "",
                           validator: (val) {
                             if (periodicity!=_AppointmentPeriodicityOptions.ONCE_EVERY_N_DAYS) {
                               return null;
