@@ -33,7 +33,7 @@ IntakeFrequencyInputModel intakeFrequencyInputModel = IntakeFrequencyInputModel(
 /// The result, is saved in [intakeFrequencyInputModel]
 class IntakeFrequencyInput extends StatelessWidget {
 
-  IntakeFrequencyInput() {
+   IntakeFrequencyInput() {
 
     var medicineFreq = medicinesModel.currentMedicine!.intakeFrequency;
     var _currentOption;

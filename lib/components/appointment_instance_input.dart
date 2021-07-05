@@ -1,6 +1,7 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/models/appointments_model.dart';
@@ -51,6 +52,9 @@ class AppointmentInstanceForm extends StatelessWidget {
           _AppointmentTypeInput(appointmentIntstance: appointmentInstance),
 
           _AppointmentDateTimeInput(appointmentInstance: appointmentInstance),
+
+          AppointmentPeriodicityInput(
+            appointment: appointmentInstance.appointment,),
 
           NotesInput(
               obj: appointmentInstance,
@@ -164,6 +168,239 @@ class _AppointmentDateTimeInput extends StatelessWidget {
 }
 
 
+enum _AppointmentPeriodicityOptions {
+  NON_PERIODIC, ONCE_A_YEAR, ONCE_A_MONTH,
+  ONCE_EVERY_N_MONTHS, ONCE_EVERY_N_DAYS
+}
+
+class AppointmentPeriodicityInput extends StatefulWidget {
+
+  Appointment appointment;
+  AppointmentPeriodicityInput({required this.appointment});
+
+  @override
+  _AppointmentPeriodicityInputState createState() =>
+      _AppointmentPeriodicityInputState(appointment: appointment);
+}
+
+class _AppointmentPeriodicityInputState extends State<AppointmentPeriodicityInput> {
+
+  late _AppointmentPeriodicityOptions periodicity;
+  Appointment appointment;
+
+  _AppointmentPeriodicityInputState({required this.appointment}) {
+
+    periodicity = _calculatePeriodicity();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    int? days = appointment.periodicityDaysInterval;
+    int? months = (periodicity == _AppointmentPeriodicityOptions.ONCE_A_MONTH)
+        ? 1 : (periodicity == _AppointmentPeriodicityOptions.ONCE_EVERY_N_MONTHS)
+        ? days!~/30 : null;
+
+    bool isPeriodic =
+        (periodicity != _AppointmentPeriodicityOptions.NON_PERIODIC);
+
+    return ListTile(
+      title: Container(
+        margin: EdgeInsets.only(top: 20, bottom: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+
+            // is periodical checkbox
+            Row(
+              children: [
+
+                Checkbox(
+                  value: isPeriodic,
+                  onChanged: (bool? val) {
+                    if (val==null || !val) {
+                      setState(() {
+                        periodicity = _AppointmentPeriodicityOptions.NON_PERIODIC;
+                        appointment.periodicityDaysInterval = null;
+                      });
+                    } else {
+                      setState(() {
+                        appointment.periodicityDaysInterval = 365;
+                        periodicity = _AppointmentPeriodicityOptions.ONCE_A_YEAR;
+                      });
+                    }
+                  }
+                ),
+
+                Text("Appuntamento Periodico"),
+              ]
+            ),
+
+            // if is periodical, I display all the periodicity options
+            if (isPeriodic) ...[
+
+              RadioListTile<_AppointmentPeriodicityOptions>(
+                title: Text("1 VOLTA ALL'ANNO"),
+                value: _AppointmentPeriodicityOptions.ONCE_A_YEAR,
+                groupValue: periodicity,
+                onChanged: (val) {
+                  if (val!=null) setState(() {
+                    appointment.periodicityDaysInterval = 365;
+                    periodicity = _AppointmentPeriodicityOptions.ONCE_A_YEAR;
+                  });
+                }
+              ),
+
+              RadioListTile<_AppointmentPeriodicityOptions>(
+                  title: Text("1 VOLTA AL MESE"),
+                  value: _AppointmentPeriodicityOptions.ONCE_A_MONTH,
+                  groupValue: periodicity,
+                  onChanged: (val) {
+                    if (val!=null) setState(() {
+                      appointment.periodicityDaysInterval = 30;
+                      periodicity = _AppointmentPeriodicityOptions.ONCE_A_MONTH;
+                    });
+                  }
+              ),
+
+              RadioListTile<_AppointmentPeriodicityOptions>(
+                  value: _AppointmentPeriodicityOptions.ONCE_EVERY_N_MONTHS,
+                  groupValue: periodicity,
+                  onChanged: (val) {
+                    if (val!=null) setState(() {
+                      appointment.periodicityDaysInterval = 60;
+                      periodicity = _AppointmentPeriodicityOptions.ONCE_EVERY_N_MONTHS;
+                    });
+                  },
+                  title: LimitedBox(
+                    maxHeight: 64,
+                    child: Row(
+                      children: [
+                        Text("1 VOLTA OGNI "),
+                        Container(
+                          width: 50,
+                          child: TextFormField(
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly],
+                            initialValue: months!=null ? months.toString() : "",
+                            validator: (val) {
+                              if (val==null && periodicity==_AppointmentPeriodicityOptions.ONCE_EVERY_N_MONTHS) {
+                                return "Questo campo non può essere lasciato vuoto";
+                              }
+
+                              int? valAsNum = int.tryParse(val!);
+                              if (valAsNum == null) {
+                                return "Inserisci un numero intero";
+                              }
+
+                              if (valAsNum<1) {
+                                return "Inserisci un numero maggiore o uguale a 1";
+                              }
+
+                              return null;
+                            },
+                            onChanged: (val) {
+                              try {
+                                int valAsNum = int.parse(val);
+                                setState(() {
+                                  appointment.periodicityDaysInterval = valAsNum*30;
+                                  periodicity = _AppointmentPeriodicityOptions.ONCE_EVERY_N_MONTHS;
+                                });
+                              } catch (e) {
+                                debugPrint(e.toString());
+                              }
+                            },
+                          ),
+                        ),
+                        Text(" MESI"),
+                      ],
+                    ),
+                  ),
+              ),
+
+              RadioListTile<_AppointmentPeriodicityOptions>(
+                  value: _AppointmentPeriodicityOptions.ONCE_EVERY_N_DAYS,
+                  groupValue: periodicity,
+                  onChanged: (val) {
+                    if (val!=null) setState(() {
+                      appointment.periodicityDaysInterval = 29;
+                      periodicity = _AppointmentPeriodicityOptions.ONCE_EVERY_N_DAYS;
+                    });
+                  },
+                title: LimitedBox(
+                  maxHeight: 64,
+                  child: Row(
+                    children: [
+                      Text("1 VOLTA OGNI "),
+                      Container(
+                        width: 50,
+                        child: TextFormField(
+                          textAlign: TextAlign.center,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly],
+                          initialValue: months!=null ? months.toString() : "",
+                          validator: (val) {
+                            if (val==null && periodicity==_AppointmentPeriodicityOptions.ONCE_EVERY_N_DAYS) {
+                              return "Questo campo non può essere lasciato vuoto";
+                            }
+
+                            int? valAsNum = int.tryParse(val!);
+                            if (valAsNum == null) {
+                              return "Inserisci un numero intero";
+                            }
+
+                            if (valAsNum<1) {
+                              return "Inserisci un numero maggiore o uguale a 1";
+                            }
+
+                            return null;
+                          },
+                          onChanged: (val) {
+                            try {
+                              int valAsNum = int.parse(val);
+                              setState(() {
+                                appointment.periodicityDaysInterval = valAsNum;
+                                periodicity = _AppointmentPeriodicityOptions.ONCE_EVERY_N_DAYS;
+                              });
+                            } catch (e) {
+                              debugPrint(e.toString());
+                            }
+                          },
+                        ),
+                      ),
+                      Text(" GIORNI"),
+                    ],
+                  ),
+                ),
+
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  _AppointmentPeriodicityOptions _calculatePeriodicity() {
+    int? days = appointment.periodicityDaysInterval;
+
+    if (days == null) {
+      return _AppointmentPeriodicityOptions.NON_PERIODIC;
+    } else if (days == 365) {
+      return _AppointmentPeriodicityOptions.ONCE_A_YEAR;
+    } else if (days == 30) {
+      return _AppointmentPeriodicityOptions.ONCE_A_MONTH;
+    } else if (days%30 == 0) {
+      return _AppointmentPeriodicityOptions.ONCE_EVERY_N_MONTHS;
+    } else {
+      return _AppointmentPeriodicityOptions.ONCE_EVERY_N_DAYS;
+    }
+  }
+}
 
 
 
