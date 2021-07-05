@@ -3,9 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:ippocrate/common/screens_model.dart';
+import 'package:ippocrate/db/appointment_instance_db_worker.dart';
+import 'package:ippocrate/db/appointments_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/models/appointments_model.dart';
 import 'package:ippocrate/services/datetime.dart';
+import 'package:provider/provider.dart';
 
 import 'notes_input.dart';
 
@@ -28,7 +32,37 @@ class AppointmentInstanceSubmitButton extends StatelessWidget {
       ),
       child: Text("conferma"),
       onPressed: () async {
-          // todo: insert or update, etc...
+        // validate form
+        if(!formKey.currentState!.validate()){
+          return;
+        }
+
+        var appointmentInstance = incomingAppointmentsModel.currentAppointment!;
+
+        return;
+
+        // insert or update the appointment type existent
+        AppointmentsDBWorker dbAppointments = AppointmentsDBWorker();
+        if (appointmentInstance.appointment.id == null) {
+          var ok = await dbAppointments.create(appointmentInstance.appointment);
+        } else {
+          var ok = await dbAppointments.update(appointmentInstance.appointment);
+        }
+
+        // insert or update the appointment instance
+        AppointmentInstancesDBWorker dbAppInst = AppointmentInstancesDBWorker();
+        if (appointmentInstance.id == null) {
+          var ok = await dbAppInst.create(appointmentInstance);
+        } else {
+          var ok = await dbAppInst.update(appointmentInstance);
+        }
+
+        // update all models
+        incomingAppointmentsModel.loadData(dbAppInst);
+        appointmentsModel.loadData(dbAppointments);
+
+        // go back at precedent screen
+        screensModel.back(context);
       }
     );
   }
@@ -53,8 +87,17 @@ class AppointmentInstanceForm extends StatelessWidget {
 
           _AppointmentDateTimeInput(appointmentInstance: appointmentInstance),
 
-          AppointmentPeriodicityInput(
-            appointment: appointmentInstance.appointment,),
+          // (enclose periodicy input in consumer to be
+          // sure it refreshes when appointment type changes
+          Consumer<IncomingAppointmentsModel>(
+            builder: (context, incAppModel, windget) {
+
+              var appointment = incAppModel.currentAppointment!.appointment;
+
+              return AppointmentPeriodicityInput(
+                appointment: appointment,);
+            },
+          ),
 
           NotesInput(
               obj: appointmentInstance,
@@ -104,6 +147,11 @@ class _AppointmentTypeInput extends StatelessWidget {
               appointmentIntstance.appointment =
                   Appointment(name: inValue);
             }
+          },
+          onSubmitted: (val) {
+
+            // notify to force refresh even of periodicity input
+            incomingAppointmentsModel.notify();
           },
           controller: _controller,
 
@@ -287,11 +335,16 @@ class _AppointmentPeriodicityInputState extends State<AppointmentPeriodicityInpu
                               FilteringTextInputFormatter.digitsOnly],
                             initialValue: months!=null ? months.toString() : "",
                             validator: (val) {
-                              if (val==null && periodicity==_AppointmentPeriodicityOptions.ONCE_EVERY_N_MONTHS) {
+
+                              if (periodicity!=_AppointmentPeriodicityOptions.ONCE_EVERY_N_MONTHS) {
+                                return null;
+                              }
+
+                              if (val==null) {
                                 return "Questo campo non può essere lasciato vuoto";
                               }
 
-                              int? valAsNum = int.tryParse(val!);
+                              int? valAsNum = int.tryParse(val);
                               if (valAsNum == null) {
                                 return "Inserisci un numero intero";
                               }
@@ -342,13 +395,17 @@ class _AppointmentPeriodicityInputState extends State<AppointmentPeriodicityInpu
                           keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly],
-                          initialValue: months!=null ? months.toString() : "",
+                          initialValue: days!=null ? months.toString() : "",
                           validator: (val) {
-                            if (val==null && periodicity==_AppointmentPeriodicityOptions.ONCE_EVERY_N_DAYS) {
+                            if (periodicity!=_AppointmentPeriodicityOptions.ONCE_EVERY_N_DAYS) {
+                              return null;
+                            }
+
+                            if (val==null) {
                               return "Questo campo non può essere lasciato vuoto";
                             }
 
-                            int? valAsNum = int.tryParse(val!);
+                            int? valAsNum = int.tryParse(val);
                             if (valAsNum == null) {
                               return "Inserisci un numero intero";
                             }

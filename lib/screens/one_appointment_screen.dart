@@ -27,7 +27,7 @@ class OneAppointmentScreen extends StatelessWidget {
                 // form confirm button
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-                  child: Text("submit button"),
+                  child: AppointmentInstanceSubmitButton(),
                 ) :
 
                 // normal screen actions

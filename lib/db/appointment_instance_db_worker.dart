@@ -26,7 +26,7 @@ class AppointmentInstancesDBWorker extends AdvancedDBWorker<AppointmentInstance>
     Database db = await getDB();
     var ok = await db.rawInsert(
         "INSERT INTO $tableName "
-            "(medicine_id, appointment_datetime, notes)"
+            "(appointment_id, appointment_datetime, notes, done)"
             "VALUES (?, ?, ?, ?)",
         [ map["medicine_id"], map["appointment_datetime"],
           map["notes"], map["done"]]
