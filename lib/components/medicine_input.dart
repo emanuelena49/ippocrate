@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ippocrate/common/screens_model.dart';
+import 'package:ippocrate/components/notes_input.dart';
 import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/db/medicines_db_worker.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
@@ -244,44 +245,7 @@ class MedicineForm extends StatelessWidget {
           // intake frequency input
           IntakeFrequencyInput(),
 
-          // notes input
-          ListTile(
-            title: (medicine.notes == null) ?
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: Colors.black54,
-              ),
-              child: Text("Aggiungi Nota"),
-              onPressed: () {
-                medicine.notes = "";
-                medicinesModel.notify();
-              },
-            ) :
-            TextFormField(
-              keyboardType: TextInputType.multiline,
-              textInputAction: TextInputAction.done,
-              decoration: InputDecoration(
-                border: UnderlineInputBorder(),
-                alignLabelWithHint: true,
-                labelText: "Scrivi nota",
-                hintText: "ex. Da prendere solo dopo i pasti",
-              ),
-              maxLines: 4,
-              initialValue: medicine.notes!,
-              validator: (inValue) {
-                return null;
-              },
-              onChanged: (inValue) {
-                medicine.notes = inValue;
-              },
-              onSaved: (inValue) {
-                if (inValue=="") {
-                  medicine.notes = null;
-                  medicinesModel.notify();
-                }
-              },
-            ),
-          ),
+          NotesInput(obj: medicine, model: medicinesModel),
 
           ListTile(title: Text("...todo notifications...")),
         ],
@@ -289,3 +253,4 @@ class MedicineForm extends StatelessWidget {
     );
   }
 }
+

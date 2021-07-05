@@ -1,8 +1,12 @@
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/models/appointments_model.dart';
+import 'package:ippocrate/services/datetime.dart';
+
+import 'notes_input.dart';
 
 final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -44,7 +48,14 @@ class AppointmentInstanceForm extends StatelessWidget {
       child: ListView(
         children: [
 
-          _AppointmentTypeInput(),
+          _AppointmentTypeInput(appointmentIntstance: appointmentInstance),
+
+          _AppointmentDateTimeInput(appointmentInstance: appointmentInstance),
+
+          NotesInput(
+              obj: appointmentInstance,
+              model: incomingAppointmentsModel
+          ),
         ],
       )
     );
@@ -53,13 +64,15 @@ class AppointmentInstanceForm extends StatelessWidget {
 
 class _AppointmentTypeInput extends StatelessWidget {
 
+  AppointmentInstance appointmentIntstance;
+
   TextEditingController _controller = TextEditingController();
 
   static List<Appointment> options = appointmentsModel.appointments;
 
-  _AppointmentTypeInput({Key? key}) : super(key: key){
-    _controller.text =
-        incomingAppointmentsModel.currentAppointment!.appointment.name;
+  _AppointmentTypeInput({Key? key, required this.appointmentIntstance}) :
+        super(key: key){
+    _controller.text = this.appointmentIntstance.appointment.name;
   }
 
   @override
@@ -69,7 +82,6 @@ class _AppointmentTypeInput extends StatelessWidget {
       title: TypeAheadField(
         textFieldConfiguration: TextFieldConfiguration(
           decoration: InputDecoration(
-            border: OutlineInputBorder(),
             labelText: "Scopo appuntamento: "
           ),
           onChanged: (inValue) {
@@ -80,12 +92,12 @@ class _AppointmentTypeInput extends StatelessWidget {
 
               // if user chose one of the proposed options, I assign it
               // as appointment type
-              incomingAppointmentsModel.currentAppointment!.appointment =
+              appointmentIntstance.appointment =
                   selected.first;
             } else {
 
               // if user typed free text, I create a new
-              incomingAppointmentsModel.currentAppointment!.appointment =
+              appointmentIntstance.appointment =
                   Appointment(name: inValue);
             }
           },
@@ -109,3 +121,63 @@ class _AppointmentTypeInput extends StatelessWidget {
     );
   }
 }
+
+class _AppointmentDateTimeInput extends StatelessWidget {
+
+  AppointmentInstance appointmentInstance;
+
+  _AppointmentDateTimeInput({required this.appointmentInstance});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: DateTimePicker(
+        type: DateTimePickerType.dateTimeSeparate,
+        dateLabelText: "Giorno",
+        timeLabelText: "Ora",
+        initialValue: appointmentInstance.dateTime.toString(),
+        initialDate: appointmentInstance.dateTime,
+        initialTime: TimeOfDay(hour: 10, minute: 0),
+        firstDate: getTodayDate(),
+        lastDate: DateTime(2100),
+        onChanged: (val) {
+          if (val != null && val != "") {
+            appointmentInstance.dateTime = DateTime.parse(val);
+          }
+        },
+        validator: (val) {
+          // check it is not null
+          if (val == null || val == "") {
+            return "La data e l'ora dell'appuntamento non possono essere nulle";
+          }
+
+          return null;
+        },
+        onSaved: (val) {
+          if (val != null && val != "") {
+            appointmentInstance.dateTime = DateTime.parse(val);
+          }
+        },
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

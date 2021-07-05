@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ippocrate/common/clonable.dart';
 import 'package:ippocrate/common/db_worker.dart';
+import 'package:ippocrate/common/has_notes.dart';
+import 'package:ippocrate/common/model.dart';
 import 'package:ippocrate/db/medicines_db_worker.dart';
 
 /// the intake frequency for a single medicine
@@ -33,13 +35,16 @@ class IntakeFrequency implements Clonable {
 }
 
 /// a single medicine
-class Medicine implements HasId, Clonable {
+class Medicine implements HasId, Clonable, HasNotes {
 
   @override
   int? id;
 
   String name;
+
+  @override
   String? notes;
+
   DateTime startDate;
   DateTime? endDate;
   late IntakeFrequency intakeFrequency;
@@ -68,7 +73,7 @@ class Medicine implements HasId, Clonable {
 }
 
 /// A container for all [Medicine]s, it notify the UI when something change
-class MedicinesModel extends ChangeNotifier {
+class MedicinesModel extends Model {
 
   List<Medicine> medicinesList = [];
   bool loading = false;
@@ -98,10 +103,6 @@ class MedicinesModel extends ChangeNotifier {
   unsetMedicine() {
     currentMedicine = null;
     isEditing = isNew = false;
-  }
-
-  notify() {
-    notifyListeners();
   }
 }
 

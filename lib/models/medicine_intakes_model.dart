@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:ippocrate/common/db_worker.dart';
+import 'package:ippocrate/common/model.dart';
 import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/models/medicines_model.dart';
 import 'package:intl/intl.dart';
@@ -39,7 +40,7 @@ class MedicineIntake extends HasId {
 
 /// A model with a list of [MedicineIntake]s. It permits you
 /// to load data according to several parameters
-class MedicineIntakesModel extends ChangeNotifier {
+class MedicineIntakesModel extends Model {
 
   List<MedicineIntake> intakes = [];
   bool loading = false;
@@ -98,10 +99,6 @@ class MedicineIntakesModel extends ChangeNotifier {
       => b.getMissingIntakes().compareTo(a.getMissingIntakes()));
 
     if (notify) notifyListeners();
-  }
-
-  notify() {
-    notifyListeners();
   }
 }
 

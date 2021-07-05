@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:ippocrate/common/clonable.dart';
 import 'package:ippocrate/common/db_worker.dart';
+import 'package:ippocrate/common/has_notes.dart';
+import 'package:ippocrate/common/model.dart';
 import 'package:ippocrate/db/appointment_instance_db_worker.dart';
 import 'package:ippocrate/models/appointments_model.dart';
 import 'package:ippocrate/services/datetime.dart';
@@ -8,14 +10,17 @@ import 'package:ippocrate/services/datetime.dart';
 
 /// It is the single, concrete instance of [Appointment]. It is the concrete
 /// appointment and it is characterized by a specific [dateTime].
-class AppointmentInstance implements HasId, Clonable {
+class AppointmentInstance implements HasId, Clonable, HasNotes {
 
   @override
   int? id;
 
   DateTime dateTime;
   Appointment appointment;
+
+  @override
   String? notes;
+
   bool done;
 
   AppointmentInstance({this.id, required this.appointment,
@@ -33,7 +38,7 @@ class AppointmentInstance implements HasId, Clonable {
 }
 
 /// The collection of incoming [AppointmentInstance]
-class IncomingAppointmentsModel extends ChangeNotifier {
+class IncomingAppointmentsModel extends Model {
 
   IncomingAppointmentsModel._();
   static final IncomingAppointmentsModel instance = IncomingAppointmentsModel._();
@@ -100,10 +105,6 @@ class IncomingAppointmentsModel extends ChangeNotifier {
       isNew = false;
     }
     isEditing = edit;
-  }
-
-  notify() {
-    notifyListeners();
   }
 }
 

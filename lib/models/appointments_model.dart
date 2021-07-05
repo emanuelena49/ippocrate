@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:ippocrate/common/db_worker.dart';
+import 'package:ippocrate/common/model.dart';
 import 'package:ippocrate/db/appointments_db_worker.dart';
 import 'package:ippocrate/services/datetime.dart';
 
@@ -24,7 +25,7 @@ class Appointment implements HasId {
   }
 }
 
-class AppointmentsModel extends ChangeNotifier {
+class AppointmentsModel extends Model {
 
   AppointmentsModel._();
   static final AppointmentsModel instance = AppointmentsModel._();
