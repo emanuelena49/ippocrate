@@ -28,7 +28,7 @@ class AppointmentInstancesDBWorker extends AdvancedDBWorker<AppointmentInstance>
         "INSERT INTO $tableName "
             "(appointment_id, appointment_datetime, notes, done)"
             "VALUES (?, ?, ?, ?)",
-        [ map["medicine_id"], map["appointment_datetime"],
+        [ map["appointment_id"], map["appointment_datetime"],
           map["notes"], map["done"]]
     );
 
@@ -82,7 +82,7 @@ class AppointmentInstancesDBWorker extends AdvancedDBWorker<AppointmentInstance>
     appointmentInstance as AppointmentInstance;
     return {
       objectIdName: appointmentInstance.id,
-      "medicine_id": appointmentInstance.appointment.id,
+      "appointment_id": appointmentInstance.appointment.id,
       "notes": appointmentInstance.notes,
       "appointment_datetime": appointmentInstance.dateTime.toString(),
       "done": appointmentInstance.done ? "TRUE" : "FALSE",
