@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:ippocrate/common/screens_model.dart';
 import 'package:ippocrate/db/appointments_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/models/appointments_model.dart';
@@ -180,7 +181,13 @@ class _PeriodicalAppointmentsListItem extends StatelessWidget {
                             ) :
                             ElevatedButton(
                                 onPressed: () {
-
+                                  incomingAppointmentsModel.viewAppointment(
+                                      AppointmentInstance(
+                                          appointment: appointment,
+                                          dateTime: DateTime.now()
+                                      ), edit: true);
+                                  screensModel.loadScreen(context,
+                                      Screen.APPOINTMENTS_ONE);
                                 },
                                 child: Text("prenota ora"),
                                 style: ElevatedButton.styleFrom(
