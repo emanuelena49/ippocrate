@@ -23,6 +23,8 @@ class AppointmentInstance implements HasId, Clonable, HasNotes {
 
   bool done;
 
+  bool get isMaybeMissed => dateTime.isBefore(getTodayDate()) && !done;
+
   AppointmentInstance({this.id, required this.appointment,
     required this.dateTime, this.notes, this.done = false});
 
@@ -50,22 +52,33 @@ class IncomingAppointmentsModel extends Model {
   bool isEditing = false;
 
   /// All the [AppointmentInstance] from [startDate]
-  /// (eventually filtered by [Appointment])
+  /// (eventually filtered by [Appointment] and eventually
+  /// including past missing)
   List<AppointmentInstance> getIncomingAppointments({DateTime? startDate,
-    Appointment? type}) {
+    Appointment? type, bool includeMissing: false}) {
 
     if (startDate==null)  startDate = getTodayDate();
 
     List<AppointmentInstance> output = [];
 
     allAppointments.forEach((appInstance) {
-      if (!getPureDate(appInstance.dateTime).isBefore(startDate!) &&
-          (type==null || appInstance.appointment.id==type.id)) {
+      if (
+        (!getPureDate(appInstance.dateTime).isBefore(startDate!) ||
+                (appInstance.isMaybeMissed && includeMissing)) &&
+            (type==null || appInstance.appointment.id==type.id)) {
         output.add(appInstance);
       }
     });
 
-    return output;
+    return output..sort((a, b) {
+      if (a.isMaybeMissed == b.isMaybeMissed) {
+        return a.dateTime.compareTo(b.dateTime);
+      } else if (b.isMaybeMissed) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
   }
 
   /// All the [AppointmentInstance] before [startDate]

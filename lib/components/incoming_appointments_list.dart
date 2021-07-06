@@ -5,6 +5,7 @@ import 'package:ippocrate/common/screens_model.dart';
 import 'package:ippocrate/components/delete_appointment.dart';
 import 'package:ippocrate/db/appointment_instance_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
+import 'package:ippocrate/services/datetime.dart';
 import 'package:ippocrate/services/ui_appointments_texts.dart';
 import 'package:provider/provider.dart';
 
@@ -39,7 +40,7 @@ class IncomingAppointmentsList extends StatelessWidget {
           }
 
           List<AppointmentInstance> incoming =
-            incAppModel.getIncomingAppointments();
+            incAppModel.getIncomingAppointments(includeMissing: true);
 
           // if list is empty, I display a proper message as list item
           if (incoming.length == 0) {
@@ -86,30 +87,47 @@ class AppointmentsListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    bool isDone = false;
-    bool isMaybeMissed = false;
+    bool isDone = appointmentInstance.done;
+    bool isMaybeMissed = appointmentInstance.isMaybeMissed;
 
     return Card(
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       elevation: 8,
-      color: Colors.blue,
+      color: isDone ? Colors.white54 :
+        isMaybeMissed ? Colors.red : Colors.blue,
+
       child: Slidable(
         actionPane: SlidableScrollActionPane(),
         actionExtentRatio: .25,
         secondaryActions: [
 
-          /* isDone
-          IconSlideAction(
-            caption: "Segna come fatto",
-            color: Colors.green,
-            icon: Icons.edit,
-            onTap: () async {
-              appointmentInstance.done;
-              var appointmentsIntancesDb = AppointmentInstancesDBWorker();
-              app
-              incomingAppointmentsModel.loadData(appointmentsIntancesDb)
-            },
-          ), */
+          // mark as undone/done
+          isDone ?
+            IconSlideAction(
+            caption: "Segna come\nda fare",
+              color: Colors.white10,
+              icon: Icons.close,
+              onTap: () async {
+                appointmentInstance.done = false;
+                var appointmentsIntancesDb = AppointmentInstancesDBWorker();
+                await appointmentsIntancesDb.update(appointmentInstance);
+                incomingAppointmentsModel.loadData(appointmentsIntancesDb);
+              }
+            ) :
+            IconSlideAction(
+              caption: "Segna come\nfatto",
+              color: Colors.green,
+              icon: Icons.check,
+              onTap: () async {
+                appointmentInstance.done = true;
+                var appointmentsIntancesDb = AppointmentInstancesDBWorker();
+                await appointmentsIntancesDb.update(appointmentInstance);
+                incomingAppointmentsModel.loadData(appointmentsIntancesDb);
+              },
+            ),
+
+
+          // edit & delete
           IconSlideAction(
             caption: "Modifica",
             color: Colors.yellow,
@@ -149,7 +167,9 @@ class AppointmentsListItem extends StatelessWidget {
                 SizedBox(height: 5,),
 
                 Text(
-                  getWhenAppointment(appointmentInstance),
+                  getWhenAppointment(appointmentInstance) +
+                      (isDone ? " (già fatto)" : isMaybeMissed ?
+                      " (FORSE MANCATO!)" : ""),
                   style: Theme.of(context).textTheme.subtitle2,
                 ),
 

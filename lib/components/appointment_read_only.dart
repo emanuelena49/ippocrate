@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ippocrate/common/screens_model.dart';
+import 'package:ippocrate/db/appointment_instance_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/models/appointments_model.dart';
 import 'package:ippocrate/services/ui_appointments_texts.dart';
@@ -14,13 +15,26 @@ class AppointmentMenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    bool isDone = appointmentInstance.done;
+    bool isMaybeMissed = appointmentInstance.isMaybeMissed;
+
     return PopupMenuButton(
       icon: Icon(Icons.more_vert),
       iconSize: 32,
       onSelected: (selection) async {
         switch(selection) {
-          case "view":
-            // viewMedicine(context, medicine);
+          case "mark-as-done":
+            appointmentInstance.done = true;
+            var appointmentsIntancesDb = AppointmentInstancesDBWorker();
+            await appointmentsIntancesDb.update(appointmentInstance);
+            incomingAppointmentsModel.loadData(appointmentsIntancesDb);
+            break;
+          case "mark-as-undone":
+            appointmentInstance.done = false;
+            var appointmentsIntancesDb = AppointmentInstancesDBWorker();
+            await appointmentsIntancesDb.update(appointmentInstance);
+            incomingAppointmentsModel.loadData(appointmentsIntancesDb);
             break;
           case "edit":
             incomingAppointmentsModel.viewAppointment(
@@ -34,10 +48,18 @@ class AppointmentMenuButton extends StatelessWidget {
         }
       },
       itemBuilder: (BuildContext context) => <PopupMenuItem> [
-        /* PopupMenuItem(
-          value: "view",
-          child: Text("Visualizza"),
-        ), */
+
+        // mark as done/undone
+        isDone ?
+          PopupMenuItem(
+            value: "mark-as-undone",
+            child: Text("Segna come da fare"),
+          ) :
+          PopupMenuItem(
+            value: "mark-as-done",
+            child: Text("Segna come fatto"),
+          ),
+
         PopupMenuItem(
           value: "edit",
           child: Text("Modifica"),
@@ -85,9 +107,14 @@ class _AppointmentHeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    bool isDone = appointmentInstance.done;
+    bool isMaybeMissed = appointmentInstance.isMaybeMissed;
+
     return Card(
       elevation: 4,
-      color: Colors.blue,
+      color: isDone ? Colors.white54 :
+        isMaybeMissed ? Colors.red : Colors.blue,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -104,6 +131,9 @@ class _AppointmentHeading extends StatelessWidget {
               getWhenAppointment(appointmentInstance),
               style: Theme.of(context).textTheme.subtitle2,
             ),
+
+            isDone ? Text("(già fatto)") : isMaybeMissed ?
+              Text("FORSE MANCATO!") : SizedBox(height: 0,),
 
             SizedBox(height: 25,),
 
