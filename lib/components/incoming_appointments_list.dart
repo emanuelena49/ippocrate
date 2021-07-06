@@ -65,7 +65,7 @@ class IncomingAppointmentsList extends StatelessWidget {
                 itemBuilder: (context, index) {
 
                   // single item of the list
-                  return _IncomingAppointmentsListItem(
+                  return AppointmentsListItem(
                       appointmentInstance: incoming[index]
                   );
                 }
@@ -77,14 +77,18 @@ class IncomingAppointmentsList extends StatelessWidget {
   }
 }
 
-class _IncomingAppointmentsListItem extends StatelessWidget {
+class AppointmentsListItem extends StatelessWidget {
 
   late AppointmentInstance appointmentInstance;
 
-  _IncomingAppointmentsListItem({required this.appointmentInstance});
+  AppointmentsListItem({required this.appointmentInstance});
 
   @override
   Widget build(BuildContext context) {
+
+    bool isDone = false;
+    bool isMaybeMissed = false;
+
     return Card(
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       elevation: 8,
@@ -93,12 +97,27 @@ class _IncomingAppointmentsListItem extends StatelessWidget {
         actionPane: SlidableScrollActionPane(),
         actionExtentRatio: .25,
         secondaryActions: [
+
+          /* isDone
+          IconSlideAction(
+            caption: "Segna come fatto",
+            color: Colors.green,
+            icon: Icons.edit,
+            onTap: () async {
+              appointmentInstance.done;
+              var appointmentsIntancesDb = AppointmentInstancesDBWorker();
+              app
+              incomingAppointmentsModel.loadData(appointmentsIntancesDb)
+            },
+          ), */
           IconSlideAction(
             caption: "Modifica",
             color: Colors.yellow,
             icon: Icons.edit,
             onTap: (){
-
+              incomingAppointmentsModel
+                  .viewAppointment(appointmentInstance, edit: true);
+              screensModel.loadScreen(context, Screen.APPOINTMENTS_ONE);
             },
           ),
           IconSlideAction(

@@ -120,7 +120,7 @@ class _AppointmentHeading extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // eventually display a "view all" button for periodical
-                appointmentInstance.appointment.isPeriodic() ? Padding(
+                Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
                     child: Text("VEDI TUTTI"),
@@ -130,8 +130,7 @@ class _AppointmentHeading extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                         primary: Colors.black54,)
                   ),
-                ) : SizedBox(height: 0, width: 0,),
-
+                ),
                 // quick button to create a new appointment of the same type
                 Padding(
                   padding: const EdgeInsets.all(8.0),

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ippocrate/components/incoming_appointments_list.dart';
 import 'package:ippocrate/db/appointment_instance_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:provider/provider.dart';
@@ -58,7 +59,7 @@ class AllAppointmentsList extends StatelessWidget {
                 itemBuilder: (context, index) {
 
                   // single item of the list
-                  return _AllAppointmentsListItem(
+                  return AppointmentsListItem(
                       appointmentInstance:
                       allAppModel.allAppointments[index]
                   );
@@ -71,14 +72,4 @@ class AllAppointmentsList extends StatelessWidget {
   }
 }
 
-class _AllAppointmentsListItem extends StatelessWidget {
 
-  late AppointmentInstance appointmentInstance;
-
-  _AllAppointmentsListItem({required this.appointmentInstance});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(appointmentInstance.appointment.name);
-  }
-}
