@@ -45,9 +45,10 @@ class MedicineFormSubmitButton extends StatelessWidget {
 
         var medicine = medicinesModel.currentMedicine!;
 
+        /*
         // add intake frequency
         medicine.intakeFrequency =
-          intakeFrequencyInputModel.currentValue!;
+          intakeFrequencyInputModel.currentValue!;*/
 
         // insert the new element or update existent
         MedicinesDBWorker dbMedicines = MedicinesDBWorker();
@@ -244,7 +245,7 @@ class MedicineForm extends StatelessWidget {
           ),
 
           // intake frequency input
-          IntakeFrequencyInput(),
+          _MedicineIntakeFrequencyInput(medicine: medicine,),
 
           NotesInput(obj: medicine, model: medicinesModel),
 
@@ -348,7 +349,7 @@ class _MedicineIntakeFrequencyInputState extends State<_MedicineIntakeFrequencyI
                               return "Questo campo non può essere lasciato vuoto";
                             }
 
-                            int? valAsNum = int.tryParse(inValue!);
+                            int? valAsNum = int.tryParse(inValue);
                             if (valAsNum == null) {
                               return "Inserisci un numero intero";
                             }
@@ -417,7 +418,7 @@ class _MedicineIntakeFrequencyInputState extends State<_MedicineIntakeFrequencyI
                               return "Questo campo non può essere lasciato vuoto";
                             }
 
-                            int? valAsNum = int.tryParse(inValue!);
+                            int? valAsNum = int.tryParse(inValue);
                             if (valAsNum == null) {
                               return "Inserisci un numero intero";
                             }
