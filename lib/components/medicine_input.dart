@@ -1,6 +1,7 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:ippocrate/common/screens_model.dart';
 import 'package:ippocrate/components/notes_input.dart';
@@ -252,5 +253,229 @@ class MedicineForm extends StatelessWidget {
       ),
     );
   }
+}
+
+enum _IntakeFrequencyOption {
+  ONCE_PER_DAY, ONCE_PER_MONTH, N_TIMES_PER_DAY, ONCE_EVERY_N_DAY
+}
+
+
+class _MedicineIntakeFrequencyInput extends StatefulWidget {
+  Medicine medicine;
+  _MedicineIntakeFrequencyInput({required this.medicine});
+
+  @override
+  State<StatefulWidget> createState() => _MedicineIntakeFrequencyInputState();
+}
+
+class _MedicineIntakeFrequencyInputState extends State<_MedicineIntakeFrequencyInput> {
+
+  late Medicine medicine;
+  late _IntakeFrequencyOption option;
+
+  @override
+  Widget build(BuildContext context) {
+
+    medicine = widget.medicine;
+    option = _calculateCurrentOption();
+
+    return ListTile(
+        title: Container(
+          margin: EdgeInsets.only(top: 20, bottom: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+
+              RadioListTile<_IntakeFrequencyOption> (
+                title: Text("1 VOLTA AL GIORNO"),
+                // dense: true,
+                value: _IntakeFrequencyOption.ONCE_PER_DAY,
+                groupValue: option,
+                onChanged: (inValue) {
+                  if (inValue!=null) setState(() {
+                    medicine.intakeFrequency =
+                        IntakeFrequency.setNIntakesPerDay(1);
+                  });
+                },
+              ),
+
+              RadioListTile<_IntakeFrequencyOption> (
+                title: Text("1 VOLTA AL MESE"),
+                value: _IntakeFrequencyOption.ONCE_PER_MONTH,
+                groupValue: option,
+                onChanged: (inValue) {
+                  if (inValue!=null) setState(() {
+                    medicine.intakeFrequency =
+                        IntakeFrequency.setNDaysBetweenIntakes(30);
+                  });
+                },
+              ),
+
+
+              RadioListTile<_IntakeFrequencyOption> (
+                value: _IntakeFrequencyOption.N_TIMES_PER_DAY,
+                groupValue: option,
+                onChanged: (inValue) {
+                  if (inValue!=null) setState(() {
+                    medicine.intakeFrequency =
+                        IntakeFrequency.setNIntakesPerDay(3);
+                  });
+                },
+                title: LimitedBox(
+                  maxHeight: 64.0,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 50,
+                        child: TextFormField(
+                          textAlign: TextAlign.center,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          initialValue:
+                            option==_IntakeFrequencyOption.N_TIMES_PER_DAY ?
+                            medicine.intakeFrequency.nIntakesPerDay.toString() :
+                            "",
+                          validator: (inValue) {
+
+                            if (option!=_IntakeFrequencyOption.N_TIMES_PER_DAY) {
+                              return null;
+                            }
+
+                            if (inValue == null) {
+                              return "Questo campo non può essere lasciato vuoto";
+                            }
+
+                            int? valAsNum = int.tryParse(inValue!);
+                            if (valAsNum == null) {
+                              return "Inserisci un numero intero";
+                            }
+
+                            if (valAsNum<1) {
+                              return "Inserisciun numero maggiore o uguale a 1";
+                            }
+
+                            return null;
+                          },
+                          onChanged: (inValue) {
+                            try {
+                              int valAsNum = int.parse(inValue);
+                              setState(() {
+                                medicine.intakeFrequency =
+                                    IntakeFrequency.setNIntakesPerDay(valAsNum);
+                              });
+                            } catch (e) {
+                              debugPrint(e.toString());
+                            }
+                          },
+                        ),
+                      ),
+                      Text(" VOLTE AL GIORNO"),
+                    ],
+                  ),
+                ),
+              ),
+
+
+              RadioListTile<_IntakeFrequencyOption> (
+                value: _IntakeFrequencyOption.ONCE_EVERY_N_DAY,
+                groupValue: option,
+                onChanged: (inValue) {
+                  if (inValue!=null) {
+                    setState(() {
+                      medicine.intakeFrequency =
+                          IntakeFrequency.setNDaysBetweenIntakes(7);
+                    });
+                  }
+                },
+                title: LimitedBox(
+                  maxHeight: 64.0,
+                  child: Row(
+                    children: [
+                      Text("1 VOLTA OGNI "),
+                      Container(
+                        width: 50,
+                        child: TextFormField(
+                          textAlign: TextAlign.center,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          initialValue:
+                            option==_IntakeFrequencyOption.ONCE_EVERY_N_DAY ?
+                            medicine.intakeFrequency.nDaysBetweenIntakes.toString() :
+                            "",
+                          validator: (inValue) {
+
+                            if (option!=_IntakeFrequencyOption.ONCE_EVERY_N_DAY) {
+                              return null;
+                            }
+
+                            if (inValue == null) {
+                              return "Questo campo non può essere lasciato vuoto";
+                            }
+
+                            int? valAsNum = int.tryParse(inValue!);
+                            if (valAsNum == null) {
+                              return "Inserisci un numero intero";
+                            }
+
+                            if (valAsNum<1) {
+                              return "Inserisci un numero maggiore o uguale a 1";
+                            }
+
+                            return null;
+                          },
+                          onChanged: (inValue) {
+                            try {
+                              int valAsNum = int.parse(inValue);
+
+                              setState(() {
+                                medicine.intakeFrequency =
+                                    IntakeFrequency.setNDaysBetweenIntakes(valAsNum);
+                              });
+
+                            } catch (e) {
+                              debugPrint(e.toString());
+                            }
+                          },
+                        ),
+                      ),
+                      Text(" GIORNI"),
+                    ],
+                  ),
+                ),
+              ),
+
+
+            ],
+          )
+        )
+    );
+  }
+
+  _IntakeFrequencyOption _calculateCurrentOption() {
+
+    var medicineFreq = medicine.intakeFrequency;
+
+    if (medicineFreq.nIntakesPerDay == 1 &&
+        medicineFreq.nDaysBetweenIntakes == 1) {
+
+      return _IntakeFrequencyOption.ONCE_PER_DAY;
+    } else if (medicineFreq.nIntakesPerDay == 1 &&
+        medicineFreq.nDaysBetweenIntakes == 30) {
+
+      return _IntakeFrequencyOption.ONCE_PER_MONTH;
+    } else if (medicineFreq.nIntakesPerDay > 1) {
+
+      return _IntakeFrequencyOption.N_TIMES_PER_DAY;
+    } else {
+
+      return _IntakeFrequencyOption.ONCE_EVERY_N_DAY;
+    }
+  }
+
 }
 
