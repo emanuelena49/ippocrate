@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
@@ -66,7 +67,8 @@ String getRemainingMedicineIntakes(MedicineIntake intake) {
   return "RIMANENTI: $nIntakesRemaining (su $nIntakesPerDay)";
 }
 
-List<String> getNoIntakeText(Medicine medicine, List<MedicineIntake> allIntakes) {
+/// [allIntakes] <- all
+List<String> getNoIntakeText(Medicine medicine) {
 
   List<String> txt = ["Nessuna assunzione prevista per oggi"];
 
@@ -75,19 +77,15 @@ List<String> getNoIntakeText(Medicine medicine, List<MedicineIntake> allIntakes)
   DateTime? endDate = medicine.endDate;
   int nDaysBetweenIntakes = medicine.intakeFrequency.nDaysBetweenIntakes;
 
-  // parse last and next intake
-  MedicineIntake? lastIntake, nextIntake;
-  for (var i in allIntakes) {
+  // get eventual last intake
+  var res = medicineIntakesModel.getIntakes(endDate: today, medicine: medicine)
+      ..sort((a, b) => a.day.isBefore(b.day) ? -1 : 1);
+  MedicineIntake? lastIntake = res.isNotEmpty ? res.last : null;
 
-    if (i.day.isBefore(today)) {
-      lastIntake = i;
-    }
-
-    if (i.day.isAfter(today)) {
-      nextIntake = i;
-      break;
-    }
-  }
+  // get eventual next intake
+  var res2 = medicineIntakesModel.getIntakes(startDate: today, medicine: medicine)
+    ..sort((a, b) => a.day.isBefore(b.day) ? -1 : 1);
+  MedicineIntake? nextIntake = res2.isNotEmpty ? res2.first : null;
 
   // add (eventual) last intake text
   if (lastIntake != null) {

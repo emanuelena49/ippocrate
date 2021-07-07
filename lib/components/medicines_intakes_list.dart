@@ -5,6 +5,7 @@ import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
 import 'package:ippocrate/models/medicines_model.dart';
 import 'package:ippocrate/screens/one_medicine_screen.dart';
+import 'package:ippocrate/services/datetime.dart';
 import 'package:ippocrate/services/ui_medicines_texts.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
@@ -38,8 +39,12 @@ class MedicineIntakesList extends StatelessWidget {
             );
           }
 
+          DateTime today = getTodayDate();
+          List<MedicineIntake> todayMedicinesIntakes =
+            intakesModel.getIntakes(startDate: today, endDate: today);
+
           // if list is empty, I display a proper message as list item
-          if (intakesModel.intakes.length == 0) {
+          if (todayMedicinesIntakes.length == 0) {
             return ListView(
               children: [
                 Padding(
@@ -58,12 +63,12 @@ class MedicineIntakesList extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.only(top: 8),
             child: ListView.builder(
-                itemCount: intakesModel.intakes.length,
+                itemCount: todayMedicinesIntakes.length,
                 itemBuilder: (context, index) {
 
                   // single item of the list
                   return _MedicinesIntakesListItem(
-                    intake: intakesModel.intakes[index],
+                    intake: todayMedicinesIntakes[index],
                     intakesDb: intakesDb,
                   );
                 }

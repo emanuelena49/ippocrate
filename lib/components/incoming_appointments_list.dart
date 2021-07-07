@@ -16,7 +16,7 @@ class IncomingAppointmentsList extends StatelessWidget {
   late AppointmentInstancesDBWorker appointmentInstancesDb;
 
   IncomingAppointmentsList() {
-    // load all the medicines
+    // load all the appointments
     appointmentInstancesDb = AppointmentInstancesDBWorker();
     incomingAppointmentsModel.loadData(appointmentInstancesDb);
   }

@@ -58,10 +58,10 @@ class MedicineMenuButton extends StatelessWidget {
 class MedicineReadOnly extends StatelessWidget {
 
   late Medicine medicine;
-
   @override
   Widget build(BuildContext context) {
 
+    // get medicine
     medicine = medicinesModel.currentMedicine!;
 
     return ListView(
@@ -83,15 +83,27 @@ class MedicineReadOnly extends StatelessWidget {
 class _MedicineHeading extends StatelessWidget {
 
   late Medicine medicine;
+  MedicineIntake? eventualIntake;
 
   _MedicineHeading({required this.medicine});
   @override
   Widget build(BuildContext context) {
 
+    if (!medicineIntakesModel.loading) {
+      // get (eventual) today's intake for this medicine
+      DateTime today = getTodayDate();
+      var res = medicineIntakesModel.getIntakes(
+          medicine: medicine, startDate: today, endDate: today);
+      eventualIntake = res.isNotEmpty ? res.first : null;
+    }
+
     return ListTile(
       title: Card(
         elevation: 4,
-        color: Colors.greenAccent,
+        color: (medicineIntakesModel.loading ||
+            (eventualIntake!=null && eventualIntake!.getMissingIntakes()>0)) ?
+            Colors.greenAccent : Colors.white54,
+
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -117,7 +129,7 @@ class _MedicineHeading extends StatelessWidget {
 
               SizedBox(height: 25,),
 
-              _IntakesRow(medicine: medicine,),
+              _IntakesRow(medicine: medicine, eventualIntake: eventualIntake),
             ],
           ),
         ),
@@ -132,80 +144,55 @@ class _IntakesRow extends StatelessWidget {
   MedicineIntake? eventualIntake;
   late MedicineIntakesDBWorker intakesDb;
 
-  _IntakesRow({required this.medicine}) {
+  _IntakesRow({required this.medicine, this.eventualIntake}) {
     intakesDb = MedicineIntakesDBWorker();
-    medicineIntakesModel2.loadAllMedicineData(intakesDb, medicine);
+    // i can suppose there is no need of calling an update on model
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-        value: medicineIntakesModel2,
-        child: Consumer<MedicineIntakesModel>(
-        builder: (context, intakesModel2, child) {
 
-          if (intakesModel2.loading) {
-            return SizedBox(height: 10,);
-          }
+      if (medicineIntakesModel.loading) {
+        return SizedBox(height: 10,);
+      }
 
-          DateTime today = getTodayDate();
+      // build ui according to eventual intake
+      return eventualIntake != null ?
+        Row(
+          children: [
+            Expanded(
+                child: Text(
+                  getRemainingMedicineIntakes(eventualIntake!),
+                  style: Theme.of(context).textTheme.subtitle1,
+                )
+            ),
+            Expanded(
+                child: eventualIntake!.getMissingIntakes()>0 ?
 
-          for (var i in intakesModel2.intakes) {
-            if (i.day.isAtSameMomentAs(today)) {
-              // found today's intake
-              eventualIntake = i;
-              break;
-            }
+                ElevatedButton(
+                    onPressed: () async {
+                      if (eventualIntake!.getMissingIntakes()>0) {
 
-            if (i.day.isAfter(today)) {
-              // no intakes for today
-              break;
-            }
-          }
+                        // perform one intake and save it
+                        eventualIntake!.doOneIntake();
+                        await intakesDb.update(eventualIntake!);
 
-          return eventualIntake != null ?
-            Row(
-              children: [
-                Expanded(
-                    child: Text(
-                      getRemainingMedicineIntakes(eventualIntake!),
-                      style: Theme.of(context).textTheme.subtitle1,
-                    )
-                ),
-                Expanded(
-                    child: eventualIntake!.getMissingIntakes()>0 ?
+                        // no need of reloading everything, just notify
+                        medicineIntakesModel.notify();
+                      }
+                    },
+                    child: Text("PRENDI ADESSO"),
+                    style: ElevatedButton.styleFrom(primary: Colors.black54,)
+                ) :
 
-                    ElevatedButton(
-                        onPressed: () async {
-                          if (eventualIntake!.getMissingIntakes()>0) {
+                Text("Assunzioni completate", textAlign: TextAlign.center,)
+            ),
+          ],
+        ) :
 
-                            // perform one intake and save it
-                            eventualIntake!.doOneIntake();
-                            await intakesDb.update(eventualIntake!);
-
-                            intakesModel2.loadAllMedicineData(intakesDb, medicine);
-
-                            // (update main model)
-                            medicineIntakesModel.loadData(intakesDb);
-
-                          }
-                        },
-                        child: Text("PRENDI ADESSO"),
-                        style: ElevatedButton.styleFrom(primary: Colors.black54,)
-                    ) :
-
-                    Text("Assunzioni completate", textAlign: TextAlign.center,)
-                ),
-              ],
-            ) :
-
-              Column(
-                children: getNoIntakeText(medicine, intakesModel2.intakes)
-                      .map((t) => Text(t)).toList(),
-              );
-        }
-      )
-    );
+        Column(
+          children: getNoIntakeText(medicine).map((t) => Text(t)).toList(),
+        );
   }
 }
 

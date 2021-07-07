@@ -45,10 +45,51 @@ class MedicineIntakesModel extends Model {
   List<MedicineIntake> intakes = [];
   bool loading = false;
 
-  DateTime? day;
-  Medicine? medicine;
-  bool onlyNotDone = false;
+  /// Load all [MedicineIntake]s from the db
+  loadData(MedicineIntakesDBWorker inDatabaseWorker, {bool notify: true}) async {
 
+    loading = true;
+
+    // get all intakes
+    intakes = await inDatabaseWorker.getAll();
+
+    // sort
+    sortByRemainingIntakes(notify: false);
+
+    loading = false;
+    if (notify) notifyListeners();
+  }
+
+  /// get the intakes according to some criteria. You can set
+  /// - a time interval from [startDate] (included) to [endDate] (included)
+  /// - a certain [medicine]
+  /// - the possibility to exclude the already done (setting true [onlyNotDone])
+  List<MedicineIntake> getIntakes({DateTime? startDate, DateTime? endDate,
+    Medicine? medicine, bool onlyNotDone: false,}) {
+
+    return intakes.where((i) {
+
+      if (startDate!=null && i.day.isBefore(startDate)) {
+        return false;
+      }
+
+      if (endDate!=null && i.day.isAfter(endDate)) {
+        return false;
+      }
+
+      if (medicine!=null && i.medicine.id!=medicine.id) {
+        return false;
+      }
+
+      if (onlyNotDone && i.getMissingIntakes()<1) {
+        return false;
+      }
+
+      return true;
+    }).toList();
+  }
+
+  /*
   /// load the data from a db. You can specify a [day] (today is default),
   /// a [medicine] and a bool param [onlyNotDone] to filter only elements
   /// which [MedicineIntake.getMissingIntakes] is > 0.
@@ -88,7 +129,7 @@ class MedicineIntakesModel extends Model {
     loading = false;
 
     if (notify) notifyListeners();
-  }
+  }*/
 
   /// Sort the current list by [MedicineIntake.getMissingIntakes]
   /// (decreasing order)
@@ -106,6 +147,6 @@ class MedicineIntakesModel extends Model {
 MedicineIntakesModel medicineIntakesModel = new MedicineIntakesModel();
 
 // (I use this one only for one medicinal queries)
-MedicineIntakesModel medicineIntakesModel2 = new MedicineIntakesModel();
+// MedicineIntakesModel medicineIntakesModel2 = new MedicineIntakesModel();
 
 // TODO: implement a more elegant solution

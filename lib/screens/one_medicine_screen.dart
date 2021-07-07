@@ -20,39 +20,42 @@ class OneMedicineScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
         value: medicinesModel,
-        child: Consumer<MedicinesModel>(
-          builder: (context, medModel, child) {
-            return Scaffold(
-              appBar: AppBar(
-                backgroundColor: Colors.black54,
-                title: Text(
-                    medModel.isNew ?
-                    "Nuovo Medicinale" :
+        child: ChangeNotifierProvider.value(
+          value: medicineIntakesModel,
+          child: Consumer2<MedicinesModel, MedicineIntakesModel>(
+            builder: (context, medModel, intakesModel, child) {
+              return Scaffold(
+                appBar: AppBar(
+                  backgroundColor: Colors.black54,
+                  title: Text(
+                      medModel.isNew ?
+                      "Nuovo Medicinale" :
+                      medModel.isEditing ?
+                          "Modifica Medicinale" :
+                          "Medicinale"
+                  ),
+                  actions: [
                     medModel.isEditing ?
-                        "Modifica Medicinale" :
-                        "Medicinale"
+                        // form confirm button
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+                          child: MedicineFormSubmitButton(),
+                        ) :
+
+                        // normal screen actions
+                        MedicineMenuButton(medicine: medModel.currentMedicine!)
+                  ],
                 ),
-                actions: [
-                  medModel.isEditing ?
-                      // form confirm button
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-                        child: MedicineFormSubmitButton(),
-                      ) :
-
-                      // normal screen actions
-                      MedicineMenuButton(medicine: medModel.currentMedicine!)
-                ],
-              ),
 
 
-              body: medModel.isEditing ?
-                MedicineForm() :
-                MedicineReadOnly(),
+                body: medModel.isEditing ?
+                  MedicineForm() :
+                  MedicineReadOnly(),
 
-              bottomNavigationBar: MyBottomBar(),
-            );
-          }
+                bottomNavigationBar: MyBottomBar(),
+              );
+            }
+          ),
         )
     );
   }
