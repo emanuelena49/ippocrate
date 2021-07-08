@@ -81,17 +81,17 @@ class IncomingAppointmentsModel extends Model {
     });
   }
 
-  /// All the [AppointmentInstance] before [startDate]
+  /// All the [AppointmentInstance] before [endDate]
   /// (eventually filtered by [Appointment])
-  List<AppointmentInstance> getPastAppointments({DateTime? startDate,
+  List<AppointmentInstance> getPastAppointments({DateTime? endDate,
     Appointment? type}) {
 
-    if (startDate==null)  startDate = getTodayDate();
+    if (endDate==null)  endDate = getTodayDate();
 
     List<AppointmentInstance> output = [];
 
     allAppointments.forEach((appInstance) {
-      if (getPureDate(appInstance.dateTime).isBefore(startDate!) &&
+      if (getPureDate(appInstance.dateTime).isBefore(endDate!) &&
           (type==null || appInstance.appointment.id==type.id)) {
         output.add(appInstance);
       }
