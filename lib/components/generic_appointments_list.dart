@@ -6,18 +6,22 @@ import 'package:ippocrate/components/delete_appointment.dart';
 import 'package:ippocrate/db/appointment_instance_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/services/appointment_search_algorithm.dart';
-import 'package:ippocrate/services/datetime.dart';
 import 'package:ippocrate/services/ui_appointments_texts.dart';
 import 'package:provider/provider.dart';
 
 
-/// The list with all [AppointmentInstance]s.
-class IncomingAppointmentsList extends StatelessWidget {
+/// A generic list of [AppointmentInstance]s, alignet to
+/// [IncomingAppointmentsModel]. It displays appointments according
+/// to [searchOptions], sorted according to [sortingOptions].
+class GenericAppointmentsList extends StatelessWidget {
 
   late AppointmentInstancesDBWorker appointmentInstancesDb;
 
-  IncomingAppointmentsList() {
-    // load all the appointments
+  AppointmentsSearchOptions? searchOptions;
+  AppointmentsSortingOptions? sortingOptions;
+
+  GenericAppointmentsList({this.searchOptions, this.sortingOptions}) {
+    // load all the medicines
     appointmentInstancesDb = AppointmentInstancesDBWorker();
     incomingAppointmentsModel.loadData(appointmentInstancesDb);
   }
@@ -28,10 +32,10 @@ class IncomingAppointmentsList extends StatelessWidget {
     return ChangeNotifierProvider.value(
       value: incomingAppointmentsModel,
       child: Consumer<IncomingAppointmentsModel>(
-        builder: (context, incAppModel, child){
+        builder: (context, appInstModel, child) {
 
           // if model is still loading, I display a loading icon
-          if (incAppModel.loading) {
+          if (appInstModel.loading) {
             return Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -40,24 +44,19 @@ class IncomingAppointmentsList extends StatelessWidget {
             );
           }
 
-          List<AppointmentInstance> incoming = searchAppointmentInstances(
-
-            // retrieve all incoming and maybe missed appointments ...
-            searchOptions: AppointmentsSearchOptions(acceptedStates:
-                [AppointmentState.INCOMING, AppointmentState.MAYBE_MISSED]),
-
-            // ... sorted by priority
-            sortingOptions: AppointmentsSortingOptions.PRIORITY,
+          var appointmentInstances = searchAppointmentInstances(
+            searchOptions: searchOptions,
+              sortingOptions: sortingOptions
           );
 
           // if list is empty, I display a proper message as list item
-          if (incoming.length == 0) {
+          if (appointmentInstances.length == 0) {
             return ListView(
               children: [
                 Padding(
                   padding: EdgeInsets.all(50),
                   child: Text(
-                    "Nessun appuntamento imminente",
+                    "Nessun appuntamento",
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headline5,
                   ),
@@ -70,12 +69,13 @@ class IncomingAppointmentsList extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.only(top: 8),
             child: ListView.builder(
-                itemCount: incoming.length,
+                itemCount: appointmentInstances.length,
                 itemBuilder: (context, index) {
 
                   // single item of the list
                   return AppointmentsListItem(
-                      appointmentInstance: incoming[index]
+                      appointmentInstance:
+                      appointmentInstances[index]
                   );
                 }
             ),
@@ -102,7 +102,7 @@ class AppointmentsListItem extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       elevation: 8,
       color: isDone ? Colors.white54 :
-        isMaybeMissed ? Colors.red : Colors.blue,
+      isMaybeMissed ? Colors.red : Colors.blue,
 
       child: Slidable(
         actionPane: SlidableScrollActionPane(),
@@ -111,8 +111,8 @@ class AppointmentsListItem extends StatelessWidget {
 
           // mark as undone/done
           isDone ?
-            IconSlideAction(
-            caption: "Segna come\nda fare",
+          IconSlideAction(
+              caption: "Segna come\nda fare",
               color: Colors.white10,
               icon: Icons.close,
               onTap: () async {
@@ -121,18 +121,18 @@ class AppointmentsListItem extends StatelessWidget {
                 await appointmentsIntancesDb.update(appointmentInstance);
                 incomingAppointmentsModel.loadData(appointmentsIntancesDb);
               }
-            ) :
-            IconSlideAction(
-              caption: "Segna come\nfatto",
-              color: Colors.green,
-              icon: Icons.check,
-              onTap: () async {
-                appointmentInstance.done = true;
-                var appointmentsIntancesDb = AppointmentInstancesDBWorker();
-                await appointmentsIntancesDb.update(appointmentInstance);
-                incomingAppointmentsModel.loadData(appointmentsIntancesDb);
-              },
-            ),
+          ) :
+          IconSlideAction(
+            caption: "Segna come\nfatto",
+            color: Colors.green,
+            icon: Icons.check,
+            onTap: () async {
+              appointmentInstance.done = true;
+              var appointmentsIntancesDb = AppointmentInstancesDBWorker();
+              await appointmentsIntancesDb.update(appointmentInstance);
+              incomingAppointmentsModel.loadData(appointmentsIntancesDb);
+            },
+          ),
 
 
           // edit & delete
@@ -189,7 +189,7 @@ class AppointmentsListItem extends StatelessWidget {
                       children: [
                         Text(
                           appointmentInstance.notes != null ?
-                            appointmentInstance.notes! : "",
+                          appointmentInstance.notes! : "",
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],

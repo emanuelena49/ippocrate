@@ -8,7 +8,7 @@ import 'package:ippocrate/models/appointments_model.dart';
 import 'package:ippocrate/services/datetime.dart';
 
 
-/// It is the single, concrete instance of [Appointment]. It is the concrete
+/// It is the single, concrete instance of [AppointmentGroup]. It is the concrete
 /// appointment and it is characterized by a specific [dateTime].
 class AppointmentInstance implements HasId, Clonable, HasNotes {
 
@@ -16,7 +16,7 @@ class AppointmentInstance implements HasId, Clonable, HasNotes {
   int? id;
 
   DateTime dateTime;
-  Appointment appointment;
+  AppointmentGroup appointment;
 
   @override
   String? notes;

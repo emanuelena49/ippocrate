@@ -2,7 +2,7 @@ import 'package:ippocrate/common/db_worker.dart';
 import 'package:ippocrate/models/appointments_model.dart';
 import 'package:sqflite/sqflite.dart';
 
-class AppointmentsDBWorker extends AdvancedDBWorker<Appointment> {
+class AppointmentGroupsDBWorker extends AdvancedDBWorker<AppointmentGroup> {
 
   @override
   String get objectName => "appointment";
@@ -27,9 +27,9 @@ class AppointmentsDBWorker extends AdvancedDBWorker<Appointment> {
   }
 
   @override
-  Appointment fromMap(Map<String, dynamic> map) {
+  AppointmentGroup fromMap(Map<String, dynamic> map) {
 
-    return Appointment(
+    return AppointmentGroup(
       id: map[objectIdName],
       name: map["name"],
       periodicityDaysInterval: map["periodicity_days_interval"],
@@ -38,7 +38,7 @@ class AppointmentsDBWorker extends AdvancedDBWorker<Appointment> {
 
   @override
   Map<String, dynamic> toMap(appointment) {
-    appointment as Appointment;
+    appointment as AppointmentGroup;
     return {
       objectIdName: appointment.id,
       "name": appointment.name,

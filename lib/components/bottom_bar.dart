@@ -10,6 +10,7 @@ var _screensIndexes = {
   Screen.MEDICINES: 2,
   Screen.MEDICINES_ONE: 2,
   Screen.GENERIC_ADD: 3,
+  Screen.APPOINTMENTS_GROUP_ONE: 1,
 };
 
 _getScreenFromIndex(int index) {

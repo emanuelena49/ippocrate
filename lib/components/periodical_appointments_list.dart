@@ -13,11 +13,11 @@ import 'package:provider/provider.dart';
 /// The list with all [AppointmentInstance]s.
 class PeriodicalAppointmentsList extends StatelessWidget {
 
-  late AppointmentsDBWorker appointmentsDBWorker;
+  late AppointmentGroupsDBWorker appointmentsDBWorker;
 
   PeriodicalAppointmentsList() {
     // load all the medicines
-    appointmentsDBWorker = AppointmentsDBWorker();
+    appointmentsDBWorker = AppointmentGroupsDBWorker();
     appointmentsModel.loadData(appointmentsDBWorker);
   }
 
@@ -28,7 +28,7 @@ class PeriodicalAppointmentsList extends StatelessWidget {
       value: appointmentsModel,
       child: ChangeNotifierProvider.value(
         value: incomingAppointmentsModel,
-        child: Consumer2<AppointmentsModel, IncomingAppointmentsModel>(
+        child: Consumer2<AppointmentGroupsModel, IncomingAppointmentsModel>(
           builder: (context, appModel, incAppModel, child){
 
             // if model is still loading, I display a loading icon
@@ -116,7 +116,7 @@ class PeriodicalAppointmentsList extends StatelessWidget {
 
 class _PeriodicalAppointmentsListItem extends StatelessWidget {
 
-  late Appointment appointment;
+  late AppointmentGroup appointment;
   AppointmentInstance? nextInstance, prevInstance;
 
   _PeriodicalAppointmentsListItem({
@@ -127,11 +127,13 @@ class _PeriodicalAppointmentsListItem extends StatelessWidget {
     return Card(
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       elevation: 8,
-      color: nextInstance==null ? Colors.lightBlueAccent : Colors.white54,
+      color: Colors.lightBlueAccent,
+      // color: nextInstance==null ? Colors.lightBlueAccent : Colors.white54,
 
       child: GestureDetector(
         onTap: () {
-          // todo: create and load page
+          appointmentsModel.viewAppointmentGroup(appointment);
+          screensModel.loadScreen(context, Screen.APPOINTMENTS_GROUP_ONE);
         },
         child: Slidable(
           actionPane: SlidableScrollActionPane(),
@@ -210,7 +212,7 @@ class _PeriodicalAppointmentsListItem extends StatelessWidget {
                                     screensModel.loadScreen(context,
                                         Screen.APPOINTMENTS_ONE);
                                   },
-                                  child: Text("prenota ora"),
+                                  child: Text("PRENOTA ORA"),
                                   style: ElevatedButton.styleFrom(
                                     primary: Colors.black54,)
                               )

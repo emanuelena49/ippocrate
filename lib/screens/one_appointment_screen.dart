@@ -6,7 +6,7 @@ import 'package:ippocrate/components/bottom_bar.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:provider/provider.dart';
 
-class OneAppointmentTypeScreen extends StatelessWidget {
+class OneAppointmentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(

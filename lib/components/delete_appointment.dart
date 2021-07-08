@@ -66,7 +66,7 @@ Future deleteAppointment(BuildContext context,
                 incomingAppointmentsModel.loadData(appInstDb);
 
                 // (reload even appointments types)
-                appointmentsModel.loadData(AppointmentsDBWorker());
+                appointmentsModel.loadData(AppointmentGroupsDBWorker());
               },
               child: Text("Si, Elimina"),
             ),

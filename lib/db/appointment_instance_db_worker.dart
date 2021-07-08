@@ -61,11 +61,11 @@ class AppointmentInstancesDBWorker extends AdvancedDBWorker<AppointmentInstance>
   }
 
   @override
-  AppointmentInstance fromMap(Map<String, dynamic> map, {Appointment? appointment}) {
+  AppointmentInstance fromMap(Map<String, dynamic> map, {AppointmentGroup? appointment}) {
 
     if (appointment==null) {
       // I expect in my map to find also medicine's fields
-      appointment = AppointmentsDBWorker().fromMap(map);
+      appointment = AppointmentGroupsDBWorker().fromMap(map);
     }
 
     return AppointmentInstance(

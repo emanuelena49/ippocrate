@@ -27,7 +27,7 @@ String getWhenAppointment(AppointmentInstance appointmentInstance) {
   return txt;
 }
 
-String getPeriodicalAppointmentFrequency(Appointment appointment) {
+String getPeriodicalAppointmentFrequency(AppointmentGroup appointment) {
 
   if (!appointment.isPeriodic()) {
     throw Exception("You can't get frequency from a non-periodical appointment");

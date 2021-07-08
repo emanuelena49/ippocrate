@@ -5,12 +5,15 @@ import 'package:ippocrate/screens/generic_add_screen.dart';
 import 'package:ippocrate/screens/home_screen.dart';
 import 'package:ippocrate/screens/medicines_screen.dart';
 import 'package:ippocrate/screens/one_appointment_screen.dart';
+import 'package:ippocrate/screens/one_appointment_type_screen.dart';
 import 'package:ippocrate/screens/one_medicine_screen.dart';
 import 'package:path/path.dart';
 
 
 enum Screen {
-  HOME, APPOINTMENTS, APPOINTMENTS_ONE, MEDICINES, MEDICINES_ONE, GENERIC_ADD
+  HOME, GENERIC_ADD,
+  APPOINTMENTS, APPOINTMENTS_ONE, APPOINTMENTS_GROUP_ONE,
+  MEDICINES, MEDICINES_ONE
 }
 
 extension ScreenExtention on Screen {
@@ -21,7 +24,9 @@ extension ScreenExtention on Screen {
       case Screen.APPOINTMENTS:
         return "/appointments";
       case Screen.APPOINTMENTS_ONE:
-        return "/appointments/one";
+        return "/appointments/group/one";
+      case Screen.APPOINTMENTS_GROUP_ONE:
+        return "/appointments/group";
       case Screen.MEDICINES:
         return "/medicines";
       case Screen.MEDICINES_ONE:
@@ -78,9 +83,10 @@ Screen screenFromRoute(String route) {
 
 var routes = {
 
-  Screen.HOME.route: (context) => HomeScreen(),
+  Screen.HOME.route: (Buildcontext) => HomeScreen(),
 
   Screen.APPOINTMENTS.route: (context) => AppointmentsScreen(),
+  Screen.APPOINTMENTS_GROUP_ONE.route: (context) => OneAppointmentTypeScreen(),
   Screen.APPOINTMENTS_ONE.route: (context) => OneAppointmentScreen(),
 
   Screen.MEDICINES.route: (context) => MedicinesScreen(),
@@ -106,7 +112,6 @@ class ScreensModel extends ChangeNotifier {
         return true;
       }
     });
-
 
     Navigator.of(context).pushNamed(screen.route);
     currentScreen = screen;

@@ -8,7 +8,7 @@ import 'package:ippocrate/services/datetime.dart';
 /// a series of appointments, it has a [name] (ex. "controllo medico di base"),
 /// + some other information (ex. the periodicity of the appointment, represented
 /// by [periodicityDaysInterval] and [isPeriodic].
-class Appointment implements HasId {
+class AppointmentGroup implements HasId {
   @override
   int? id;
   String name;
@@ -16,7 +16,7 @@ class Appointment implements HasId {
   /// In case of periodicity, the (approximate) days between each appointment
   int? periodicityDaysInterval;
 
-  Appointment({this.id, required this.name, this.periodicityDaysInterval});
+  AppointmentGroup({this.id, required this.name, this.periodicityDaysInterval});
 
   /// If this appointment should be repeated periodically, in detail every
   /// [periodicityDaysInterval] days
@@ -25,24 +25,34 @@ class Appointment implements HasId {
   }
 }
 
-class AppointmentsModel extends Model {
+class AppointmentGroupsModel extends Model {
 
-  AppointmentsModel._();
-  static final AppointmentsModel instance = AppointmentsModel._();
+  AppointmentGroupsModel._();
+  static final AppointmentGroupsModel instance = AppointmentGroupsModel._();
 
-  List<Appointment> appointments = [];
+  List<AppointmentGroup> appointmentGroups = [];
   bool loading = false;
 
-  loadData(AppointmentsDBWorker appointmentsDBWorker) async {
+  AppointmentGroup? currentAppointmentGroup;
+  bool isEditing = false;
+
+  loadData(AppointmentGroupsDBWorker appointmentsDBWorker, {bool notify: true}) async {
     loading = true;
-    appointments = await appointmentsDBWorker.getAll();
+    appointmentGroups = await appointmentsDBWorker.getAll();
     loading = false;
+
+    if (notify) notifyListeners();
+  }
+
+  viewAppointmentGroup(AppointmentGroup appointmentGroup, {edit: false}) {
+    currentAppointmentGroup = appointmentGroup;
+    isEditing = false;
   }
 
   /// After called [loadData], get only the periodical appointments
-  List<Appointment> getPeriodical() {
-    List<Appointment> periodicalAppointments = [];
-    appointments.forEach((appointment) {
+  List<AppointmentGroup> getPeriodical() {
+    List<AppointmentGroup> periodicalAppointments = [];
+    appointmentGroups.forEach((appointment) {
 
       if (appointment.isPeriodic()) {
         periodicalAppointments.add(appointment);
@@ -53,4 +63,4 @@ class AppointmentsModel extends Model {
   }
 }
 
-AppointmentsModel appointmentsModel = AppointmentsModel.instance;
+AppointmentGroupsModel appointmentsModel = AppointmentGroupsModel.instance;

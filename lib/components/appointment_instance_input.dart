@@ -42,7 +42,7 @@ class AppointmentInstanceSubmitButton extends StatelessWidget {
         // return;
 
         // insert or update the appointment type existent
-        AppointmentsDBWorker dbAppointments = AppointmentsDBWorker();
+        AppointmentGroupsDBWorker dbAppointments = AppointmentGroupsDBWorker();
         if (appointmentInstance.appointment.id == null) {
           var ok = await dbAppointments.create(appointmentInstance.appointment);
         } else {
@@ -117,14 +117,14 @@ class _AppointmentTypeInput extends StatelessWidget {
 
   TextEditingController _controller = TextEditingController();
 
-  static List<Appointment> options = appointmentsModel.appointments;
+  static List<AppointmentGroup> options = appointmentsModel.appointmentGroups;
 
   _AppointmentTypeInput({Key? key, required this.appointmentIntstance}) :
         super(key: key){
     _controller.text = this.appointmentIntstance.appointment.name;
   }
 
-  handleNewValue({String?  freeText, Appointment? selection}) {
+  handleNewValue({String?  freeText, AppointmentGroup? selection}) {
 
     if (selection != null) {
       appointmentIntstance.appointment = selection;
@@ -147,7 +147,7 @@ class _AppointmentTypeInput extends StatelessWidget {
 
       // if user typed free text, I create a new
       appointmentIntstance.appointment =
-          Appointment(name: freeText);
+          AppointmentGroup(name: freeText);
     }
   }
 
@@ -175,12 +175,12 @@ class _AppointmentTypeInput extends StatelessWidget {
           return options.where((option) =>
               option.name.contains(pattern));
         },
-        itemBuilder: (context, Appointment suggestion) {
+        itemBuilder: (context, AppointmentGroup suggestion) {
           return ListTile(
             title: Text(suggestion.name),
           );
         },
-        onSuggestionSelected: (Appointment selection) {
+        onSuggestionSelected: (AppointmentGroup selection) {
           _controller.text = selection.name;
           handleNewValue(selection: selection);
           incomingAppointmentsModel.notify();
@@ -240,7 +240,7 @@ enum _AppointmentPeriodicityOptions {
 
 class AppointmentPeriodicityInput extends StatefulWidget {
 
-  Appointment appointment;
+  AppointmentGroup appointment;
   AppointmentPeriodicityInput({required this.appointment});
 
   @override
@@ -251,7 +251,7 @@ class AppointmentPeriodicityInput extends StatefulWidget {
 class _AppointmentPeriodicityInputState extends State<AppointmentPeriodicityInput> {
 
   late _AppointmentPeriodicityOptions periodicity;
-  late Appointment appointment;
+  late AppointmentGroup appointment;
 
   /*
   _AppointmentPeriodicityInputState() {

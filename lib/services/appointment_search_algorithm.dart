@@ -45,7 +45,7 @@ List<AppointmentInstance> _sortByPriority(List<AppointmentInstance> res) {
 }
 
 class AppointmentsSearchOptions {
-  List<Appointment>? types;
+  List<AppointmentGroup>? types;
   List<AppointmentState>? acceptedStates;
   DateTime? startDate;
   DateTime? endDate;
@@ -92,7 +92,7 @@ List<AppointmentInstance> searchAppointmentInstances({
         bool ok = false;
 
         // check if t belongs to one of passed types
-        for (Appointment t in searchOptions.types!) {
+        for (AppointmentGroup t in searchOptions.types!) {
           if (t.id == a.appointment.id) {
             ok = true;
           }
@@ -126,7 +126,7 @@ List<AppointmentInstance> searchAppointmentInstances({
 
 /// Given a [date] and a [type], it retrieves the first [AppointmentInstance]
 /// before that [DateTime]
-AppointmentInstance? getPrevAppointmentInstance(Appointment type, DateTime date) {
+AppointmentInstance? getPrevAppointmentInstance(AppointmentGroup type, DateTime date) {
   var res = searchAppointmentInstances(
     searchOptions: AppointmentsSearchOptions(types: [type], endDate: date)
   );
@@ -136,7 +136,7 @@ AppointmentInstance? getPrevAppointmentInstance(Appointment type, DateTime date)
 
 /// Given a [date] and a [type], it retrieves the first [AppointmentInstance]
 /// after that date [DateTime]
-AppointmentInstance? getNextAppointmentInstance(Appointment type, DateTime date) {
+AppointmentInstance? getNextAppointmentInstance(AppointmentGroup type, DateTime date) {
   var res = searchAppointmentInstances(
       searchOptions: AppointmentsSearchOptions(types: [type], startDate: date)
   );

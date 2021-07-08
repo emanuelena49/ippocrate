@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ippocrate/common/screens_model.dart';
-import 'package:ippocrate/components/all_appointments_list.dart';
+import 'package:ippocrate/components/generic_appointments_list.dart';
 import 'package:ippocrate/components/bottom_bar.dart';
-import 'package:ippocrate/components/incoming_appointments_list.dart';
 import 'package:ippocrate/components/periodical_appointments_list.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/models/appointments_model.dart';
+import 'package:ippocrate/services/appointment_search_algorithm.dart';
 
 class AppointmentsScreen extends StatelessWidget {
 
@@ -44,7 +44,7 @@ class AppointmentsScreen extends StatelessWidget {
                   onPressed: () {
                     incomingAppointmentsModel.viewAppointment(
                       AppointmentInstance(
-                          appointment: Appointment(name: ""),
+                          appointment: AppointmentGroup(name: ""),
                           dateTime: DateTime.now()
                       ), edit: true
                     );
@@ -57,9 +57,9 @@ class AppointmentsScreen extends StatelessWidget {
 
         body: TabBarView(
           children: [
-            IncomingAppointmentsList(),
-            PeriodicalAppointmentsList(),
-            AllAppointmentsList(),
+            _IncomingAppointmentsTab(),
+            _PeriodicalAppointmentsTab(),
+            _AllAppointmentsTab(),
           ],
         ),
 
@@ -67,4 +67,42 @@ class AppointmentsScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+class _IncomingAppointmentsTab extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GenericAppointmentsList(
+      searchOptions: AppointmentsSearchOptions(
+        acceptedStates: [AppointmentState.INCOMING, AppointmentState.MAYBE_MISSED],
+      ),
+      sortingOptions: AppointmentsSortingOptions.PRIORITY,
+    );
+  }
+}
+
+class _PeriodicalAppointmentsTab extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return PeriodicalAppointmentsList();
+  }
+}
+
+class _AllAppointmentsTab extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+
+        // todo: add search & filter bar
+
+        Expanded(
+          child: GenericAppointmentsList(
+            sortingOptions: AppointmentsSortingOptions.DATE_INCREASE,
+          ),
+        ),
+      ],
+    );
+  }
+
 }
