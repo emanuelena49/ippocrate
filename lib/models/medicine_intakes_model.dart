@@ -36,6 +36,10 @@ class MedicineIntake extends HasId {
       throw Exception("You can't perform an intake if zero are missing");
     }
   }
+
+  resetIntakes() {
+    nIntakesDone = 0;
+  }
 }
 
 /// A model with a list of [MedicineIntake]s. It permits you

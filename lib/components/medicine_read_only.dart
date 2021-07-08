@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ippocrate/common/screens_model.dart';
+import 'package:ippocrate/components/reset_today_medicine_intake.dart';
 import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
 import 'package:ippocrate/models/medicines_model.dart';
@@ -13,17 +14,26 @@ import 'delete_medicine.dart';
 class MedicineMenuButton extends StatelessWidget {
 
   Medicine medicine;
+  MedicineIntake? todayEventualIntake;
+
   MedicineMenuButton({required this.medicine});
 
   @override
   Widget build(BuildContext context) {
+
+    // get (eventual) today's intake for this medicine
+    DateTime today = getTodayDate();
+    var res = medicineIntakesModel.getIntakes(
+        medicine: medicine, startDate: today, endDate: today);
+    todayEventualIntake = res.isNotEmpty ? res.first : null;
+
     return PopupMenuButton(
       icon: Icon(Icons.more_vert),
       iconSize: 32,
       onSelected: (selection) async {
         switch(selection) {
-          case "view":
-          // viewMedicine(context, medicine);
+          case "reset-today":
+            resetTodayIntakes(context, todayEventualIntake!);
             break;
           case "edit":
             medicinesModel.viewMedicine(medicine, editing: true);
@@ -41,6 +51,12 @@ class MedicineMenuButton extends StatelessWidget {
           value: "view",
           child: Text("Visualizza"),
         ), */
+        if (todayEventualIntake != null)
+          PopupMenuItem(
+            value: "reset-today",
+            child: Text("Resetta assunzioni di oggi")
+          ),
+
         PopupMenuItem(
           value: "edit",
           child: Text("Modifica"),
@@ -58,6 +74,7 @@ class MedicineMenuButton extends StatelessWidget {
 class MedicineReadOnly extends StatelessWidget {
 
   late Medicine medicine;
+
   @override
   Widget build(BuildContext context) {
 

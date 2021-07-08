@@ -208,9 +208,9 @@ class _IntakeIntervalInput extends StatelessWidget {
                   }
 
                   // check it is after the end date
-                  DateTime newStart = DateTime.parse(val);
+                  DateTime newStart = getPureDate(DateTime.parse(val));
                   if (medicine.endDate != null &&
-                      medicine.endDate!.isBefore(newStart)) {
+                      newStart.isAfter(medicine.endDate!)) {
                     return "La data d'inizio non può venire dopo quella di fine";
                   }
 
@@ -219,7 +219,7 @@ class _IntakeIntervalInput extends StatelessWidget {
                 onSaved: (val) {
 
                   if (val != null) {
-                    medicine.startDate = DateTime.parse(val);
+                    medicine.startDate = getPureDate(DateTime.parse(val));
                   }
                 },
               ),
@@ -248,13 +248,15 @@ class _IntakeIntervalInput extends StatelessWidget {
 
                   // check it is not null
                   if (val == null || val == "") {
-                    return "La data d'inizio non può essere nulla";
+                    return "La data di fine non può essere nulla";
                   }
 
                   //if (val != null && val != "") {
                   // check it is after the end date
-                  DateTime newEnd = DateTime.parse(val);
-                  if (medicine.startDate.isAfter(newEnd)) {
+                  DateTime newEnd = getPureDate(DateTime.parse(val));
+                  if (newEnd.isBefore(medicine.startDate)) {
+                    debugPrint(newEnd.toString());
+                    debugPrint(medicine.startDate.toString());
                     return "La data di fine non può venire prima di quella d'inizio";
                   }
                   //}
@@ -262,7 +264,7 @@ class _IntakeIntervalInput extends StatelessWidget {
                   return null;
                 },
                 onSaved: (val) {
-                  medicine.endDate = val!=null ? DateTime.parse(val) : null;
+                  medicine.endDate = val!=null ? getPureDate(DateTime.parse(val)) : null;
                 },
               ),
             ),

@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ippocrate/common/screens_model.dart';
+import 'package:ippocrate/components/delete_medicine.dart';
+import 'package:ippocrate/components/reset_today_medicine_intake.dart';
 import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
 import 'package:ippocrate/models/medicines_model.dart';
@@ -92,23 +95,51 @@ class _MedicinesIntakesListItem extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Card(
-
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
       elevation: 8,
       color: intake.getMissingIntakes()>0 ?
         Colors.greenAccent :
         Colors.white54,
-
-      child: GestureDetector(
-        onTap: () {
-          medicinesModel.viewMedicine(intake.medicine, editing: false);
-          screensModel.loadScreen(context, Screen.MEDICINES_ONE);
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+      child: Slidable(
+        actionPane: SlidableScrollActionPane(),
+        actionExtentRatio: .22,
+        secondaryActions: [
+          IconSlideAction(
+            caption: "Resetta\nassunzioni",
+            color: Colors.black54,
+            icon: Icons.update,
+            onTap: (){
+              // editMedicine(context, this.intake.medicine);
+              resetTodayIntakes(context, intake);
+            },
+          ),
+          IconSlideAction(
+            caption: "Modifica",
+            color: Colors.yellow,
+            icon: Icons.edit,
+            onTap: (){
+              editMedicine(context, this.intake.medicine);
+            },
+          ),
+          IconSlideAction(
+            caption: "Elimina",
+            color: Colors.red,
+            icon: Icons.delete,
+            onTap: (){
+              deleteMedicine(context, this.intake.medicine);
+            },
+          ),
+        ],
+        child: GestureDetector(
+          onTap: () {
+            medicinesModel.viewMedicine(intake.medicine, editing: false);
+            screensModel.loadScreen(context, Screen.MEDICINES_ONE);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
 
               // Medicine name
               Text(
@@ -164,12 +195,23 @@ class _MedicinesIntakesListItem extends StatelessWidget {
                   ),
                 ],
               ),
-
             ],
           ),
         ),
       ),
+      ),
     );
   }
+}
+
+Future viewMedicine(BuildContext context, Medicine medicine) async {
+  medicinesModel.viewMedicine(medicine, editing: false);
+  screensModel.loadScreen(context, Screen.MEDICINES_ONE);
+}
+
+
+Future editMedicine(BuildContext context, Medicine medicine) async {
+  medicinesModel.viewMedicine(medicine, editing: true);
+  screensModel.loadScreen(context, Screen.MEDICINES_ONE);
 }
 

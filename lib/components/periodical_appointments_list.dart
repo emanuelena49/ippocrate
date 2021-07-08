@@ -137,67 +137,99 @@ class _PeriodicalAppointmentsListItem extends StatelessWidget {
     return Card(
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       elevation: 8,
-      color: nextInstance==null ? Colors.blue : Colors.white54,
+      color: nextInstance==null ? Colors.lightBlueAccent : Colors.white54,
 
       child: GestureDetector(
         onTap: () {
-
+          // todo: create and load page
         },
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                appointment.name,
-                style: Theme.of(context).textTheme.headline5,
-              ),
+        child: Slidable(
+          actionPane: SlidableScrollActionPane(),
+          actionExtentRatio: .22,
+          secondaryActions: [
 
-              SizedBox(height: 25,),
-
-              Container(
-                height: 45,
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // display frequency
-                            Text(getPeriodicalAppointmentFrequency(appointment)),
-
-                            // eventually display last time
-                            precInstance!=null ?
-                              Text("(${getPastAppointmentTime(precInstance!)})") :
-                              SizedBox(height: 0,)
-                          ],
-                        )
-                    ),
-                    Expanded(
-                        child: nextInstance!=null ?
-                            Text(
-                                "Prossimo:\n${getWhenAppointment(nextInstance!)}"
-                            ) :
-                            ElevatedButton(
-                                onPressed: () {
-                                  incomingAppointmentsModel.viewAppointment(
-                                      AppointmentInstance(
-                                          appointment: appointment,
-                                          dateTime: DateTime.now()
-                                      ), edit: true);
-                                  screensModel.loadScreen(context,
-                                      Screen.APPOINTMENTS_ONE);
-                                },
-                                child: Text("prenota ora"),
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.black54,)
-                            )
-                    )
-                  ],
+            IconSlideAction(
+              caption: "Gestisci",
+              color: Colors.green,
+              icon: Icons.list_sharp,
+              onTap: (){
+                // todo: create and load page
+              },
+            ),
+            // edit & delete
+            IconSlideAction(
+              caption: "Modifica",
+              color: Colors.yellow,
+              icon: Icons.edit,
+              onTap: (){
+                // todo: create and load page
+              },
+            ),
+            IconSlideAction(
+              caption: "Elimina tutti",
+              color: Colors.red,
+              icon: Icons.delete,
+              onTap: (){
+                // todo: create and load popup
+              },
+            ),
+          ],
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  appointment.name,
+                  style: Theme.of(context).textTheme.headline5,
                 ),
-              )
-            ],
+
+                SizedBox(height: 25,),
+
+                Container(
+                  height: 45,
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // display frequency
+                              Text(getPeriodicalAppointmentFrequency(appointment)),
+
+                              // eventually display last time
+                              precInstance!=null ?
+                                Text("(${getPastAppointmentTime(precInstance!)})") :
+                                SizedBox(height: 0,)
+                            ],
+                          )
+                      ),
+                      Expanded(
+                          child: nextInstance!=null ?
+                              Text(
+                                  "Prossimo:\n${getWhenAppointment(nextInstance!)}"
+                              ) :
+                              ElevatedButton(
+                                  onPressed: () {
+                                    incomingAppointmentsModel.viewAppointment(
+                                        AppointmentInstance(
+                                            appointment: appointment,
+                                            dateTime: DateTime.now()
+                                        ), edit: true);
+                                    screensModel.loadScreen(context,
+                                        Screen.APPOINTMENTS_ONE);
+                                  },
+                                  child: Text("prenota ora"),
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.black54,)
+                              )
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

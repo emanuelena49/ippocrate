@@ -89,14 +89,12 @@ class _MedicinesListItem extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Card(
-
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       elevation: 8,
       color: Colors.greenAccent,
-
       child: Slidable(
         actionPane: SlidableScrollActionPane(),
-        actionExtentRatio: .25,
+        actionExtentRatio: .22,
         secondaryActions: [
           IconSlideAction(
             caption: "Modifica",

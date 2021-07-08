@@ -98,7 +98,7 @@ class AppointmentsListItem extends StatelessWidget {
 
       child: Slidable(
         actionPane: SlidableScrollActionPane(),
-        actionExtentRatio: .25,
+        actionExtentRatio: .22,
         secondaryActions: [
 
           // mark as undone/done
