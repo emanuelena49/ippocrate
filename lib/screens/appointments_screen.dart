@@ -20,7 +20,7 @@ class AppointmentsScreen extends StatelessWidget {
 
           backgroundColor: Colors.blueGrey,
 
-          title: Text("Appuntmanenti"),
+          title: Text("Appuntamenti"),
 
           bottom: TabBar(
             tabs: [

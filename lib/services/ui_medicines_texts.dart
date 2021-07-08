@@ -73,9 +73,6 @@ List<String> getNoIntakeText(Medicine medicine) {
   List<String> txt = ["Nessuna assunzione prevista per oggi"];
 
   DateTime today = getTodayDate();
-  DateTime startDate = medicine.startDate;
-  DateTime? endDate = medicine.endDate;
-  int nDaysBetweenIntakes = medicine.intakeFrequency.nDaysBetweenIntakes;
 
   // get eventual last intake
   var res = medicineIntakesModel.getIntakes(endDate: today, medicine: medicine)

@@ -2,7 +2,6 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:ippocrate/common/screens_model.dart';
 import 'package:ippocrate/components/notes_input.dart';
 import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
@@ -12,7 +11,6 @@ import 'package:ippocrate/models/medicines_model.dart';
 import 'package:ippocrate/services/datetime.dart';
 import 'package:ippocrate/services/generate_intakes_from_medicine.dart';
 
-import 'intake_frequency_input.dart';
 
 final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -93,8 +91,8 @@ class MedicineFormSubmitButton extends StatelessWidget {
           List<MedicineIntake> intakes = generateIntakesFromMedicine(
               medicine,
               endDate: medicine.endDate!=null ?
-              medicine.endDate :
-              DateTime.now().add(Duration(days: 100))
+                medicine.endDate :
+                DateTime.now().add(Duration(days: 100))
           );
 
           for (var i in intakes) {
@@ -154,95 +152,7 @@ class MedicineForm extends StatelessWidget {
           ),
 
           // intake interval
-          ListTile(
-            title: LimitedBox(
-              maxHeight: 200,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 150,
-                    child: DateTimePicker(
-                      type: DateTimePickerType.date,
-                      dateLabelText: 'Da ',
-                      initialValue: medicine.startDate.toString(),
-                      initialDate: medicine.startDate,
-                      firstDate: medicine.startDate.isBefore(getTodayDate()) ?
-                        medicine.startDate : getTodayDate(),
-                      lastDate: DateTime(2100),
-                      decoration: const InputDecoration(
-                          errorMaxLines: 3),
-
-                      onChanged: (val) {
-                        if (val != null && val != "") {
-                          medicine.startDate = DateTime.parse(val);
-                        }
-                      },
-
-                      validator: (val) {
-
-                        // check it is not null
-                        if (val == null || val == "") {
-                          return "La data d'inizio non può essere nulla";
-                        }
-
-                        // check it is after the end date
-                        DateTime newStart = DateTime.parse(val);
-                        if (medicine.endDate != null &&
-                            medicine.endDate!.isBefore(newStart)) {
-                          return "La data d'inizio non può venire dopo quella di fine";
-                        }
-
-                        return null;
-                      },
-                      onSaved: (val) {
-
-                        if (val != null) {
-                          medicine.startDate = DateTime.parse(val);
-                        }
-                      },
-                    ),
-                  ),
-
-                  Container(
-                    width: 150,
-                    // margin: EdgeInsets.only(right: 20),
-                    child: DateTimePicker(
-                      type: DateTimePickerType.date,
-                      dateLabelText: "a ",
-                      initialValue: medicine.endDate != null ?
-                        medicine.endDate!.toString() : "",
-                      firstDate: medicine.startDate.isBefore(getTodayDate()) ?
-                        medicine.startDate : getTodayDate(),
-                      lastDate: DateTime(2100),
-                      decoration: const InputDecoration(
-                          errorMaxLines: 3),
-                      onChanged: (val) {
-                        medicine.endDate = (val != null && val != "") ?
-                        DateTime.parse(val) : null;
-                      },
-                      validator: (val) {
-
-                        if (val != null && val != "") {
-                          // check it is after the end date
-                          DateTime newEnd = DateTime.parse(val);
-                          if (medicine.startDate.isAfter(newEnd)) {
-                            return "La data di fine non può venire prima di quella d'inizio";
-                          }
-                        }
-
-                        return null;
-                      },
-                      onSaved: (val) {
-                        medicine.endDate = val!=null ? DateTime.parse(val) : null;
-                      },
-                    ),
-                  ),
-                ],
-
-              ),
-            ),
-          ),
+          _IntakeIntervalInput(medicine: medicine),
 
           // intake frequency input
           _MedicineIntakeFrequencyInput(medicine: medicine,),
@@ -256,11 +166,122 @@ class MedicineForm extends StatelessWidget {
   }
 }
 
+/// An input for a [DateTime] iterval to get [Medicine.startDate] and
+/// [Medicine.endDate].
+class _IntakeIntervalInput extends StatelessWidget {
+
+  Medicine medicine;
+  _IntakeIntervalInput({required this.medicine});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: LimitedBox(
+        maxHeight: 200,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              width: 150,
+              child: DateTimePicker(
+                type: DateTimePickerType.date,
+                dateLabelText: 'Da ',
+                initialValue: medicine.startDate.toString(),
+                initialDate: medicine.startDate,
+                firstDate: medicine.startDate.isBefore(getTodayDate()) ?
+                medicine.startDate : getTodayDate(),
+                lastDate: DateTime(2100),
+                decoration: const InputDecoration(
+                    errorMaxLines: 3),
+
+                onChanged: (val) {
+                  if (val != null && val != "") {
+                    medicine.startDate = DateTime.parse(val);
+                  }
+                },
+
+                validator: (val) {
+
+                  // check it is not null
+                  if (val == null || val == "") {
+                    return "La data d'inizio non può essere nulla";
+                  }
+
+                  // check it is after the end date
+                  DateTime newStart = DateTime.parse(val);
+                  if (medicine.endDate != null &&
+                      medicine.endDate!.isBefore(newStart)) {
+                    return "La data d'inizio non può venire dopo quella di fine";
+                  }
+
+                  return null;
+                },
+                onSaved: (val) {
+
+                  if (val != null) {
+                    medicine.startDate = DateTime.parse(val);
+                  }
+                },
+              ),
+            ),
+
+            Container(
+              width: 150,
+              // margin: EdgeInsets.only(right: 20),
+              child: DateTimePicker(
+                type: DateTimePickerType.date,
+                dateLabelText: "a ",
+                initialValue: medicine.endDate != null ?
+                medicine.endDate!.toString() : "",
+                firstDate: medicine.startDate.isBefore(getTodayDate()) ?
+                medicine.startDate : getTodayDate(),
+                lastDate: DateTime(2100),
+                decoration: const InputDecoration(
+                    errorMaxLines: 3),
+                onChanged: (val) {
+                  medicine.endDate = (val != null && val != "") ?
+                  DateTime.parse(val) : null;
+                },
+                validator: (val) {
+
+                  // todo: find a more elegant solution for the intakes generation problem
+
+                  // check it is not null
+                  if (val == null || val == "") {
+                    return "La data d'inizio non può essere nulla";
+                  }
+
+                  //if (val != null && val != "") {
+                  // check it is after the end date
+                  DateTime newEnd = DateTime.parse(val);
+                  if (medicine.startDate.isAfter(newEnd)) {
+                    return "La data di fine non può venire prima di quella d'inizio";
+                  }
+                  //}
+
+                  return null;
+                },
+                onSaved: (val) {
+                  medicine.endDate = val!=null ? DateTime.parse(val) : null;
+                },
+              ),
+            ),
+          ],
+
+        ),
+      ),
+    );
+  }
+}
+
+/// The different types of [IntakeFrequency]
 enum _IntakeFrequencyOption {
   ONCE_PER_DAY, ONCE_PER_MONTH, N_TIMES_PER_DAY, ONCE_EVERY_N_DAY
 }
 
-
+/// The form to get the [Medicine.intakeFrequency]. It offers to the user
+/// some configurable options [_IntakeFrequencyOption] from which he can
+/// choose
 class _MedicineIntakeFrequencyInput extends StatefulWidget {
   Medicine medicine;
   _MedicineIntakeFrequencyInput({required this.medicine});
