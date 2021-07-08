@@ -5,6 +5,7 @@ import 'package:ippocrate/common/screens_model.dart';
 import 'package:ippocrate/components/delete_appointment.dart';
 import 'package:ippocrate/db/appointment_instance_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
+import 'package:ippocrate/services/appointment_search_algorithm.dart';
 import 'package:ippocrate/services/datetime.dart';
 import 'package:ippocrate/services/ui_appointments_texts.dart';
 import 'package:provider/provider.dart';
@@ -39,8 +40,15 @@ class IncomingAppointmentsList extends StatelessWidget {
             );
           }
 
-          List<AppointmentInstance> incoming =
-            incAppModel.getIncomingAppointments(includeMissing: true);
+          List<AppointmentInstance> incoming = searchAppointmentInstances(
+
+            // retrieve all incoming and maybe missed appointments ...
+            searchOptions: AppointmentsSearchOptions(acceptedStates:
+                [AppointmentState.INCOMING, AppointmentState.MAYBE_MISSED]),
+
+            // ... sorted by priority
+            sortingOptions: AppointmentsSortingOptions.PRIORITY,
+          );
 
           // if list is empty, I display a proper message as list item
           if (incoming.length == 0) {

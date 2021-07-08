@@ -5,6 +5,8 @@ import 'package:ippocrate/common/screens_model.dart';
 import 'package:ippocrate/db/appointments_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/models/appointments_model.dart';
+import 'package:ippocrate/services/appointment_search_algorithm.dart';
+import 'package:ippocrate/services/datetime.dart';
 import 'package:ippocrate/services/ui_appointments_texts.dart';
 import 'package:provider/provider.dart';
 
@@ -62,39 +64,27 @@ class PeriodicalAppointmentsList extends StatelessWidget {
 
             List<Map> bookedAppointments = [];
             List<Map> notBookedAppointments = [];
+            var today = getTodayDate();
 
             periodicals.forEach((appointment) {
 
-              // look if have I got a next
-              var incAppointment;
-              var incAppointments =
-                incAppModel.getIncomingAppointments(type: appointment);
-
-              if (incAppointments.length>0) {
-                incAppointment = incAppointments.first;
-              }
-
-              // look if have I got a prec (reverse order)
-              var pastAppointment;
-              var pastAppointments =
-                incAppModel.getPastAppointments(type: appointment);
-
-              if (pastAppointments.length>0) {
-                pastAppointment = pastAppointments.last;
-              }
+              // look if have I got a next and a prev
+              var next = getNextAppointmentInstance(appointment, today);
+              var prev = getPrevAppointmentInstance(appointment,
+                    today.subtract(Duration(days: 1)));
 
               // insert it in one or the other list (booked or not)
-              if (incAppointment==null) {
+              if (next==null) {
                 notBookedAppointments.add({
                   "appointment": appointment,
                   "nextInstance": null,
-                  "precInstance": pastAppointment,
+                  "precInstance": prev,
                 });
               } else {
                 bookedAppointments.add({
                   "appointment": appointment,
-                  "nextInstance": incAppointment,
-                  "precInstance": pastAppointment,
+                  "nextInstance": next,
+                  "prevInstance": prev,
                 });
               }
             });
@@ -112,7 +102,7 @@ class PeriodicalAppointmentsList extends StatelessWidget {
                     return _PeriodicalAppointmentsListItem(
                       appointment: outputList[index]["appointment"],
                       nextInstance: outputList[index]["nextInstance"],
-                      precInstance: outputList[index]["precInstance"]
+                      prevInstance: outputList[index]["prevInstance"]
                     );
                   }
               ),
@@ -127,10 +117,10 @@ class PeriodicalAppointmentsList extends StatelessWidget {
 class _PeriodicalAppointmentsListItem extends StatelessWidget {
 
   late Appointment appointment;
-  AppointmentInstance? nextInstance, precInstance;
+  AppointmentInstance? nextInstance, prevInstance;
 
   _PeriodicalAppointmentsListItem({
-    required this.appointment, this.nextInstance, this.precInstance });
+    required this.appointment, this.nextInstance, this.prevInstance });
 
   @override
   Widget build(BuildContext context) {
@@ -199,8 +189,8 @@ class _PeriodicalAppointmentsListItem extends StatelessWidget {
                               Text(getPeriodicalAppointmentFrequency(appointment)),
 
                               // eventually display last time
-                              precInstance!=null ?
-                                Text("(${getPastAppointmentTime(precInstance!)})") :
+                              prevInstance!=null ?
+                                Text("(${getPastAppointmentTime(prevInstance!)})") :
                                 SizedBox(height: 0,)
                             ],
                           )
@@ -208,7 +198,7 @@ class _PeriodicalAppointmentsListItem extends StatelessWidget {
                       Expanded(
                           child: nextInstance!=null ?
                               Text(
-                                  "Prossimo:\n${getWhenAppointment(nextInstance!)}"
+                                  "Prossimo prenotato:\n${getWhenAppointment(nextInstance!)}"
                               ) :
                               ElevatedButton(
                                   onPressed: () {

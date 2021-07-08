@@ -51,55 +51,6 @@ class IncomingAppointmentsModel extends Model {
   bool isNew = false;
   bool isEditing = false;
 
-  /// All the [AppointmentInstance] from [startDate]
-  /// (eventually filtered by [Appointment] and eventually
-  /// including past missing)
-  List<AppointmentInstance> getIncomingAppointments({DateTime? startDate,
-    Appointment? type, bool includeMissing: false}) {
-
-    if (startDate==null)  startDate = getTodayDate();
-
-    List<AppointmentInstance> output = [];
-
-    allAppointments.forEach((appInstance) {
-      if (
-        (!getPureDate(appInstance.dateTime).isBefore(startDate!) ||
-                (appInstance.isMaybeMissed && includeMissing)) &&
-            (type==null || appInstance.appointment.id==type.id)) {
-        output.add(appInstance);
-      }
-    });
-
-    return output..sort((a, b) {
-      if (a.isMaybeMissed == b.isMaybeMissed) {
-        return a.dateTime.compareTo(b.dateTime);
-      } else if (b.isMaybeMissed) {
-        return 1;
-      } else {
-        return -1;
-      }
-    });
-  }
-
-  /// All the [AppointmentInstance] before [endDate]
-  /// (eventually filtered by [Appointment])
-  List<AppointmentInstance> getPastAppointments({DateTime? endDate,
-    Appointment? type}) {
-
-    if (endDate==null)  endDate = getTodayDate();
-
-    List<AppointmentInstance> output = [];
-
-    allAppointments.forEach((appInstance) {
-      if (getPureDate(appInstance.dateTime).isBefore(endDate!) &&
-          (type==null || appInstance.appointment.id==type.id)) {
-        output.add(appInstance);
-      }
-    });
-
-    return output;
-  }
-
   loadData(AppointmentInstancesDBWorker appointmentsIntancesDb, {notify: true}) async {
 
     loading = true;

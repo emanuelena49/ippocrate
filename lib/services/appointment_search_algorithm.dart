@@ -57,18 +57,17 @@ class AppointmentsSearchOptions {
 }
 
 enum AppointmentsSortingOptions {
-  DATE_INCREASE, DATE_DECREASE, PRIORITIZE
+  DATE_INCREASE, DATE_DECREASE, PRIORITY
 }
 
 /// Retrieve a list of appointments according to certain [searchOptions],
 /// appropriately sorted according to some [sortingOptions]
-List<AppointmentInstance> retrieveAppointments({
+List<AppointmentInstance> searchAppointmentInstances({
   AppointmentsSearchOptions? searchOptions,
   AppointmentsSortingOptions? sortingOptions, }) {
 
-  if (searchOptions==null) searchOptions = AppointmentsSearchOptions();
-  if (sortingOptions==null) sortingOptions =
-      AppointmentsSortingOptions.DATE_INCREASE;
+  searchOptions = searchOptions ?? AppointmentsSearchOptions();
+  sortingOptions = sortingOptions ?? AppointmentsSortingOptions.DATE_INCREASE;
 
   // -------------------------------------------------
   // retrieve phase
@@ -77,16 +76,18 @@ List<AppointmentInstance> retrieveAppointments({
   Iterable<AppointmentInstance> res =
     incomingAppointmentsModel.allAppointments.where((a) {
 
+      searchOptions!; sortingOptions!;
+
       // filter by start date
-      if (searchOptions!.startDate != null &&
+      if (searchOptions.startDate != null &&
           a.dateTime.isBefore(searchOptions.startDate!)) return false;
 
       // filter by end date
-      if (searchOptions!.startDate != null &&
+      if (searchOptions.endDate != null &&
           a.dateTime.isAfter(searchOptions.endDate!)) return false;
 
       // filter by type
-      if (searchOptions!.types != null) {
+      if (searchOptions.types != null) {
 
         bool ok = false;
 
@@ -101,7 +102,7 @@ List<AppointmentInstance> retrieveAppointments({
       }
 
       // filter by state
-      if (searchOptions!.acceptedStates != null) {
+      if (searchOptions.acceptedStates != null) {
         if (!searchOptions.acceptedStates!.contains(_getAppointmentState(a)))
           return false;
       }
@@ -121,6 +122,26 @@ List<AppointmentInstance> retrieveAppointments({
     // apply priority algorithm
     return _sortByPriority(res.toList());
   }
+}
+
+/// Given a [date] and a [type], it retrieves the first [AppointmentInstance]
+/// before that [DateTime]
+AppointmentInstance? getPrevAppointmentInstance(Appointment type, DateTime date) {
+  var res = searchAppointmentInstances(
+    searchOptions: AppointmentsSearchOptions(types: [type], endDate: date)
+  );
+
+  return res.isNotEmpty ? res.last : null;
+}
+
+/// Given a [date] and a [type], it retrieves the first [AppointmentInstance]
+/// after that date [DateTime]
+AppointmentInstance? getNextAppointmentInstance(Appointment type, DateTime date) {
+  var res = searchAppointmentInstances(
+      searchOptions: AppointmentsSearchOptions(types: [type], startDate: date)
+  );
+
+  return res.isNotEmpty ? res.first : null;
 }
 
 
