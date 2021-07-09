@@ -46,7 +46,7 @@ class AppointmentGroupsModel extends Model {
 
   viewAppointmentGroup(AppointmentGroup appointmentGroup, {edit: false}) {
     currentAppointmentGroup = appointmentGroup;
-    isEditing = false;
+    isEditing = edit;
   }
 
   /// After called [loadData], get only the periodical appointments
