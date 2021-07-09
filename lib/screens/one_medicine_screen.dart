@@ -1,17 +1,10 @@
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:ippocrate/components/bottom_bar.dart';
-import 'package:ippocrate/components/intake_frequency_input.dart';
-import 'package:ippocrate/components/medicine_input.dart';
-import 'package:ippocrate/components/medicine_read_only.dart';
-import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
-import 'package:ippocrate/db/medicines_db_worker.dart';
+import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/forms/medicine_input.dart';
+import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/single_screens/medicine_read_only.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
 import 'package:ippocrate/models/medicines_model.dart';
-import 'package:ippocrate/services/generate_intakes_from_medicine.dart';
-import 'package:ippocrate/services/ui_medicines_texts.dart';
 import 'package:provider/provider.dart';
 
 class OneMedicineScreen extends StatelessWidget {

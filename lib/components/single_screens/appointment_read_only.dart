@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ippocrate/common/screens_model.dart';
+import 'package:ippocrate/components/dialogs/delete_appointment_instance.dart';
 import 'package:ippocrate/db/appointment_instance_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/models/appointments_model.dart';
 import 'package:ippocrate/services/ui_appointments_texts.dart';
 
-import 'delete_appointment_instance.dart';
 
 class AppointmentMenuButton extends StatelessWidget {
   AppointmentInstance appointmentInstance;

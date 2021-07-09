@@ -1,15 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ippocrate/common/screens_model.dart';
-import 'package:ippocrate/components/reset_today_medicine_intake.dart';
+import 'package:ippocrate/components/dialogs/delete_medicine.dart';
+import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/dialogs/reset_today_medicine_intake.dart';
 import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
 import 'package:ippocrate/models/medicines_model.dart';
 import 'package:ippocrate/services/datetime.dart';
 import 'package:ippocrate/services/ui_medicines_texts.dart';
-import 'package:provider/provider.dart';
-
-import 'delete_medicine.dart';
 
 class MedicineMenuButton extends StatelessWidget {
 
@@ -36,7 +34,7 @@ class MedicineMenuButton extends StatelessWidget {
             resetTodayIntakes(context, todayEventualIntake!);
             break;
           case "edit":
-            medicinesModel.viewMedicine(medicine, editing: true);
+            medicinesModel.viewMedicine(medicine, edit: true);
             medicinesModel.notify();
             break;
           case "delete":
@@ -231,7 +229,7 @@ class _MedicineNotes extends StatelessWidget {
                 Text(medicine.notes!, style: Theme.of(context).textTheme.bodyText2),
                 ElevatedButton(
                     onPressed: () {
-                      medicinesModel.viewMedicine(medicine, editing: true);
+                      medicinesModel.viewMedicine(medicine, edit: true);
                       medicinesModel.notify();
                     },
                     child: Text("modifica")
@@ -243,7 +241,7 @@ class _MedicineNotes extends StatelessWidget {
                 Text("Nessuna nota intserita"),
                 ElevatedButton(
                     onPressed: () {
-                      medicinesModel.viewMedicine(medicine, editing: true);
+                      medicinesModel.viewMedicine(medicine, edit: true);
                       medicinesModel.notify();
                     },
                     child: Text("aggiungi nota")

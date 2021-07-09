@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ippocrate/common/screens_model.dart';
-import 'package:ippocrate/components/delete_appointment_group.dart';
+import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/dialogs/delete_appointment_group.dart';
 import 'package:ippocrate/db/appointments_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/models/appointments_model.dart';

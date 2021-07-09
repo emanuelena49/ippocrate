@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ippocrate/common/screens_model.dart';
+import 'package:ippocrate/components/dialogs/delete_medicine.dart';
 import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/db/medicines_db_worker.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
@@ -9,9 +10,6 @@ import 'package:ippocrate/models/medicines_model.dart';
 import 'package:ippocrate/screens/one_medicine_screen.dart';
 import 'package:ippocrate/services/ui_medicines_texts.dart';
 import 'package:provider/provider.dart';
-
-import 'delete_medicine.dart';
-
 
 /// The list with all [Medicine]s.
 class AllMedicinesList extends StatelessWidget {
@@ -167,13 +165,13 @@ class _MedicinesListItem extends StatelessWidget {
 }
 
 Future viewMedicine(BuildContext context, Medicine medicine) async {
-  medicinesModel.viewMedicine(medicine, editing: false);
+  medicinesModel.viewMedicine(medicine, edit: false);
   screensModel.loadScreen(context, Screen.MEDICINES_ONE);
 }
 
 
 Future editMedicine(BuildContext context, Medicine medicine) async {
-  medicinesModel.viewMedicine(medicine, editing: true);
+  medicinesModel.viewMedicine(medicine, edit: true);
   screensModel.loadScreen(context, Screen.MEDICINES_ONE);
 }
 

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ippocrate/common/screens_model.dart';
-import 'package:ippocrate/components/delete_appointment_instance.dart';
+import 'package:ippocrate/components/dialogs/delete_appointment_instance.dart';
 import 'package:ippocrate/db/appointment_instance_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/services/appointment_search_algorithm.dart';

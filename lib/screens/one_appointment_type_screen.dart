@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ippocrate/components/appointment_group_read_only.dart';
+import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/single_screens/appointment_group_read_only.dart';
 import 'package:ippocrate/components/bottom_bar.dart';
-import 'package:ippocrate/components/generic_appointments_list.dart';
+import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/lists/generic_appointments_list.dart';
 import 'package:ippocrate/models/appointments_model.dart';
 import 'package:ippocrate/services/appointment_search_algorithm.dart';
 import 'package:ippocrate/services/datetime.dart';

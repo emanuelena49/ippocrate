@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ippocrate/components/appointment_instance_input.dart';
-import 'package:ippocrate/components/appointment_read_only.dart';
+import 'package:ippocrate/components/forms/appointment_instance_input.dart';
+import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/single_screens/appointment_read_only.dart';
 import 'package:ippocrate/components/bottom_bar.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:provider/provider.dart';

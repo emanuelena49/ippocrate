@@ -89,15 +89,14 @@ class MedicinesModel extends Model {
     if (notify) notifyListeners();
   }
 
-  viewMedicine(Medicine medicine, {bool editing: false}) {
+  viewMedicine(Medicine medicine, {bool edit: false}) {
     currentMedicine = medicine;
-    isEditing = editing;
-    isNew = false;
-  }
-
-  startNewMedicineCreation() {
-    currentMedicine = Medicine(name: "", startDate: DateTime.now());
-    isEditing = isNew = true;
+    if (medicine.id==null) {
+      isNew = true;
+    } else {
+      isNew = false;
+    }
+    isEditing = edit;
   }
 
   unsetMedicine() {
