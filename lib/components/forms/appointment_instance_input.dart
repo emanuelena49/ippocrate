@@ -67,7 +67,6 @@ class AppointmentInstanceSubmitButton extends StatelessWidget {
   }
 }
 
-
 class AppointmentInstanceForm extends StatelessWidget {
 
   late AppointmentInstance appointmentInstance;
