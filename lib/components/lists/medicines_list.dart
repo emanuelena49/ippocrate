@@ -128,6 +128,7 @@ class _MedicinesListItem extends StatelessWidget {
                         child: Text(
                           medicine.name,
                           style: Theme.of(context).textTheme.headline5,
+                          overflow: TextOverflow.ellipsis,
                         )
                     ),
                     // _MedicineItemMenu(medicine: medicine,),

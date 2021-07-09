@@ -170,6 +170,7 @@ class AppointmentsListItem extends StatelessWidget {
                 Text(
                   appointmentInstance.appointment.name,
                   style: Theme.of(context).textTheme.headline5,
+                  overflow: TextOverflow.ellipsis,
                 ),
 
                 SizedBox(height: 5,),

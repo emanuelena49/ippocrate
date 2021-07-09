@@ -177,6 +177,7 @@ class _PeriodicalAppointmentsListItem extends StatelessWidget {
                 Text(
                   appointment.name,
                   style: Theme.of(context).textTheme.headline5,
+                  overflow: TextOverflow.ellipsis,
                 ),
 
                 SizedBox(height: 25,),
