@@ -9,7 +9,6 @@ import 'package:ippocrate/db/appointments_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/models/appointment_groups_model.dart';
 import 'package:ippocrate/services/datetime.dart';
-import 'package:provider/provider.dart';
 
 import 'notes_input.dart';
 
@@ -17,10 +16,10 @@ final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
 class AppointmentInstanceSubmitButton extends StatelessWidget {
 
-  late AppointmentInstance initialValue;
+  // late AppointmentInstance initialValue;
 
   AppointmentInstanceSubmitButton() {
-    initialValue = appointmentsInstancesModel.currentAppointment!.clone();
+    // initialValue = appointmentsInstancesModel.currentAppointment!.clone();
   }
 
   @override

@@ -41,12 +41,13 @@ class NotesInput extends StatelessWidget {
         onChanged: (inValue) {
           obj.notes = inValue;
         },
+        /*
         onSaved: (inValue) {
           if (inValue=="") {
             obj.notes = null;
             model.notify();
           }
-        },
+        },*/
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/single_screens/appointment_group_read_only.dart';
 import 'package:ippocrate/components/bottom_bar.dart';
+import 'package:ippocrate/components/forms/appointment_group_edit_input.dart';
 import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/lists/generic_appointments_list.dart';
 import 'package:ippocrate/models/appointment_groups_model.dart';
 import 'package:ippocrate/services/appointment_search_algorithm.dart';
@@ -30,7 +31,7 @@ class OneAppointmentTypeScreen extends StatelessWidget {
                     // form confirm button
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-                      child: Text("...todo..."),
+                      child: AppointmentGroupSubmitButton(),
                     ) :
 
                     // normal screen actions
@@ -42,7 +43,7 @@ class OneAppointmentTypeScreen extends StatelessWidget {
 
 
               body: appGroupModel.isEditing ?
-                Text("...todo...") :
+                AppointmentGroupForm():
                 AppointmentGroupReadOnly(appGroupModel.currentAppointmentGroup!),
 
               bottomNavigationBar: MyBottomBar(),
