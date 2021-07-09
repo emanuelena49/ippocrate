@@ -153,7 +153,7 @@ class _AppointmentHeading extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
-                    child: Text("VEDI TUTTI"),
+                    child: Text("VEDI GRUPPO"),
                     onPressed: () {
                       appointmentGroupsModel.viewAppointmentGroup(
                           appointmentInstance.appointment);
@@ -195,43 +195,31 @@ class _AppointmentNotes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ExpansionTile(
-      initiallyExpanded: true,
-      title: Text("Note: ", style: Theme.of(context).textTheme.headline6,),
-      children: [
-        appointmentInstance.notes != null ?
-        Column(
-            children: [
-
-              Text(
-                  appointmentInstance.notes!,
-                  style: Theme.of(context).textTheme.bodyText2
-              ),
-
-              ElevatedButton(
-                  onPressed: () {
-                    appointmentsInstancesModel.viewAppointment(
-                        appointmentInstance, edit: true);
-                    appointmentsInstancesModel.notify();
-                  },
-                  child: Text("modifica")
-              )
-            ]
-        ) :
-        Column(
+    return ListTile(
+      title: appointmentInstance.notes != null ?
+      Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Nessuna nota intserita"),
-            ElevatedButton(
-                onPressed: () {
-                  appointmentsInstancesModel.viewAppointment(
-                      appointmentInstance, edit: true);
-                  appointmentsInstancesModel.notify();
-                },
-                child: Text("aggiungi nota"),
-            )
-          ],
-        )
-      ],
+            Text("Note: ", style: Theme.of(context).textTheme.headline6,),
+            Text(
+                appointmentInstance.notes!,
+                style: Theme.of(context).textTheme.bodyText2
+            ),
+          ]
+      ) :
+      Column(
+        children: [
+          Text("Nessuna nota intserita"),
+          ElevatedButton(
+            onPressed: () {
+              appointmentsInstancesModel.viewAppointment(
+                  appointmentInstance, edit: true);
+              appointmentsInstancesModel.notify();
+            },
+            child: Text("aggiungi nota"),
+          )
+        ],
+      ),
     );
   }
 }

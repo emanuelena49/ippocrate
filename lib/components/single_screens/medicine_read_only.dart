@@ -219,36 +219,30 @@ class _MedicineNotes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ExpansionTile(
-      initiallyExpanded: true,
-      title: Text("Note: ", style: Theme.of(context).textTheme.headline6,),
-      children: [
-        medicine.notes != null ?
-            Column(
-              children: [
-                Text(medicine.notes!, style: Theme.of(context).textTheme.bodyText2),
-                ElevatedButton(
-                    onPressed: () {
-                      medicinesModel.viewMedicine(medicine, edit: true);
-                      medicinesModel.notify();
-                    },
-                    child: Text("modifica")
-                )
-              ]
-            ) :
-            Column(
-              children: [
-                Text("Nessuna nota intserita"),
-                ElevatedButton(
-                    onPressed: () {
-                      medicinesModel.viewMedicine(medicine, edit: true);
-                      medicinesModel.notify();
-                    },
-                    child: Text("aggiungi nota")
-                )
-              ],
-            )
-      ],
+    return ListTile(
+      title: medicine.notes != null ?
+      Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Note: ", style: Theme.of(context).textTheme.headline6,),
+            Text(
+                medicine.notes!,
+                style: Theme.of(context).textTheme.bodyText2
+            ),
+          ]
+      ) :
+      Column(
+        children: [
+          Text("Nessuna nota intserita"),
+          ElevatedButton(
+            onPressed: () {
+              medicinesModel.viewMedicine(medicine, edit: true);
+              medicinesModel.notify();
+            },
+            child: Text("aggiungi nota"),
+          )
+        ],
+      ),
     );
   }
 }
