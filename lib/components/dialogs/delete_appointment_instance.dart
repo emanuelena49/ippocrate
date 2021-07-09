@@ -5,7 +5,7 @@ import 'package:ippocrate/db/appointments_db_worker.dart';
 import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/db/medicines_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
-import 'package:ippocrate/models/appointments_model.dart';
+import 'package:ippocrate/models/appointment_groups_model.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
 import 'package:ippocrate/models/medicines_model.dart';
 import 'package:ippocrate/services/ui_appointments_texts.dart';
@@ -63,10 +63,10 @@ Future deleteAppointment(BuildContext context,
                   ),
                 );
 
-                incomingAppointmentsModel.loadData(appInstDb);
+                appointmentsInstancesModel.loadData(appInstDb);
 
                 // (reload even appointments types)
-                appointmentsModel.loadData(AppointmentGroupsDBWorker());
+                appointmentGroupsModel.loadData(AppointmentGroupsDBWorker());
               },
               child: Text("Si, Elimina"),
             ),

@@ -97,7 +97,10 @@ var routes = {
 
 var initialRoute = Screen.HOME.route;
 
-class ScreensModel extends ChangeNotifier {
+class ScreensManager /*extends ChangeNotifier*/ {
+
+  ScreensManager._();
+  static final ScreensManager instance = ScreensManager._();
 
   Screen currentScreen = Screen.HOME;
 
@@ -115,7 +118,7 @@ class ScreensModel extends ChangeNotifier {
 
     Navigator.of(context).pushNamed(screen.route);
     currentScreen = screen;
-    notifyListeners();
+    // notifyListeners();
   }
 
   /// back to subpage
@@ -125,11 +128,11 @@ class ScreensModel extends ChangeNotifier {
       Navigator.of(context).pop();
       String? oldRoute = ModalRoute.of(context)!.settings.name;
       currentScreen = screenFromRoute(oldRoute!);
-      notifyListeners();
+      // notifyListeners();
     } else {
       debugPrint("Warning, called an unmakable pop");
     }
   }
 }
 
-ScreensModel screensModel = ScreensModel();
+ScreensManager screensManager = ScreensManager.instance;

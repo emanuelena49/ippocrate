@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/single_screens/appointment_group_read_only.dart';
 import 'package:ippocrate/components/bottom_bar.dart';
 import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/lists/generic_appointments_list.dart';
-import 'package:ippocrate/models/appointments_model.dart';
+import 'package:ippocrate/models/appointment_groups_model.dart';
 import 'package:ippocrate/services/appointment_search_algorithm.dart';
 import 'package:ippocrate/services/datetime.dart';
 import 'package:ippocrate/services/ui_appointments_texts.dart';
@@ -14,7 +14,7 @@ class OneAppointmentTypeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
-      value: appointmentsModel,
+      value: appointmentGroupsModel,
       child: Consumer<AppointmentGroupsModel>(
           builder: (context, appGroupModel, child) {
             return  Scaffold(

@@ -3,11 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:ippocrate/common/screens_model.dart';
+import 'package:ippocrate/common/screens_manager.dart';
 import 'package:ippocrate/db/appointment_instance_db_worker.dart';
 import 'package:ippocrate/db/appointments_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
-import 'package:ippocrate/models/appointments_model.dart';
+import 'package:ippocrate/models/appointment_groups_model.dart';
 import 'package:ippocrate/services/datetime.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +20,7 @@ class AppointmentInstanceSubmitButton extends StatelessWidget {
   late AppointmentInstance initialValue;
 
   AppointmentInstanceSubmitButton() {
-    initialValue = incomingAppointmentsModel.currentAppointment!.clone();
+    initialValue = appointmentsInstancesModel.currentAppointment!.clone();
   }
 
   @override
@@ -37,7 +37,7 @@ class AppointmentInstanceSubmitButton extends StatelessWidget {
           return;
         }
 
-        var appointmentInstance = incomingAppointmentsModel.currentAppointment!;
+        var appointmentInstance = appointmentsInstancesModel.currentAppointment!;
 
         // return;
 
@@ -58,11 +58,11 @@ class AppointmentInstanceSubmitButton extends StatelessWidget {
         }
 
         // update all models
-        incomingAppointmentsModel.loadData(dbAppInst);
-        appointmentsModel.loadData(dbAppointments);
+        appointmentsInstancesModel.loadData(dbAppInst);
+        appointmentGroupsModel.loadData(dbAppointments);
 
         // go back at precedent screen
-        screensModel.back(context);
+        screensManager.back(context);
       }
     );
   }
@@ -76,7 +76,7 @@ class AppointmentInstanceForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    appointmentInstance = incomingAppointmentsModel.currentAppointment!;
+    appointmentInstance = appointmentsInstancesModel.currentAppointment!;
 
     return Form(
       key: formKey,
@@ -103,7 +103,7 @@ class AppointmentInstanceForm extends StatelessWidget {
 
           NotesInput(
               obj: appointmentInstance,
-              model: incomingAppointmentsModel
+              model: appointmentsInstancesModel
           ),
         ],
       )
@@ -117,7 +117,7 @@ class _AppointmentTypeInput extends StatelessWidget {
 
   TextEditingController _controller = TextEditingController();
 
-  static List<AppointmentGroup> options = appointmentsModel.appointmentGroups;
+  static List<AppointmentGroup> options = appointmentGroupsModel.appointmentGroups;
 
   _AppointmentTypeInput({Key? key, required this.appointmentIntstance}) :
         super(key: key){
@@ -166,7 +166,7 @@ class _AppointmentTypeInput extends StatelessWidget {
           onSubmitted: (val) {
 
             // notify to force refresh even of periodicity input
-            incomingAppointmentsModel.notify();
+            appointmentsInstancesModel.notify();
           },
           controller: _controller,
 
@@ -183,7 +183,7 @@ class _AppointmentTypeInput extends StatelessWidget {
         onSuggestionSelected: (AppointmentGroup selection) {
           _controller.text = selection.name;
           handleNewValue(selection: selection);
-          incomingAppointmentsModel.notify();
+          appointmentsInstancesModel.notify();
         },
         getImmediateSuggestions: true,
       ),

@@ -10,8 +10,8 @@ class OneAppointmentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
-      value: incomingAppointmentsModel,
-      child: Consumer<IncomingAppointmentsModel>(
+      value: appointmentsInstancesModel,
+      child: Consumer<AppointmentInstancesModel>(
         builder: (context, appModel, child) {
           return  Scaffold(
             appBar: AppBar(

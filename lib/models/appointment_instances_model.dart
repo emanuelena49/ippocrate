@@ -4,7 +4,7 @@ import 'package:ippocrate/common/db_worker.dart';
 import 'package:ippocrate/common/has_notes.dart';
 import 'package:ippocrate/common/model.dart';
 import 'package:ippocrate/db/appointment_instance_db_worker.dart';
-import 'package:ippocrate/models/appointments_model.dart';
+import 'package:ippocrate/models/appointment_groups_model.dart';
 import 'package:ippocrate/services/datetime.dart';
 
 
@@ -40,10 +40,10 @@ class AppointmentInstance implements HasId, Clonable, HasNotes {
 }
 
 /// The collection of incoming [AppointmentInstance]
-class IncomingAppointmentsModel extends Model {
+class AppointmentInstancesModel extends Model {
 
-  IncomingAppointmentsModel._();
-  static final IncomingAppointmentsModel instance = IncomingAppointmentsModel._();
+  AppointmentInstancesModel._();
+  static final AppointmentInstancesModel instance = AppointmentInstancesModel._();
 
   List<AppointmentInstance> allAppointments = [];
   AppointmentInstance? currentAppointment;
@@ -72,5 +72,5 @@ class IncomingAppointmentsModel extends Model {
   }
 }
 
-IncomingAppointmentsModel incomingAppointmentsModel =
-  IncomingAppointmentsModel.instance;
+AppointmentInstancesModel appointmentsInstancesModel =
+  AppointmentInstancesModel.instance;

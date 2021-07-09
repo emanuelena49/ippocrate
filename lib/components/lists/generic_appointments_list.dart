@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:ippocrate/common/screens_model.dart';
+import 'package:ippocrate/common/screens_manager.dart';
 import 'package:ippocrate/components/dialogs/delete_appointment_instance.dart';
 import 'package:ippocrate/db/appointment_instance_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 
 /// A generic list of [AppointmentInstance]s, alignet to
-/// [IncomingAppointmentsModel]. It displays appointments according
+/// [AppointmentInstancesModel]. It displays appointments according
 /// to [searchOptions], sorted according to [sortingOptions].
 class GenericAppointmentsList extends StatelessWidget {
 
@@ -23,15 +23,15 @@ class GenericAppointmentsList extends StatelessWidget {
   GenericAppointmentsList({this.searchOptions, this.sortingOptions}) {
     // load all the medicines
     appointmentInstancesDb = AppointmentInstancesDBWorker();
-    incomingAppointmentsModel.loadData(appointmentInstancesDb);
+    appointmentsInstancesModel.loadData(appointmentInstancesDb);
   }
 
   @override
   Widget build(BuildContext context) {
 
     return ChangeNotifierProvider.value(
-      value: incomingAppointmentsModel,
-      child: Consumer<IncomingAppointmentsModel>(
+      value: appointmentsInstancesModel,
+      child: Consumer<AppointmentInstancesModel>(
         builder: (context, appInstModel, child) {
 
           // if model is still loading, I display a loading icon
@@ -119,7 +119,7 @@ class AppointmentsListItem extends StatelessWidget {
                 appointmentInstance.done = false;
                 var appointmentsIntancesDb = AppointmentInstancesDBWorker();
                 await appointmentsIntancesDb.update(appointmentInstance);
-                incomingAppointmentsModel.loadData(appointmentsIntancesDb);
+                appointmentsInstancesModel.loadData(appointmentsIntancesDb);
               }
           ) :
           IconSlideAction(
@@ -130,7 +130,7 @@ class AppointmentsListItem extends StatelessWidget {
               appointmentInstance.done = true;
               var appointmentsIntancesDb = AppointmentInstancesDBWorker();
               await appointmentsIntancesDb.update(appointmentInstance);
-              incomingAppointmentsModel.loadData(appointmentsIntancesDb);
+              appointmentsInstancesModel.loadData(appointmentsIntancesDb);
             },
           ),
 
@@ -141,9 +141,9 @@ class AppointmentsListItem extends StatelessWidget {
             color: Colors.yellow,
             icon: Icons.edit,
             onTap: (){
-              incomingAppointmentsModel
+              appointmentsInstancesModel
                   .viewAppointment(appointmentInstance, edit: true);
-              screensModel.loadScreen(context, Screen.APPOINTMENTS_ONE);
+              screensManager.loadScreen(context, Screen.APPOINTMENTS_ONE);
             },
           ),
           IconSlideAction(
@@ -158,9 +158,9 @@ class AppointmentsListItem extends StatelessWidget {
         child: GestureDetector(
           onTap: () {
 
-            incomingAppointmentsModel.viewAppointment(
+            appointmentsInstancesModel.viewAppointment(
                 appointmentInstance, edit: false);
-            screensModel.loadScreen(context, Screen.APPOINTMENTS_ONE);
+            screensManager.loadScreen(context, Screen.APPOINTMENTS_ONE);
           },
           child: Padding(
             padding: const EdgeInsets.all(12),

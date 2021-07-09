@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ippocrate/common/screens_model.dart';
+import 'package:ippocrate/common/screens_manager.dart';
 import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/dialogs/delete_appointment_group.dart';
 import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/lists/generic_appointments_list.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
-import 'package:ippocrate/models/appointments_model.dart';
+import 'package:ippocrate/models/appointment_groups_model.dart';
 import 'package:ippocrate/services/appointment_search_algorithm.dart';
 import 'package:ippocrate/services/datetime.dart';
 import 'package:ippocrate/services/ui_appointments_texts.dart';
@@ -23,12 +23,12 @@ class AppointmentGroupMenuItem extends StatelessWidget {
       onSelected: (selection) async {
         switch(selection) {
           case "edit":
-            appointmentsModel.viewAppointmentGroup(appointmentGroup, edit: true);
-            appointmentsModel.notify();
+            appointmentGroupsModel.viewAppointmentGroup(appointmentGroup, edit: true);
+            appointmentGroupsModel.notify();
             break;
           case "delete":
             await deleteAppointmentGroup(context, appointmentGroup);
-            screensModel.back(context);
+            screensManager.back(context);
             break;
         }
       },
@@ -128,13 +128,13 @@ class _AppointmentGroupHeading extends StatelessWidget {
                   child: ElevatedButton(
                       child: Text("PRENOTA UN ALTRO"),
                       onPressed: () {
-                        incomingAppointmentsModel.viewAppointment(
+                        appointmentsInstancesModel.viewAppointment(
                             AppointmentInstance(
                                 appointment: appointmentGroup,
                                 dateTime: DateTime.now(),
                             ), edit: true
                         );
-                        screensModel.loadScreen(context, Screen.APPOINTMENTS_ONE);
+                        screensManager.loadScreen(context, Screen.APPOINTMENTS_ONE);
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.black54,)

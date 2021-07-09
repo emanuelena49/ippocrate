@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ippocrate/common/screens_model.dart';
+import 'package:ippocrate/common/screens_manager.dart';
 import 'package:ippocrate/components/bottom_bar.dart';
 import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/lists/medicines_intakes_list.dart';
 import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/lists/medicines_list.dart';
@@ -50,7 +50,7 @@ class MedicinesScreen extends StatelessWidget {
                             endDate: today.add(Duration(days: 14))
                         ), edit: true
                     );
-                    screensModel.loadScreen(context, Screen.MEDICINES_ONE);
+                    screensManager.loadScreen(context, Screen.MEDICINES_ONE);
                   }
               ),
             )

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ippocrate/common/screens_model.dart';
+import 'package:ippocrate/common/screens_manager.dart';
 import 'package:provider/provider.dart';
 
 var _screensIndexes = {
@@ -26,50 +26,43 @@ _getScreenFromIndex(int index) {
 class MyBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-        value: screensModel,
-        child: Consumer<ScreensModel>(
-          builder: (context, screensModel, child) {
 
-            Color color = Colors.green;
-            int currentIndex = _screensIndexes[screensModel.currentScreen]!;
+        Color color = Colors.green;
+        int currentIndex = _screensIndexes[screensManager.currentScreen]!;
 
-            return BottomNavigationBar(
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: "HOME",
-                  backgroundColor: color,
-                ),
+        return BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "HOME",
+              backgroundColor: color,
+            ),
 
-                BottomNavigationBarItem(
-                  icon: ImageIcon(AssetImage('assets/icons/appointment.png')),
-                  label: "APPUNTAMENTI",
-                  backgroundColor: color,
+            BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('assets/icons/appointment.png')),
+              label: "APPUNTAMENTI",
+              backgroundColor: color,
 
-                ),
+            ),
 
-                BottomNavigationBarItem(
-                  icon: ImageIcon(AssetImage('assets/icons/medicine.png')),
-                  label: "MEDICINALI",
-                  backgroundColor: color,
-                ),
+            BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('assets/icons/medicine.png')),
+              label: "MEDICINALI",
+              backgroundColor: color,
+            ),
 
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.add),
-                  label: "AGGIUNGI",
-                  backgroundColor: color,
-                ),
-              ],
-              currentIndex: _screensIndexes[screensModel.currentScreen]!,
-              showUnselectedLabels: true,
-              onTap: (index) {
-                Screen screen = _getScreenFromIndex(index);
-                screensModel.loadScreen(context, screen);
-              },
-            );
-          }
-        )
-    );
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add),
+              label: "AGGIUNGI",
+              backgroundColor: color,
+            ),
+          ],
+          currentIndex: _screensIndexes[screensManager.currentScreen]!,
+          showUnselectedLabels: true,
+          onTap: (index) {
+            Screen screen = _getScreenFromIndex(index);
+            screensManager.loadScreen(context, screen);
+          },
+        );
   }
 }

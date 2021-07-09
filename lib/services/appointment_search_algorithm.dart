@@ -1,5 +1,5 @@
 import 'package:ippocrate/models/appointment_instances_model.dart';
-import 'package:ippocrate/models/appointments_model.dart';
+import 'package:ippocrate/models/appointment_groups_model.dart';
 
 enum AppointmentState {
   DONE, INCOMING, MAYBE_MISSED
@@ -74,7 +74,7 @@ List<AppointmentInstance> searchAppointmentInstances({
 
   // get all as Iterable
   Iterable<AppointmentInstance> res =
-    incomingAppointmentsModel.allAppointments.where((a) {
+    appointmentsInstancesModel.allAppointments.where((a) {
 
       searchOptions!; sortingOptions!;
 

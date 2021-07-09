@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:ippocrate/screens/medicines_screen.dart';
 import 'package:path_provider/path_provider.dart';
-import 'common/screens_model.dart';
+import 'common/screens_manager.dart';
 import 'common/utils.dart' as utils;
 
 void main() async {

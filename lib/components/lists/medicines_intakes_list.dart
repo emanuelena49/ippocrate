@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:ippocrate/common/screens_model.dart';
+import 'package:ippocrate/common/screens_manager.dart';
 import 'package:ippocrate/components/dialogs/delete_medicine.dart';
 import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/dialogs/reset_today_medicine_intake.dart';
 import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
@@ -133,7 +133,7 @@ class _MedicinesIntakesListItem extends StatelessWidget {
         child: GestureDetector(
           onTap: () {
             medicinesModel.viewMedicine(intake.medicine, edit: false);
-            screensModel.loadScreen(context, Screen.MEDICINES_ONE);
+            screensManager.loadScreen(context, Screen.MEDICINES_ONE);
           },
           child: Padding(
             padding: const EdgeInsets.all(12),
@@ -206,12 +206,12 @@ class _MedicinesIntakesListItem extends StatelessWidget {
 
 Future viewMedicine(BuildContext context, Medicine medicine) async {
   medicinesModel.viewMedicine(medicine, edit: false);
-  screensModel.loadScreen(context, Screen.MEDICINES_ONE);
+  screensManager.loadScreen(context, Screen.MEDICINES_ONE);
 }
 
 
 Future editMedicine(BuildContext context, Medicine medicine) async {
   medicinesModel.viewMedicine(medicine, edit: true);
-  screensModel.loadScreen(context, Screen.MEDICINES_ONE);
+  screensManager.loadScreen(context, Screen.MEDICINES_ONE);
 }
 

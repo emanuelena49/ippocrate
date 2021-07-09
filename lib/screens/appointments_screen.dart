@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ippocrate/common/screens_model.dart';
+import 'package:ippocrate/common/screens_manager.dart';
 import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/lists/generic_appointments_list.dart';
 import 'package:ippocrate/components/bottom_bar.dart';
 import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/lists/periodical_appointments_list.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
-import 'package:ippocrate/models/appointments_model.dart';
+import 'package:ippocrate/models/appointment_groups_model.dart';
 import 'package:ippocrate/services/appointment_search_algorithm.dart';
 
 class AppointmentsScreen extends StatelessWidget {
@@ -42,13 +42,13 @@ class AppointmentsScreen extends StatelessWidget {
                       primary: Colors.green
                   ),
                   onPressed: () {
-                    incomingAppointmentsModel.viewAppointment(
+                    appointmentsInstancesModel.viewAppointment(
                       AppointmentInstance(
                           appointment: AppointmentGroup(name: ""),
                           dateTime: DateTime.now()
                       ), edit: true
                     );
-                    screensModel.loadScreen(context, Screen.APPOINTMENTS_ONE);
+                    screensManager.loadScreen(context, Screen.APPOINTMENTS_ONE);
                   }
               ),
             )

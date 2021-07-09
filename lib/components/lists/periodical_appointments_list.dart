@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:ippocrate/common/screens_model.dart';
+import 'package:ippocrate/common/screens_manager.dart';
 import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/dialogs/delete_appointment_group.dart';
 import 'package:ippocrate/db/appointments_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
-import 'package:ippocrate/models/appointments_model.dart';
+import 'package:ippocrate/models/appointment_groups_model.dart';
 import 'package:ippocrate/services/appointment_search_algorithm.dart';
 import 'package:ippocrate/services/datetime.dart';
 import 'package:ippocrate/services/ui_appointments_texts.dart';
@@ -19,17 +19,17 @@ class PeriodicalAppointmentsList extends StatelessWidget {
   PeriodicalAppointmentsList() {
     // load all the medicines
     appointmentsDBWorker = AppointmentGroupsDBWorker();
-    appointmentsModel.loadData(appointmentsDBWorker);
+    appointmentGroupsModel.loadData(appointmentsDBWorker);
   }
 
   @override
   Widget build(BuildContext context) {
 
     return ChangeNotifierProvider.value(
-      value: appointmentsModel,
+      value: appointmentGroupsModel,
       child: ChangeNotifierProvider.value(
-        value: incomingAppointmentsModel,
-        child: Consumer2<AppointmentGroupsModel, IncomingAppointmentsModel>(
+        value: appointmentsInstancesModel,
+        child: Consumer2<AppointmentGroupsModel, AppointmentInstancesModel>(
           builder: (context, appModel, incAppModel, child){
 
             // if model is still loading, I display a loading icon
@@ -133,8 +133,8 @@ class _PeriodicalAppointmentsListItem extends StatelessWidget {
 
       child: GestureDetector(
         onTap: () {
-          appointmentsModel.viewAppointmentGroup(appointment);
-          screensModel.loadScreen(context, Screen.APPOINTMENTS_GROUP_ONE);
+          appointmentGroupsModel.viewAppointmentGroup(appointment);
+          screensManager.loadScreen(context, Screen.APPOINTMENTS_GROUP_ONE);
         },
         child: Slidable(
           actionPane: SlidableScrollActionPane(),
@@ -146,8 +146,8 @@ class _PeriodicalAppointmentsListItem extends StatelessWidget {
               color: Colors.green,
               icon: Icons.list_sharp,
               onTap: (){
-                appointmentsModel.viewAppointmentGroup(appointment);
-                screensModel.loadScreen(context, Screen.APPOINTMENTS_GROUP_ONE);
+                appointmentGroupsModel.viewAppointmentGroup(appointment);
+                screensManager.loadScreen(context, Screen.APPOINTMENTS_GROUP_ONE);
               },
             ),
             // edit & delete
@@ -156,8 +156,8 @@ class _PeriodicalAppointmentsListItem extends StatelessWidget {
               color: Colors.yellow,
               icon: Icons.edit,
               onTap: (){
-                appointmentsModel.viewAppointmentGroup(appointment, edit: true);
-                screensModel.loadScreen(context, Screen.APPOINTMENTS_GROUP_ONE);
+                appointmentGroupsModel.viewAppointmentGroup(appointment, edit: true);
+                screensManager.loadScreen(context, Screen.APPOINTMENTS_GROUP_ONE);
               },
             ),
             IconSlideAction(
@@ -207,12 +207,12 @@ class _PeriodicalAppointmentsListItem extends StatelessWidget {
                               ) :
                               ElevatedButton(
                                   onPressed: () {
-                                    incomingAppointmentsModel.viewAppointment(
+                                    appointmentsInstancesModel.viewAppointment(
                                         AppointmentInstance(
                                             appointment: appointment,
                                             dateTime: DateTime.now()
                                         ), edit: true);
-                                    screensModel.loadScreen(context,
+                                    screensManager.loadScreen(context,
                                         Screen.APPOINTMENTS_ONE);
                                   },
                                   child: Text("PRENOTA ORA"),

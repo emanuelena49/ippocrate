@@ -1,5 +1,5 @@
 import 'package:ippocrate/common/db_worker.dart';
-import 'package:ippocrate/models/appointments_model.dart';
+import 'package:ippocrate/models/appointment_groups_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 class AppointmentGroupsDBWorker extends AdvancedDBWorker<AppointmentGroup> {

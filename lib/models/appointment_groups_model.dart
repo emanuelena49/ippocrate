@@ -63,4 +63,4 @@ class AppointmentGroupsModel extends Model {
   }
 }
 
-AppointmentGroupsModel appointmentsModel = AppointmentGroupsModel.instance;
+AppointmentGroupsModel appointmentGroupsModel = AppointmentGroupsModel.instance;

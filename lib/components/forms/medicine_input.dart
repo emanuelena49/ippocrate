@@ -2,7 +2,7 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ippocrate/common/screens_model.dart';
+import 'package:ippocrate/common/screens_manager.dart';
 import 'package:ippocrate/components/forms/notes_input.dart';
 import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/db/medicines_db_worker.dart';
@@ -108,7 +108,7 @@ class MedicineFormSubmitButton extends StatelessWidget {
         medicineIntakesModel.loadData(dbIntakes);
 
         // Navigator.pop(context);
-        screensModel.back(context);
+        screensManager.back(context);
       },
     );
   }

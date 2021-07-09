@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ippocrate/common/screens_model.dart';
+import 'package:ippocrate/common/screens_manager.dart';
 import 'package:ippocrate/components/dialogs/delete_appointment_instance.dart';
 import 'package:ippocrate/db/appointment_instance_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
-import 'package:ippocrate/models/appointments_model.dart';
+import 'package:ippocrate/models/appointment_groups_model.dart';
 import 'package:ippocrate/services/ui_appointments_texts.dart';
 
 
@@ -28,22 +28,22 @@ class AppointmentMenuButton extends StatelessWidget {
             appointmentInstance.done = true;
             var appointmentsIntancesDb = AppointmentInstancesDBWorker();
             await appointmentsIntancesDb.update(appointmentInstance);
-            incomingAppointmentsModel.loadData(appointmentsIntancesDb);
+            appointmentsInstancesModel.loadData(appointmentsIntancesDb);
             break;
           case "mark-as-undone":
             appointmentInstance.done = false;
             var appointmentsIntancesDb = AppointmentInstancesDBWorker();
             await appointmentsIntancesDb.update(appointmentInstance);
-            incomingAppointmentsModel.loadData(appointmentsIntancesDb);
+            appointmentsInstancesModel.loadData(appointmentsIntancesDb);
             break;
           case "edit":
-            incomingAppointmentsModel.viewAppointment(
+            appointmentsInstancesModel.viewAppointment(
                 appointmentInstance, edit: true);
-            incomingAppointmentsModel.notify();
+            appointmentsInstancesModel.notify();
             break;
           case "delete":
             await deleteAppointment(context, appointmentInstance);
-            screensModel.back(context);
+            screensManager.back(context);
             break;
         }
       },
@@ -80,7 +80,7 @@ class AppointmentReadOnly extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    appointmentInstance = incomingAppointmentsModel.currentAppointment!;
+    appointmentInstance = appointmentsInstancesModel.currentAppointment!;
 
     return ListView(
       children: [
@@ -155,9 +155,9 @@ class _AppointmentHeading extends StatelessWidget {
                   child: ElevatedButton(
                     child: Text("VEDI TUTTI"),
                     onPressed: () {
-                      appointmentsModel.viewAppointmentGroup(
+                      appointmentGroupsModel.viewAppointmentGroup(
                           appointmentInstance.appointment);
-                      screensModel.loadScreen(context,
+                      screensManager.loadScreen(context,
                           Screen.APPOINTMENTS_GROUP_ONE);
                     },
                     style: ElevatedButton.styleFrom(
@@ -170,9 +170,9 @@ class _AppointmentHeading extends StatelessWidget {
                   child: ElevatedButton(
                     child: Text("PRENOTA UN ALTRO"),
                     onPressed: () {
-                      incomingAppointmentsModel.viewAppointment(
+                      appointmentsInstancesModel.viewAppointment(
                           appointmentInstance, edit: true);
-                      incomingAppointmentsModel.notify();
+                      appointmentsInstancesModel.notify();
                     },
                     style: ElevatedButton.styleFrom(
                         primary: Colors.black54,)
@@ -210,9 +210,9 @@ class _AppointmentNotes extends StatelessWidget {
 
               ElevatedButton(
                   onPressed: () {
-                    incomingAppointmentsModel.viewAppointment(
+                    appointmentsInstancesModel.viewAppointment(
                         appointmentInstance, edit: true);
-                    incomingAppointmentsModel.notify();
+                    appointmentsInstancesModel.notify();
                   },
                   child: Text("modifica")
               )
@@ -223,9 +223,9 @@ class _AppointmentNotes extends StatelessWidget {
             Text("Nessuna nota intserita"),
             ElevatedButton(
                 onPressed: () {
-                  incomingAppointmentsModel.viewAppointment(
+                  appointmentsInstancesModel.viewAppointment(
                       appointmentInstance, edit: true);
-                  incomingAppointmentsModel.notify();
+                  appointmentsInstancesModel.notify();
                 },
                 child: Text("aggiungi nota"),
             )
