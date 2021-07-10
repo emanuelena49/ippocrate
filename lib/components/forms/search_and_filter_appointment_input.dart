@@ -56,7 +56,9 @@ class SearchAndFilterAppointmentInput extends StatelessWidget {
                           _controller.text = "";
                           handleNewValue(freeText: "");
                           searchFilterModel.notify();
-                          FocusScope.of(context).requestFocus(new FocusNode());
+
+                          // FocusScope.of(context).requestFocus(new FocusNode());
+                          FocusManager.instance.primaryFocus?.unfocus();
                         },
                       ),
                       suffix: IconButton(
