@@ -27,8 +27,6 @@ Future appointmentsSearchFilterDialog(context) async {
             builder: (inAlertContext) {
 
               var width = MediaQuery.of(context).size.width;
-              var height = MediaQuery.of(context).size.height;
-
 
               return Container(
                 width: width-100,

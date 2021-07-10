@@ -192,8 +192,9 @@ class _IntakeIntervalInput extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Text("Dal "),
             Container(
-              width: 150,
+              width: 100,
               child: DateTimePicker(
                 type: DateTimePickerType.date,
                 dateLabelText: 'Da ',
@@ -235,9 +236,9 @@ class _IntakeIntervalInput extends StatelessWidget {
                 },
               ),
             ),
-
+            Text(" al "),
             Container(
-              width: 150,
+              width: 100,
               // margin: EdgeInsets.only(right: 20),
               child: DateTimePicker(
                 type: DateTimePickerType.date,
