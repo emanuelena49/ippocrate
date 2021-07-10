@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:ippocrate/components/forms/search_and_filter_appointment_input.dart';
@@ -27,9 +29,10 @@ Future appointmentsSearchFilterDialog(context) async {
               var width = MediaQuery.of(context).size.width;
               var height = MediaQuery.of(context).size.height;
 
+
               return Container(
                 width: width-100,
-                height: height-250,
+                height: 500,
                 child: ChangeNotifierProvider.value(
                   value: appointmentSearchFilterModel,
                   child: Consumer<AppointmentSearchFilterModel>(

@@ -196,31 +196,29 @@ class _PeriodicalAppointmentsListItem extends StatelessWidget {
 
                               // eventually display last time
                               prevInstance!=null ?
-                                Text("(${getPastAppointmentTime(prevInstance!)})") :
+                                Text("${getPastAppointmentTime(prevInstance!)}") :
                                 SizedBox(height: 0,)
                             ],
                           )
                       ),
-                      Expanded(
-                          child: nextInstance!=null ?
-                              Text(
-                                  "Prossimo prenotato:\n${getWhenAppointment(nextInstance!)}"
-                              ) :
-                              ElevatedButton(
-                                  onPressed: () {
-                                    appointmentsInstancesModel.viewAppointment(
-                                        AppointmentInstance(
-                                            appointment: appointment,
-                                            dateTime: DateTime.now()
-                                        ), edit: true);
-                                    screensManager.loadScreen(context,
-                                        Screen.APPOINTMENTS_ONE);
-                                  },
-                                  child: Text("PRENOTA ORA"),
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Colors.black54,)
-                              )
-                      )
+                      nextInstance!=null ?
+                          Text(
+                              "Prossimo prenotato:\n${getWhenAppointment(nextInstance!)}"
+                          ) :
+                          ElevatedButton(
+                              onPressed: () {
+                                appointmentsInstancesModel.viewAppointment(
+                                    AppointmentInstance(
+                                        appointment: appointment,
+                                        dateTime: DateTime.now()
+                                    ), edit: true);
+                                screensManager.loadScreen(context,
+                                    Screen.APPOINTMENTS_ONE);
+                              },
+                              child: Text("PRENOTA ORA"),
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.black54,)
+                          )
                     ],
                   ),
                 )
