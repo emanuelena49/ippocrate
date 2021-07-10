@@ -1,3 +1,4 @@
+import 'package:ippocrate/common/clonable.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/models/appointment_groups_model.dart';
 
@@ -44,7 +45,7 @@ List<AppointmentInstance> _sortByPriority(List<AppointmentInstance> res) {
   return missing + incoming + done;
 }
 
-class AppointmentsSearchOptions {
+class AppointmentsSearchOptions extends Clonable {
   List<AppointmentGroup>? types;
   List<AppointmentState>? acceptedStates;
   DateTime? startDate;
@@ -54,6 +55,16 @@ class AppointmentsSearchOptions {
     this.types, this.acceptedStates,
     this.startDate, this.endDate
   });
+
+  @override
+  AppointmentsSearchOptions clone() {
+    return AppointmentsSearchOptions(
+      types: types!=null ? [...types!] : null,
+      acceptedStates: acceptedStates!=null ? [...acceptedStates!] : null,
+      startDate: startDate,
+      endDate: endDate
+    );
+  }
 }
 
 enum AppointmentsSortingOptions {
