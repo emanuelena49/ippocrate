@@ -43,6 +43,14 @@ class AppointmentGroupSubmitButton extends StatelessWidget {
 
           // go back at precedent screen
           screensManager.back(context);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 2),
+              content: Text("Gruppo di appuntamenti modificato correttamente!"),
+            ),
+          );
         }
     );
   }

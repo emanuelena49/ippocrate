@@ -50,9 +50,12 @@ class AppointmentInstanceSubmitButton extends StatelessWidget {
 
         // insert or update the appointment instance
         AppointmentInstancesDBWorker dbAppInst = AppointmentInstancesDBWorker();
+        var action;
         if (appointmentInstance.id == null) {
+          action = "creato";
           var ok = await dbAppInst.create(appointmentInstance);
         } else {
+          action = "modificato";
           var ok = await dbAppInst.update(appointmentInstance);
         }
 
@@ -62,6 +65,14 @@ class AppointmentInstanceSubmitButton extends StatelessWidget {
 
         // go back at precedent screen
         screensManager.back(context);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+            content: Text("Appuntamento $action correttamente!"),
+          ),
+        );
       }
     );
   }

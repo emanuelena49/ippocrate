@@ -50,9 +50,12 @@ class MedicineFormSubmitButton extends StatelessWidget {
 
         // insert the new element or update existent
         MedicinesDBWorker dbMedicines = MedicinesDBWorker();
+        var action;
         if (medicinesModel.isNew) {
+          action = "creato";
           var ok = await dbMedicines.create(medicine);
         } else {
+          action = "modificato";
           var ok = await dbMedicines.update(medicine);
         }
 
@@ -109,6 +112,14 @@ class MedicineFormSubmitButton extends StatelessWidget {
 
         // Navigator.pop(context);
         screensManager.back(context);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+            content: Text("Medicinale $action correttamente!"),
+          ),
+        );
       },
     );
   }
