@@ -3,12 +3,7 @@ import 'package:flutter/material.dart';
 import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/single_screens/appointment_group_read_only.dart';
 import 'package:ippocrate/components/bottom_bar.dart';
 import 'package:ippocrate/components/forms/appointment_group_edit_input.dart';
-import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/lists/generic_appointments_list.dart';
 import 'package:ippocrate/models/appointment_groups_model.dart';
-import 'package:ippocrate/services/appointment_search_algorithm.dart';
-import 'package:ippocrate/services/datetime.dart';
-import 'package:ippocrate/services/ui_appointments_texts.dart';
-
 import 'package:provider/provider.dart';
 
 class OneAppointmentTypeScreen extends StatelessWidget {
@@ -42,9 +37,16 @@ class OneAppointmentTypeScreen extends StatelessWidget {
               ),
 
 
-              body: appGroupModel.isEditing ?
-                AppointmentGroupForm():
-                AppointmentGroupReadOnly(appGroupModel.currentAppointmentGroup!),
+              body: GestureDetector(
+                // tool to close keyboard when clicked outside
+                onTap: () {
+                  // FocusScope.of(context).requestFocus(new FocusNode());
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
+                child: appGroupModel.isEditing ?
+                  AppointmentGroupForm():
+                  AppointmentGroupReadOnly(appGroupModel.currentAppointmentGroup!),
+              ),
 
               bottomNavigationBar: MyBottomBar(),
             );

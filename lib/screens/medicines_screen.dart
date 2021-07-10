@@ -5,7 +5,6 @@ import 'package:ippocrate/components/bottom_bar.dart';
 import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/lists/medicines_intakes_list.dart';
 import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/lists/medicines_list.dart';
 import 'package:ippocrate/models/medicines_model.dart';
-import 'package:ippocrate/screens/one_medicine_screen.dart';
 import 'package:ippocrate/services/datetime.dart';
 
 
@@ -57,15 +56,22 @@ class MedicinesScreen extends StatelessWidget {
           ],
         ),
 
-        body: TabBarView(
-          children: [
-            // daily intakes tab
-            MedicineIntakesList(),
+        body: GestureDetector(
+          // tool to close keyboard when clicked outside
+          onTap: () {
+            // FocusScope.of(context).requestFocus(new FocusNode());
+            FocusManager.instance.primaryFocus?.unfocus();
+            },
+          child: TabBarView(
+            children: [
+              // daily intakes tab
+              MedicineIntakesList(),
 
-            // all medicines
-            AllMedicinesList(),
+              // all medicines
+              AllMedicinesList(),
 
-          ],
+            ],
+          ),
         ),
 
         bottomNavigationBar: MyBottomBar(),

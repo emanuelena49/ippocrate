@@ -1,12 +1,16 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:ippocrate/common/screens_manager.dart';
 import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/lists/generic_appointments_list.dart';
 import 'package:ippocrate/components/bottom_bar.dart';
+import 'package:ippocrate/components/forms/search_and_filter_appointment_input.dart';
+import 'package:ippocrate/db/appointments_db_worker.dart';
 import 'file:///C:/Users/Proprietario/AndroidStudioProjects/ippocrate/lib/components/lists/periodical_appointments_list.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/models/appointment_groups_model.dart';
 import 'package:ippocrate/services/appointment_search_algorithm.dart';
+import 'package:provider/provider.dart';
 
 class AppointmentsScreen extends StatelessWidget {
 
@@ -55,12 +59,19 @@ class AppointmentsScreen extends StatelessWidget {
           ],
         ),
 
-        body: TabBarView(
-          children: [
-            _IncomingAppointmentsTab(),
-            _PeriodicalAppointmentsTab(),
-            _AllAppointmentsTab(),
-          ],
+        body: GestureDetector(
+          // tool to close keyboard when clicked outside
+          onTap: () {
+            // FocusScope.of(context).requestFocus(new FocusNode());
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
+          child: TabBarView(
+            children: [
+              _IncomingAppointmentsTab(),
+              _PeriodicalAppointmentsTab(),
+              _AllAppointmentsTab(),
+            ],
+          ),
         ),
 
         bottomNavigationBar: MyBottomBar(),
@@ -89,19 +100,36 @@ class _PeriodicalAppointmentsTab extends StatelessWidget {
 }
 
 class _AllAppointmentsTab extends StatelessWidget {
+
+  _AllAppointmentsTab() {
+    appointmentGroupsModel.loadData(AppointmentGroupsDBWorker());
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
+    return ChangeNotifierProvider.value(
+      value: appointmentSearchFilterModel,
+      child: ChangeNotifierProvider.value(
+        value: appointmentGroupsModel,
+        child: Column(
+          children: [
 
-        // todo: add search & filter bar
+            SearchAndFilterAppointmentInput(),
 
-        Expanded(
-          child: GenericAppointmentsList(
-            sortingOptions: AppointmentsSortingOptions.DATE_INCREASE,
-          ),
+            // list of appointment filtered and sorted
+            Consumer<AppointmentSearchFilterModel>(
+              builder: (context, searchFilterModel, widget) {
+                return Expanded(
+                  child: GenericAppointmentsList(
+                    searchOptions: searchFilterModel.searchOptions,
+                    sortingOptions: searchFilterModel.sortingOptions,
+                  ),
+                );
+              }
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 

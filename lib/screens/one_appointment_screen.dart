@@ -38,9 +38,16 @@ class OneAppointmentScreen extends StatelessWidget {
             ),
 
 
-            body: appModel.isEditing ?
+            body: GestureDetector(
+              // tool to close keyboard when clicked outside
+              onTap: () {
+                // FocusScope.of(context).requestFocus(new FocusNode());
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
+              child: appModel.isEditing ?
                 AppointmentInstanceForm() :
                 AppointmentReadOnly(),
+            ),
 
             bottomNavigationBar: MyBottomBar(),
           );

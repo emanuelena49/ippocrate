@@ -41,9 +41,16 @@ class OneMedicineScreen extends StatelessWidget {
                 ),
 
 
-                body: medModel.isEditing ?
-                  MedicineForm() :
-                  MedicineReadOnly(),
+                body: GestureDetector(
+                  // tool to close keyboard when clicked outside
+                  onTap: () {
+                    // FocusScope.of(context).requestFocus(new FocusNode());
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
+                  child: medModel.isEditing ?
+                    MedicineForm() :
+                    MedicineReadOnly(),
+                ),
 
                 bottomNavigationBar: MyBottomBar(),
               );

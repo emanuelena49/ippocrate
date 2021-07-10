@@ -22,16 +22,17 @@ class AppointmentSearchFilterModel extends ChangeNotifier {
 AppointmentSearchFilterModel appointmentSearchFilterModel =
     AppointmentSearchFilterModel.instance;
 
-class SearchAndFilterAppointment extends StatelessWidget {
+class SearchAndFilterAppointmentInput extends StatelessWidget {
 
   TextEditingController _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
         child: Consumer2<AppointmentGroupsModel, AppointmentSearchFilterModel>(
         builder: (context, appModel, searchFilterModel, widget) {
+
           return Row(
             children: [
 
@@ -48,7 +49,22 @@ class SearchAndFilterAppointment extends StatelessWidget {
                 child: TypeAheadField<AppointmentGroup>(
                   textFieldConfiguration: TextFieldConfiguration(
                     decoration: InputDecoration(
-                      labelText: "Scopo appuntamento: "
+                      labelText: "Scopo appuntamento: ",
+                      prefix: IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () {
+                          _controller.text = "";
+                          handleNewValue(freeText: "");
+                          searchFilterModel.notify();
+                          FocusScope.of(context).requestFocus(new FocusNode());
+                        },
+                      ),
+                      suffix: IconButton(
+                        icon: Icon(Icons.search),
+                        onPressed: () {
+                          searchFilterModel.notify();
+                        },
+                      ),
                     ),
                     onChanged: (inValue) {
                       handleNewValue(freeText: inValue);
@@ -85,17 +101,20 @@ class SearchAndFilterAppointment extends StatelessWidget {
   }
 
   handleNewValue({AppointmentGroup? selection, String? freeText}) {
+
     if (selection != null) {
 
       // search selection
       appointmentSearchFilterModel.searchOptions.types = [selection];
-    } else if (freeText != null) {
+    } else {
 
       // search all AppointmentGroups which match freeText
       appointmentSearchFilterModel.searchOptions.types =
           appointmentGroupsModel.appointmentGroups.where(
-                  (option) => option.name.contains(freeText)
+                  (option) => option.name.contains(freeText ?? "")
           ).toList();
     }
+
+    return;
   }
 }

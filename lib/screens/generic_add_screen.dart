@@ -9,7 +9,14 @@ class GenericAddScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Aggiungi"),
       ),
-      body: Text("..."),
+      body: GestureDetector(
+        // tool to close keyboard when clicked outside
+          onTap: () {
+            // FocusScope.of(context).requestFocus(new FocusNode());
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
+          child: Text("...")
+      ),
       bottomNavigationBar: MyBottomBar(),
     );
   }
