@@ -56,8 +56,6 @@ class SwipeCarusel extends StatelessWidget {
         pagination: _pagination,
         control: _controller,
         loop: false,
-        layout: SwiperLayout.DEFAULT,
-
       ),
     );
   }
