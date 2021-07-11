@@ -9,62 +9,55 @@ import 'package:provider/provider.dart';
 
 class MedicineSwipe extends StatelessWidget {
 
-  MedicineSwipe() {
-    medicineIntakesModel.loadData(MedicineIntakesDBWorker());
-  }
-
   @override
   Widget build(BuildContext context) {
 
     var today = getTodayDate();
 
-    return ChangeNotifierProvider.value(
-      value: medicineIntakesModel,
-      child: Consumer<MedicineIntakesModel>(
-        builder: (context, medIntakeModel, child) {
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: Text(
-                  "Medicinali",
-                  style: Theme.of(context).textTheme.headline5,
-                ),
+    return Consumer<MedicineIntakesModel>(
+      builder: (context, medIntakeModel, child) {
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Text(
+                "Medicinali",
+                style: Theme.of(context).textTheme.headline5,
               ),
-              Builder(
-                builder: (context) {
-                  if (medIntakeModel.loading) {
-                    return CircularProgressIndicator();
-                  }
+            ),
+            Builder(
+              builder: (context) {
+                if (medIntakeModel.loading) {
+                  return CircularProgressIndicator();
+                }
 
-                  var intakes = medIntakeModel.getIntakes(
-                      startDate: today, endDate: today,
-                      onlyNotDone: true);
+                var intakes = medIntakeModel.getIntakes(
+                    startDate: today, endDate: today,
+                    onlyNotDone: true);
 
-                  if (intakes.length == 0) {
-                    return Container(
-                      color: Colors.white54,
-                      child: Padding(
-                        padding: EdgeInsets.all(50),
-                        child: Text(
-                          "Nessun medicinale rimasto per oggi!",
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.subtitle1,
-                        ),
+                if (intakes.length == 0) {
+                  return Container(
+                    color: Colors.white54,
+                    child: Padding(
+                      padding: EdgeInsets.all(50),
+                      child: Text(
+                        "Nessun medicinale rimasto per oggi!",
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.subtitle1,
                       ),
-                    );
-                  }
-
-                  return SwipeCarusel(
-                    intakes.map((i) =>
-                        MedicineSwipeCard(medicineIntake: i)).toList(),
+                    ),
                   );
-                },
-              )
-            ],
-          );
-        },
-      ),
+                }
+
+                return SwipeCarusel(
+                  intakes.map((i) =>
+                      MedicineSwipeCard(medicineIntake: i)).toList(),
+                );
+              },
+            )
+          ],
+        );
+      },
     );
   }
 

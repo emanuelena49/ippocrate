@@ -10,70 +10,63 @@ import 'package:provider/provider.dart';
 
 class IncomingAppointmentsSwipe extends StatelessWidget {
 
-  IncomingAppointmentsSwipe() {
-    appointmentsInstancesModel.loadData(AppointmentInstancesDBWorker());
-  }
-
   @override
   Widget build(BuildContext context) {
 
     var today = getTodayDate();
 
-    return ChangeNotifierProvider.value(
-      value: appointmentsInstancesModel,
-      child: Consumer<AppointmentInstancesModel>(
-        builder: (context, appModel, child) {
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: Text(
-                  "Appuntamenti Imminenti",
-                  style: Theme.of(context).textTheme.headline5,
-                ),
+    return Consumer<AppointmentInstancesModel>(
+      builder: (context, appModel, child) {
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Text(
+                "Appuntamenti Imminenti",
+                style: Theme.of(context).textTheme.headline5,
               ),
-              Builder(
-                builder: (context) {
-                  if (appModel.loading) {
-                    return CircularProgressIndicator();
-                  }
+            ),
+            Builder(
+              builder: (context) {
+                if (appModel.loading) {
+                  return CircularProgressIndicator();
+                }
 
-                  var appointments = searchAppointmentInstances(
-                    searchOptions: AppointmentsSearchOptions(
-                      endDate: today.add(Duration(days: 60)),
-                      acceptedStates: [
-                        AppointmentState.MAYBE_MISSED,
-                        AppointmentState.INCOMING,
-                      ]
-                    ),
-                    sortingOptions: AppointmentsSortingOptions.PRIORITY
-                  );
+                var appointments = searchAppointmentInstances(
+                  searchOptions: AppointmentsSearchOptions(
+                    endDate: today.add(Duration(days: 60)),
+                    acceptedStates: [
+                      AppointmentState.MAYBE_MISSED,
+                      AppointmentState.INCOMING,
+                    ]
+                  ),
+                  sortingOptions: AppointmentsSortingOptions.PRIORITY
+                );
 
-                  if (appointments.length == 0) {
-                    return Container(
-                      color: Colors.white54,
-                      child: Padding(
-                        padding: EdgeInsets.all(50),
-                        child: Text(
-                          "Nessun appuntamento imminente!",
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.subtitle1,
-                        ),
+                if (appointments.length == 0) {
+                  return Container(
+                    color: Colors.white54,
+                    child: Padding(
+                      padding: EdgeInsets.all(50),
+                      child: Text(
+                        "Nessun appuntamento imminente!",
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.subtitle1,
                       ),
-                    );
-                  }
-
-                  return SwipeCarusel(
-                    appointments.map((i) =>
-                        AppointmentSwipeCard(appointmentInstance: i)).toList(),
-                    height: 140,
+                    ),
                   );
-                },
-              )
-            ],
-          );
-        },
-      ),
+                }
+
+                return SwipeCarusel(
+                  appointments.map((i) =>
+                      AppointmentSwipeCard(appointmentInstance: i)).toList(),
+                  height: 140,
+                );
+              },
+            )
+          ],
+        );
+      },
     );
   }
 
