@@ -6,7 +6,7 @@ import 'package:ippocrate/models/medicine_intakes_model.dart';
 import 'package:ippocrate/models/medicines_model.dart';
 import 'package:ippocrate/services/ui_medicines_texts.dart';
 
-class MedicineSwipeCard extends SwipableCard {
+class MedicineSwipeCard extends StatelessWidget {
 
   late MedicineIntake medicineIntake;
   MedicineSwipeCard({required this.medicineIntake});
@@ -16,72 +16,66 @@ class MedicineSwipeCard extends SwipableCard {
 
     var medicine = medicineIntake.medicine;
 
-    return Card(
-      elevation: 8,
+    return SwipableCard(
       color: Colors.greenAccent,
-      margin: EdgeInsets.symmetric(horizontal: 4, vertical: 5),
-      child: GestureDetector(
-        onTap: () {
-          // todo: open medicine
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 30),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      onTap: () {
+
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+
+          // medicine name
+          Text(
+            medicine.name,
+            style: Theme.of(context).textTheme.headline5,
+          ),
+
+          // medicine frequence and period
+          Text(
+            getIntervalText(medicine),
+            style: Theme.of(context).textTheme.subtitle2,
+          ),
+
+          SizedBox(height: 5,),
+
+          // notes preview
+          Text(
+            medicine.notes != null ? medicine.notes! : "",
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+
+          SizedBox(height: 15,),
+
+          // perform intake row
+          Row(
             children: [
-
-              // medicine name
-              Text(
-                medicine.name,
-                style: Theme.of(context).textTheme.headline5,
+              Expanded(
+                child: Text(
+                  getRemainingMedicineIntakes(medicineIntake),
+                  style: Theme.of(context).textTheme.subtitle1,
+                ),
               ),
+              ElevatedButton(
+                  onPressed: () async {
+                    if (medicineIntake.getMissingIntakes()>0) {
 
-              // medicine frequence and period
-              Text(
-                getIntervalText(medicine),
-                style: Theme.of(context).textTheme.subtitle2,
-              ),
+                      // perform one intake and save it
+                      medicineIntake.doOneIntake();
+                      await MedicineIntakesDBWorker().update(medicineIntake);
 
-              SizedBox(height: 5,),
-
-              // notes preview
-              Text(
-                medicine.notes != null ? medicine.notes! : "",
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-
-              SizedBox(height: 10,),
-
-              // perform intake row
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      getRemainingMedicineIntakes(medicineIntake),
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
-                  ),
-                  ElevatedButton(
-                      onPressed: () async {
-                        if (medicineIntake.getMissingIntakes()>0) {
-
-                          // perform one intake and save it
-                          medicineIntake.doOneIntake();
-                          await MedicineIntakesDBWorker().update(medicineIntake);
-
-                          // no need of reloading everything, just notify
-                          medicineIntakesModel.notify();
-                        }
-                      },
-                      child: Text("PRENDI ADESSO"),
-                      style: ElevatedButton.styleFrom(primary: Colors.black54,)
-                  )
-                ],
+                      // no need of reloading everything, just notify
+                      medicineIntakesModel.notify();
+                    }
+                  },
+                  child: Text("PRENDI ADESSO"),
+                  style: ElevatedButton.styleFrom(primary: Colors.black54,)
               )
             ],
-          ),
-        ),
+          )
+        ],
       ),
     );
   }

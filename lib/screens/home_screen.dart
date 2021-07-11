@@ -38,7 +38,8 @@ class _HomeScreenBody extends StatelessWidget {
 
         // today's medicine intakes carusel
         Container(
-            child: ChangeNotifierProvider.value(
+          margin: EdgeInsets.all(0),
+          child: ChangeNotifierProvider.value(
               value: medicineIntakesModel,
               child: Consumer<MedicineIntakesModel>(
                 builder: (context, medIntakeModel, child) {
@@ -85,10 +86,11 @@ class _HomeScreenBody extends StatelessWidget {
                 },
               ),
             ),
-          ),
+        ),
 
         // today's medicine intakes carusel
         Container(
+          margin: EdgeInsets.all(0),
           child: ChangeNotifierProvider.value(
             value: medicineIntakesModel,
             child: Consumer<MedicineIntakesModel>(
@@ -96,7 +98,7 @@ class _HomeScreenBody extends StatelessWidget {
                 return Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 20),
+                      padding: const EdgeInsets.only(top: 12),
                       child: Text(
                         "Medicinali",
                         style: Theme.of(context).textTheme.headline5,
@@ -140,6 +142,7 @@ class _HomeScreenBody extends StatelessWidget {
 
         // today's medicine intakes carusel
         Container(
+          margin: EdgeInsets.all(0),
           child: ChangeNotifierProvider.value(
             value: medicineIntakesModel,
             child: Consumer<MedicineIntakesModel>(
@@ -147,7 +150,7 @@ class _HomeScreenBody extends StatelessWidget {
                 return Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 20),
+                      padding: const EdgeInsets.only(top: 12),
                       child: Text(
                         "Medicinali",
                         style: Theme.of(context).textTheme.headline5,
