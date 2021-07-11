@@ -19,14 +19,15 @@ class MedicineSwipeCard extends SwipableCard {
     return Card(
       elevation: 8,
       color: Colors.greenAccent,
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 30),
+      margin: EdgeInsets.symmetric(horizontal: 4, vertical: 5),
       child: GestureDetector(
         onTap: () {
           // todo: open medicine
         },
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 30),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
               // medicine name
@@ -35,34 +36,22 @@ class MedicineSwipeCard extends SwipableCard {
                 style: Theme.of(context).textTheme.headline5,
               ),
 
-              SizedBox(height: 5,),
-
               // medicine frequence and period
               Text(
                 getIntervalText(medicine),
                 style: Theme.of(context).textTheme.subtitle2,
               ),
+
+              SizedBox(height: 5,),
+
+              // notes preview
               Text(
-                getIntakesPerDayText(medicine),
-                style: Theme.of(context).textTheme.subtitle2,
+                medicine.notes != null ? medicine.notes! : "",
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
 
               SizedBox(height: 10,),
-
-              Container(
-                  height: 35,
-                  padding: EdgeInsets.only(bottom: 5),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        medicine.notes != null ? medicine.notes! : "",
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                    ],
-                  )
-              ),
 
               // perform intake row
               Row(

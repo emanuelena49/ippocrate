@@ -20,7 +20,7 @@ class SwipeCarusel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 205,
+      height: 160,
       child: Swiper(
         itemCount: cards.length,
         itemBuilder: (BuildContext context,int index){
