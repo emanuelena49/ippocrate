@@ -44,7 +44,7 @@ class _HomeScreenBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
+
     return ChangeNotifierProvider.value(
       value: medicineIntakesModel,
       child: ChangeNotifierProvider.value(

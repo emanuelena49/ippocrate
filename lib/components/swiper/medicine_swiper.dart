@@ -19,10 +19,10 @@ class MedicineSwipe extends StatelessWidget {
         return Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 12),
+              padding: const EdgeInsets.only(top: 20),
               child: Text(
-                "Medicinali",
-                style: Theme.of(context).textTheme.headline5,
+                "Medicinali di oggi",
+                style: Theme.of(context).textTheme.headline6,
               ),
             ),
             Builder(
@@ -39,7 +39,7 @@ class MedicineSwipe extends StatelessWidget {
                   return Container(
                     color: Colors.white54,
                     child: Padding(
-                      padding: EdgeInsets.all(50),
+                      padding: EdgeInsets.all(25),
                       child: Text(
                         "Nessun medicinale rimasto per oggi!",
                         textAlign: TextAlign.center,
@@ -98,40 +98,48 @@ class MedicineSwipeCard extends StatelessWidget {
           SizedBox(height: 5,),
 
           // notes preview
-          Text(
+          /*Text(
             medicine.notes != null ? medicine.notes! : "",
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
-          ),
+          ),*/
 
           SizedBox(height: 15,),
 
-          // perform intake row
+
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
-                child: Text(
-                  getRemainingMedicineIntakes(medicineIntake),
-                  style: Theme.of(context).textTheme.subtitle1,
-                ),
+              Column(
+                children: [
+                  Text(
+                    getRemainingMedicineIntakes(medicineIntake),
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+                  ElevatedButton(
+                      onPressed: () async {
+                        if (medicineIntake.getMissingIntakes()>0) {
+
+                          // perform one intake and save it
+                          medicineIntake.doOneIntake();
+                          await MedicineIntakesDBWorker().update(medicineIntake);
+
+                          // no need of reloading everything, just notify
+                          medicineIntakesModel.notify();
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                        child: Text("PRENDI ADESSO"),
+                      ),
+                      style: ElevatedButton.styleFrom(primary: Colors.black54,)
+                  ),
+                ],
               ),
-              ElevatedButton(
-                  onPressed: () async {
-                    if (medicineIntake.getMissingIntakes()>0) {
-
-                      // perform one intake and save it
-                      medicineIntake.doOneIntake();
-                      await MedicineIntakesDBWorker().update(medicineIntake);
-
-                      // no need of reloading everything, just notify
-                      medicineIntakesModel.notify();
-                    }
-                  },
-                  child: Text("PRENDI ADESSO"),
-                  style: ElevatedButton.styleFrom(primary: Colors.black54,)
-              )
             ],
           )
+
+
         ],
       ),
     );

@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ippocrate/components/swiper/appointment_swiper.dart';
 import 'package:ippocrate/components/swiper/swipe_carusel.dart';
-import 'package:ippocrate/db/appointments_db_worker.dart';
 import 'package:ippocrate/models/appointment_groups_model.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/services/appointment_search_algorithm.dart';
@@ -22,10 +20,10 @@ class PeriodicalAppointmentsSwipe extends StatelessWidget {
         return Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 12),
+              padding: const EdgeInsets.only(top: 20),
               child: Text(
                 "Appuntamenti periodici da prenotare",
-                style: Theme.of(context).textTheme.headline5,
+                style: Theme.of(context).textTheme.headline6,
               ),
             ),
             Builder(
@@ -49,7 +47,7 @@ class PeriodicalAppointmentsSwipe extends StatelessWidget {
                   return Container(
                     color: Colors.white54,
                     child: Padding(
-                      padding: EdgeInsets.all(50),
+                      padding: EdgeInsets.all(25),
                       child: Text(
                         "Nessun appuntamento imminente!",
                         textAlign: TextAlign.center,
@@ -110,11 +108,36 @@ class PeriodicalAppointmentSwipeCard extends StatelessWidget {
 
           SizedBox(height: 5,),
 
+
           if (prevInstance!=null)
             Text(
               "Ultima volta: ${getWhenAppointment(prevInstance)}",
               style: Theme.of(context).textTheme.subtitle2,
-            ),
+            )
+          else
+            Text(""),
+
+          SizedBox(height: 15,),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    child: Text("PRENOTA ORA"),
+                  ),
+                  onPressed: () {
+
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black54,)
+              )
+            ],
+          )
+
+
+
         ],
       ),
     );

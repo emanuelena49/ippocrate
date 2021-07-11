@@ -20,10 +20,10 @@ class IncomingAppointmentsSwipe extends StatelessWidget {
         return Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 12),
+              padding: const EdgeInsets.only(top: 20),
               child: Text(
                 "Appuntamenti Imminenti",
-                style: Theme.of(context).textTheme.headline5,
+                style: Theme.of(context).textTheme.headline6,
               ),
             ),
             Builder(
@@ -47,7 +47,7 @@ class IncomingAppointmentsSwipe extends StatelessWidget {
                   return Container(
                     color: Colors.white54,
                     child: Padding(
-                      padding: EdgeInsets.all(50),
+                      padding: EdgeInsets.all(25),
                       child: Text(
                         "Nessun appuntamento imminente!",
                         textAlign: TextAlign.center,
