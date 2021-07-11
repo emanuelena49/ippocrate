@@ -102,7 +102,7 @@ class AppointmentsListItem extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       elevation: 8,
       color: isDone ? Colors.white54 :
-      isMaybeMissed ? Colors.red : Colors.blue,
+      isMaybeMissed ? Colors.red : Colors.lightBlueAccent,
 
       child: Slidable(
         actionPane: SlidableScrollActionPane(),

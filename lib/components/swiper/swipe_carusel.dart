@@ -37,9 +37,10 @@ class SwipableCard extends StatelessWidget {
 class SwipeCarusel extends StatelessWidget {
 
   List<Widget> cards = [];
+  double height;
   var _controller;
   var _pagination;
-  SwipeCarusel(this.cards) {
+  SwipeCarusel(this.cards, {this.height: 180}) {
     _pagination = new SwiperPagination();
     _controller = new SwiperControl();
   }
@@ -47,7 +48,7 @@ class SwipeCarusel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 180,
+      height: height,
       child: Swiper(
         itemCount: cards.length,
         itemBuilder: (BuildContext context,int index){
@@ -56,6 +57,7 @@ class SwipeCarusel extends StatelessWidget {
         pagination: _pagination,
         control: _controller,
         loop: false,
+
       ),
     );
   }

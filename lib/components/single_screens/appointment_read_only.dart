@@ -114,7 +114,7 @@ class _AppointmentHeading extends StatelessWidget {
     return Card(
       elevation: 4,
       color: isDone ? Colors.white54 :
-        isMaybeMissed ? Colors.red : Colors.blue,
+        isMaybeMissed ? Colors.red : Colors.lightBlueAccent,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
