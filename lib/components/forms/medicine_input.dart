@@ -170,7 +170,7 @@ class MedicineForm extends StatelessWidget {
 
           NotesInput(obj: medicine, model: medicinesModel),
 
-          ListTile(title: Text("...todo notifications...")),
+          // ListTile(title: Text("...todo notifications...")),
         ],
       ),
     );

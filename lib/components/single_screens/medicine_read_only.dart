@@ -239,6 +239,9 @@ class _MedicineNotes extends StatelessWidget {
               medicinesModel.viewMedicine(medicine, edit: true);
               medicinesModel.notify();
             },
+            style: ElevatedButton.styleFrom(
+                primary: Colors.black54
+            ),
             child: Text("aggiungi nota"),
           )
         ],

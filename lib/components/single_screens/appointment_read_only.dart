@@ -216,6 +216,9 @@ class _AppointmentNotes extends StatelessWidget {
                   appointmentInstance, edit: true);
               appointmentsInstancesModel.notify();
             },
+            style: ElevatedButton.styleFrom(
+              primary: Colors.black54
+            ),
             child: Text("aggiungi nota"),
           )
         ],
