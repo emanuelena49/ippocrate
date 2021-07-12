@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ippocrate/common/screens_manager.dart';
 import 'package:ippocrate/components/swiper/swipe_carusel.dart';
 import 'package:ippocrate/db/appointment_instance_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
@@ -87,7 +88,8 @@ class AppointmentSwipeCard extends StatelessWidget {
       color: appointmentInstance.isMaybeMissed ? Colors.red :
         appointmentInstance.done ? Colors.white54 : Colors.lightBlueAccent,
       onTap: () {
-
+        appointmentsInstancesModel.viewAppointment(appointmentInstance);
+        screensManager.loadScreen(context, Screen.APPOINTMENTS_ONE);
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

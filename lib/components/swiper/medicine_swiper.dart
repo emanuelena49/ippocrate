@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:ippocrate/common/screens_manager.dart';
 import 'package:ippocrate/components/swiper/swipe_carusel.dart';
 import 'package:ippocrate/db/medicine_intakes_db_worker.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
+import 'package:ippocrate/models/medicines_model.dart';
 import 'package:ippocrate/services/datetime.dart';
 import 'package:ippocrate/services/ui_medicines_texts.dart';
 import 'package:provider/provider.dart';
@@ -76,7 +78,8 @@ class MedicineSwipeCard extends StatelessWidget {
     return SwipableCard(
       color: Colors.greenAccent,
       onTap: () {
-
+        medicinesModel.viewMedicine(medicine);
+        screensManager.loadScreen(context, Screen.MEDICINES_ONE);
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

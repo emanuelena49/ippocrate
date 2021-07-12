@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ippocrate/common/screens_manager.dart';
 import 'package:ippocrate/components/swiper/swipe_carusel.dart';
 import 'package:ippocrate/models/appointment_groups_model.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
@@ -87,7 +88,8 @@ class PeriodicalAppointmentSwipeCard extends StatelessWidget {
     return SwipableCard(
       color: Colors.lightBlueAccent,
       onTap: () {
-
+        appointmentGroupsModel.viewAppointmentGroup(appointmentGroup);
+        screensManager.loadScreen(context, Screen.APPOINTMENTS_GROUP_ONE);
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,16 +130,18 @@ class PeriodicalAppointmentSwipeCard extends StatelessWidget {
                     child: Text("PRENOTA ORA"),
                   ),
                   onPressed: () {
-
+                    var newInstance = AppointmentInstance(
+                        appointment: appointmentGroup,
+                        dateTime: DateTime.now()
+                    );
+                    appointmentsInstancesModel.viewAppointment(newInstance, edit: true);
+                    screensManager.loadScreen(context, Screen.APPOINTMENTS_ONE);
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Colors.black54,)
               )
             ],
           )
-
-
-
         ],
       ),
     );
