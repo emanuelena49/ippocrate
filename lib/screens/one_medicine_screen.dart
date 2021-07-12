@@ -19,7 +19,6 @@ class OneMedicineScreen extends StatelessWidget {
             builder: (context, medModel, intakesModel, child) {
               return Scaffold(
                 appBar: AppBar(
-                  backgroundColor: Colors.black54,
                   title: Text(
                       medModel.isNew ?
                       "Nuovo Medicinale" :

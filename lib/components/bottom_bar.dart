@@ -27,7 +27,7 @@ class MyBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-        Color color = Colors.green;
+        Color color = Theme.of(context).primaryColor;
         int currentIndex = _screensIndexes[screensManager.currentScreen]!;
 
         return BottomNavigationBar(

@@ -22,8 +22,6 @@ class AppointmentsScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
 
-          backgroundColor: Colors.blueGrey,
-
           title: Text("Appuntamenti"),
 
           bottom: TabBar(

@@ -19,8 +19,6 @@ class MedicinesScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
 
-          backgroundColor: Colors.blueGrey,
-
           title: Text("Medicinali"),
 
           bottom: TabBar(

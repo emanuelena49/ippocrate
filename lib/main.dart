@@ -20,6 +20,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: initialRoute,
       routes: routes,
+      theme: ThemeData(
+        primaryColor: Colors.blueGrey.shade800
+      )
     );
   }
 }

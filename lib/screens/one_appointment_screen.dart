@@ -15,7 +15,6 @@ class OneAppointmentScreen extends StatelessWidget {
         builder: (context, appModel, child) {
           return  Scaffold(
             appBar: AppBar(
-              backgroundColor: Colors.black54,
               title: Text(
                 appModel.isNew ? "Nuovo Appuntamento" :
                     appModel.isEditing ? "Modifica Appuntamento" :
