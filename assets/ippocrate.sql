@@ -1,9 +1,4 @@
-DROP TABLE IF EXISTS medicine_intakes;
-DROP TABLE IF EXISTS medicines;
-DROP TABLE IF EXISTS appointment_instances;
-DROP TABLE IF EXISTS appointments;
-
-CREATE TABLE medicines (
+CREATE TABLE IF NOT EXISTS medicines (
     medicine_id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     notes TEXT,
@@ -13,7 +8,7 @@ CREATE TABLE medicines (
     n_days_between_intakes INTEGER DEFAULT 1
 );
 
-CREATE TABLE medicine_intakes (
+CREATE TABLE IF NOT EXISTS medicine_intakes (
     medicine_intake_id INTEGER PRIMARY KEY,
     medicine_id INTEGER NOT NULL,
     intake_date DATE NOT NULL,
@@ -23,13 +18,13 @@ CREATE TABLE medicine_intakes (
     ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE appointments (
+CREATE TABLE IF NOT EXISTS  appointments (
     appointment_id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     periodicity_days_interval INT
 );
 
-CREATE TABLE appointment_instances (
+CREATE TABLE  IF NOT EXISTS appointment_instances (
     appointment_instance_id INTEGER PRIMARY KEY,
     appointment_id INTEGER NOT NULL,
     appointment_datetime DATE NOT NULL,
