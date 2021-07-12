@@ -39,3 +39,16 @@ CREATE TABLE appointment_instances (
     FOREIGN KEY (appointment_id) REFERENCES appointments (appointment_id)
     ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+insert into appointments (name)
+values ("controllo dentista");
+
+insert into appointments (name, periodicity_days_interval)
+values ("visita medico di base", 90),
+ ("visita medico-sportiva", 365);
+
+insert into appointment_instances (appointment_id, appointment_datetime, notes, done)
+values (1, "2021-08-15 10:00:00", "controllo periodico dentista. Ricordati di passare il filo", "FALSE"),
+(1, "2021-06-15 09:00:00", null, "TRUE"),
+(2, "2021-07-25 16:00:00", null, "FALSE"),
+(2, "2021-06-25 16:00:00", null, "FALSE");
