@@ -19,8 +19,7 @@ class _DBManager {
       // path of sqlite db
       String path = join(utils.docsDir.path, "ippocrate.db");
 
-      if (true) {
-
+      /*if (true) {
         try {
           var x = File(path);
           if (await x.exists()) {
@@ -29,8 +28,7 @@ class _DBManager {
         } catch (e) {
           debugPrint(e.toString());
         }
-
-      }
+      }*/
 
       bool isInit = false;
 
@@ -53,7 +51,6 @@ class _DBManager {
           onOpen: (Database inDB) async {
 
             if(!isInit) await _runInitQuery(inDB);
-
             var r = await inDB.query('sqlite_master', columns: ['type', 'name']);
             debugPrint(r.toString());
           },
