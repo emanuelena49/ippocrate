@@ -1,6 +1,7 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:ippocrate/common/notifications.dart';
 import 'package:ippocrate/screens/medicines_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'common/screens_manager.dart';
@@ -14,9 +15,19 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+
+  notif() async {
+    MyNotifier notifier = MyNotifier();
+    await notifier.initNotifier();
+    notifier.displayNotification();
+  }
+
   @override
   Widget build(BuildContext context) {
     // if (true) return MedicinesScreen();
+
+    notif();
+
     return MaterialApp(
       initialRoute: initialRoute,
       routes: routes,
