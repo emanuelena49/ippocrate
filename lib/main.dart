@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // if (true) return MedicinesScreen();
 
-    sampleNotify();
+    // sampleNotify();
 
     return MaterialApp(
       initialRoute: initialRoute,
