@@ -16,17 +16,19 @@ void main() async {
 
 class MyApp extends StatelessWidget {
 
-  notif() async {
+  sampleNotify() async {
     MyNotifier notifier = MyNotifier();
     await notifier.initNotifier();
-    notifier.displayNotification();
+    notifier.sampleNotification();
+
+    notifier.sampleScheduledNotification();
   }
 
   @override
   Widget build(BuildContext context) {
     // if (true) return MedicinesScreen();
 
-    notif();
+    sampleNotify();
 
     return MaterialApp(
       initialRoute: initialRoute,
