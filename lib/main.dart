@@ -19,9 +19,17 @@ class MyApp extends StatelessWidget {
   sampleNotify() async {
     MyNotifier notifier = MyNotifier();
     await notifier.initNotifier();
-    notifier.sampleNotification();
+    await notifier.sampleNotification();
+    // await notifier.sampleScheduledNotification(15);
+    // await notifier.sampleScheduledNotification(10);
+    //await notifier.sampleScheduledNotification(15);
 
-    notifier.sampleScheduledNotification();
+    await notifier.samplePendingNotifications();
+    // await notifier.sampleCancelNotification();
+    // await notifier.sampleCancelNotification2();
+    // await notifier.samplePendingNotifications();
+
+    await notifier.sampleNotificationAppDetails();
   }
 
   @override
