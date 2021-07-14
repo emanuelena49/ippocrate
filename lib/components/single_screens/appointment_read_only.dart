@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ippocrate/common/screens_manager.dart';
 import 'package:ippocrate/components/dialogs/delete_appointment_instance.dart';
+import 'package:ippocrate/components/forms/appointment_notifications_input.dart';
 import 'package:ippocrate/db/appointment_instance_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/models/appointment_groups_model.dart';
@@ -94,6 +95,11 @@ class AppointmentReadOnly extends StatelessWidget {
 
         // todo: Appointment notifications
         SizedBox(height: 25,),
+        ListTile(
+          title: AppointmentNotificationInput(
+            appointmentInstance: appointmentInstance
+          ),
+        )
       ],
     );
   }

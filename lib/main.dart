@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:ippocrate/common/notifications_sample.dart';
 import 'package:ippocrate/screens/medicines_screen.dart';
+import 'package:ippocrate/services/notifications/notifications.dart';
 import 'package:path_provider/path_provider.dart';
 import 'common/screens_manager.dart';
 import 'common/utils.dart' as utils;
@@ -37,6 +38,9 @@ class MyApp extends StatelessWidget {
     // if (true) return MedicinesScreen();
 
     // sampleNotify();
+
+    // init notifications manager
+    NotificationsModel.instance.init();
 
     return MaterialApp(
       initialRoute: initialRoute,

@@ -38,6 +38,7 @@ dependencies:
   badges: ^2.0.1
   card_swiper: ^1.0.2
   flutter_local_notifications: ^6.0.0
+  dotted_border: ^2.0.0
 
 dev_dependencies:
   flutter_test:

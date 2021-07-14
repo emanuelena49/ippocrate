@@ -9,12 +9,15 @@ import 'package:timezone/timezone.dart' as tz;
 
 class NotificationsModel extends NotificationModelLogic {
 
+  NotificationsModel._();
+  static NotificationsModel instance = NotificationsModel._();
+
   late FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
   late NotificationDetails _platformChannelSpecifics;
   bool _initDone = false;
 
   @override
-  addNotification(MyNotification notification, {bool notify: true, subject}) async {
+  addNotification(MyNotification notification, {bool notify: true, subjectAsObj}) async {
 
     // insert the notification in our local list (and generate a valid id)
     super.addNotification(notification);
@@ -29,13 +32,13 @@ class NotificationsModel extends NotificationModelLogic {
         notification.dateTime.month,
         notification.dateTime.day,
         notification.dateTime.hour,
-        notification.dateTime.minute, 
+        notification.dateTime.minute,
     ).subtract(offsetTime);
 
     _flutterLocalNotificationsPlugin.zonedSchedule(
         notification.id!,
-        getNotificationTitle(subject),
-        getNotificationContent(subject),
+        getNotificationTitle(subjectAsObj),
+        getNotificationContent(subjectAsObj),
         zonedTime,
         _platformChannelSpecifics,
         androidAllowWhileIdle: true,
