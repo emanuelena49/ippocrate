@@ -37,8 +37,7 @@ class MyNotifier {
         // iOS: initializationSettingsIOS,
         // macOS: initializationSettingsMacOS
     );
-    await flutterLocalNotificationsPlugin.initialize(
-        initializationSettings, onSelectNotification: handleNotification);
+
 
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
       AndroidNotificationDetails(

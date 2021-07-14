@@ -1,7 +1,7 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:ippocrate/common/notifications.dart';
+import 'package:ippocrate/common/notifications_sample.dart';
 import 'package:ippocrate/screens/medicines_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'common/screens_manager.dart';
