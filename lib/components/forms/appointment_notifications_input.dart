@@ -47,8 +47,28 @@ class AppointmentNotificationInput extends StatelessWidget {
     );
   }
 
-  clickedRemove(MyNotification n) async {
-    debugPrint("todo: remove notication ${n.id!.toString()}");
+  clickedRemove(BuildContext context, MyNotification n) async {
+    // debugPrint("todo: remove notication ${n.id!.toString()}");
+
+    NotificationsModel.instance.removeNotification(n);
+
+    // ------------------------------------------------------------
+    // show confirm snackbar
+    String txt = _getNotificationWhen(n);
+
+    if (txt.startsWith("OGGI") || txt.startsWith("DOMANI")) {
+      txt = "Notifica di $txt rimossa!";
+    } else {
+      txt = "Notifica del $txt rimossa!";
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 2),
+        content: Text(txt),
+      ),
+    );
   }
 
   clickedAdd(context) async {
@@ -90,8 +110,26 @@ class AppointmentNotificationInput extends StatelessWidget {
       )),
     );
 
-    NotificationsModel.instance.addNotification(
+    await NotificationsModel.instance.addNotification(
         notification, subjectAsObj: appointmentInstance);
+
+    // ------------------------------------------------------------
+    // show confirm snackbar
+    String txt = _getNotificationWhen(notification);
+
+    if (txt.startsWith("OGGI") || txt.startsWith("DOMANI")) {
+      txt = "Aggiunta notifica per $txt.";
+    } else {
+      txt = "Aggiunta notifica per il $txt.";
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.blueAccent,
+        duration: Duration(seconds: 2),
+        content: Text(txt),
+      ),
+    );
   }
 }
 
@@ -105,26 +143,11 @@ class NotificationItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    String txt;
-
-    DateTime today = getTodayDate();
-    DateTime dateOnly = getPureDate(notification.dateTime);
-
-    if (dateOnly.isAtSameMomentAs(today)) {
-      txt = "OGGI";
-    } else if (dateOnly.isAtSameMomentAs(today.add(Duration(days: 1)))) {
-      txt = "DOMANI";
-    } else {
-      DateFormat dateFormat = DateFormat("dd/MM");
-      txt = dateFormat.format(notification.dateTime);
-    }
-
-    DateFormat hourFormat = DateFormat("hh:mm");
-    txt += " ALLE " + hourFormat.format(notification.dateTime);
+    String txt = _getNotificationWhen(notification);
 
     return Card(
       color: Colors.blue.shade800,
-      margin: const EdgeInsets.symmetric(vertical: 8),
+      margin: const EdgeInsets.symmetric(vertical: 4),
       child: Container(
         padding: const EdgeInsets.all(25),
         decoration: BoxDecoration(
@@ -145,7 +168,7 @@ class NotificationItem extends StatelessWidget {
 
             GestureDetector(
                 onTap: () {
-                  onClickedRemove(notification);
+                  onClickedRemove(context, notification);
                 },
                 child: Icon(Icons.clear, size: 38,)
             ),
@@ -164,7 +187,7 @@ class NotificationAddButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
+      margin: const EdgeInsets.symmetric(vertical: 4),
       child: DottedBorder(
         color: Colors.black,
         strokeWidth: 1,
@@ -191,4 +214,26 @@ class NotificationAddButton extends StatelessWidget {
       ),
     );
   }
+}
+
+String _getNotificationWhen(MyNotification n) {
+
+  String txt;
+
+  DateTime today = getTodayDate();
+  DateTime dateOnly = getPureDate(n.dateTime);
+
+  if (dateOnly.isAtSameMomentAs(today)) {
+    txt = "OGGI";
+  } else if (dateOnly.isAtSameMomentAs(today.add(Duration(days: 1)))) {
+    txt = "DOMANI";
+  } else {
+    DateFormat dateFormat = DateFormat("dd/MM");
+    txt = dateFormat.format(n.dateTime);
+  }
+
+  DateFormat hourFormat = DateFormat("hh:mm");
+  txt += " ALLE " + hourFormat.format(n.dateTime);
+
+  return txt;
 }

@@ -155,8 +155,9 @@ abstract class NotificationModelLogic extends Model {
   /// Call this before or after your override (it's up to you)
   @mustCallSuper
   removeNotification(MyNotification notification, {bool notify: true}) {
-    notifications.forEach((n) { 
+    for(int i=0; i<notifications.length; i++){
+      var n = notifications[i];
       if (n.id == notification.id) notifications.remove(n);
-    });
+    }
   }
 }
