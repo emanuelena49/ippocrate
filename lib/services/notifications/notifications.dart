@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:ippocrate/services/notifications/notifications_logic.dart';
+import 'package:ippocrate/services/notifications/notifications_texts.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -13,7 +14,7 @@ class NotificationsModel extends NotificationModelLogic {
   bool _initDone = false;
 
   @override
-  addNotification(MyNotification notification, {bool notify: true}) async {
+  addNotification(MyNotification notification, {bool notify: true, subject}) async {
 
     // insert the notification in our local list (and generate a valid id)
     super.addNotification(notification);
@@ -21,13 +22,21 @@ class NotificationsModel extends NotificationModelLogic {
     // ----------------------------------------------------------------
     // now, schedule it
 
-    // todo: schedule it w. real date
+    Duration offsetTime= DateTime.now().timeZoneOffset;
+
+    tz.TZDateTime zonedTime = tz.TZDateTime.local(
+        notification.dateTime.year,
+        notification.dateTime.month,
+        notification.dateTime.day,
+        notification.dateTime.hour,
+        notification.dateTime.minute, 
+    ).subtract(offsetTime);
 
     _flutterLocalNotificationsPlugin.zonedSchedule(
         notification.id!,
-        'scheduled title',
-        'scheduled body',
-        tz.TZDateTime.now(tz.local).add(Duration(seconds: 5)),
+        getNotificationTitle(subject),
+        getNotificationContent(subject),
+        zonedTime,
         _platformChannelSpecifics,
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
