@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:ippocrate/common/screens_manager.dart';
+import 'package:ippocrate/components/forms/appointment_notifications_input.dart';
 import 'package:ippocrate/db/appointment_instance_db_worker.dart';
 import 'package:ippocrate/db/appointments_db_worker.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/models/appointment_groups_model.dart';
 import 'package:ippocrate/services/datetime.dart';
+import 'package:ippocrate/services/notifications/notifications_logic.dart';
 
 import 'notes_input.dart';
 
@@ -58,6 +60,11 @@ class AppointmentInstanceSubmitButton extends StatelessWidget {
           action = "modificato";
           var ok = await dbAppInst.update(appointmentInstance);
         }
+
+        // apply changes on notifications
+        NotificationsOnSaveModel.instance.applyList(
+          obj: appointmentInstance
+        );
 
         // update all models
         appointmentsInstancesModel.loadData(dbAppInst);
@@ -114,6 +121,14 @@ class AppointmentInstanceForm extends StatelessWidget {
               obj: appointmentInstance,
               model: appointmentsInstancesModel
           ),
+
+
+          ListTile(
+            title: AppointmentNotificationInput(
+              appointmentInstance: appointmentInstance,
+              applyOnSave: true,
+            ),
+          )
         ],
       )
     );

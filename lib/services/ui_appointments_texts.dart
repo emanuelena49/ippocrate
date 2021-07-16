@@ -21,7 +21,7 @@ String getWhenAppointment(AppointmentInstance appointmentInstance) {
     txt = dateFormat.format(appointmentInstance.dateTime);
   }
 
-  DateFormat hourFormat = DateFormat("hh:mm");
+  DateFormat hourFormat = DateFormat("HH:mm");
   txt += " ALLE " + hourFormat.format(appointmentInstance.dateTime);
 
   return txt;

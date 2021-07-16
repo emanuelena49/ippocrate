@@ -44,14 +44,14 @@ class NotificationSubject implements HasId {
 
   factory NotificationSubject.fromObj(HasId obj) {
 
-    return _getObject( id: obj.id!, type: obj.runtimeType.toString() );
+    return _getObject( id: obj.id, type: obj.runtimeType.toString() );
   }
 
 
   static List<NotificationSubject> _all = [];
   /// Get an existent instance of [NotificationSubject] with certain features
   /// or generate a new one (that helps preventing duplicates)
-  static NotificationSubject _getObject({required int id, required String type}) {
+  static NotificationSubject _getObject({int? id, required String type}) {
 
     for (var s in _all) {
       if (id==s.id && type==s.type) {

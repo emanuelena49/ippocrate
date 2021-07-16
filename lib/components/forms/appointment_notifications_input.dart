@@ -2,53 +2,165 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ippocrate/common/model.dart';
 import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/services/datetime.dart';
 import 'package:ippocrate/services/notifications/notifications.dart';
 import 'package:ippocrate/services/notifications/notifications_logic.dart';
 import 'package:provider/provider.dart';
 
+
+class NotificationsOnSaveModel extends Model {
+
+  NotificationsOnSaveModel._();
+  static NotificationsOnSaveModel instance =
+      NotificationsOnSaveModel._();
+
+
+  List<MyNotification> notificationsBuffer=[],
+      notificationsBufferInitial = [];
+
+  /// Pass [subject] only if it exists in the DB!!!
+  init({NotificationSubject? subject}) {
+
+    notificationsBufferInitial = [];
+    notificationsBuffer = [];
+
+    // (if it exists) get initial notifications
+    var model = NotificationsModel.instance;
+    if (subject!=null) {
+
+      model.getSubjectNotifications(subject).forEach((n) {
+        notificationsBufferInitial.add(n);
+        notificationsBuffer.add(n);
+      });
+    }
+  }
+
+  applyList({obj}) {
+
+    var model = NotificationsModel.instance;
+
+    // get removed notifications
+    List removedNotifications = [];
+    notificationsBufferInitial.forEach((n) {
+      if (!notificationsBuffer.contains(n)) {
+        removedNotifications.add(n);
+      }
+    });
+
+    // get new notifications
+    List newNotifications = [];
+    notificationsBuffer.forEach((n) {
+      if (!notificationsBufferInitial.contains(n)) {
+        newNotifications.add(n);
+      }
+    });
+
+    // copy buffer in initial buffer
+    notificationsBufferInitial = notificationsBuffer;
+
+    // perform removal
+    for (int i=0; i<removedNotifications.length; i++) {
+      var n = removedNotifications[i];
+      model.removeNotification(n, notify: false);
+    }
+
+    // perform insert
+    for (int i=0; i<newNotifications.length; i++) {
+      MyNotification n = newNotifications[i];
+
+      // (eventually add the subject)
+      if (obj!=null) {
+        n.subject = NotificationSubject.fromObj(obj);
+      }
+
+      // add it
+      model.addNotification(n, notify: false, subjectAsObj: obj);
+    }
+
+    // notify notifications model
+    model.notify();
+  }
+}
+
 class AppointmentNotificationInput extends StatelessWidget {
 
   AppointmentInstance appointmentInstance;
-  late NotificationSubject subject;
-  AppointmentNotificationInput({required this.appointmentInstance});
+  NotificationSubject? subject;
+  final bool applyOnSave;
+  AppointmentNotificationInput({required this.appointmentInstance, this.applyOnSave: false}) {
+
+    // evenutally init notification model
+    if (applyOnSave) {
+
+      // I want to pass a valid subject ONLY if I have a valid ID
+      var subj = appointmentInstance.id!=null ?
+          NotificationSubject.fromObj(appointmentInstance) :
+          null;
+
+      NotificationsOnSaveModel.instance.init(subject: subj);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
 
+
     return ChangeNotifierProvider.value(
       value: NotificationsModel.instance,
-      child: Consumer<NotificationsModel>(
-        builder: (context, notificationsModel, widget) {
-          
-          // get this notification subject
-          subject = NotificationSubject.fromObj(appointmentInstance);
-          
-          List<NotificationItem> notificationItems =
-              notificationsModel.getSubjectNotifications(subject)
-                  .map((n) => NotificationItem(
+      child: ChangeNotifierProvider.value(
+        value: NotificationsOnSaveModel.instance,
+        child: Consumer2<NotificationsModel, NotificationsOnSaveModel>(
+          builder: (context, notificationsModel, notificationsOnSaveModel,widget) {
+
+            List<MyNotification> notifs;
+
+            if (applyOnSave) {
+              // If I apply on save, I use its notification list
+              notifs = notificationsOnSaveModel.notificationsBuffer;
+            } else {
+
+              // ... else I use normal model
+
+              // get this notification subject
+              subject = NotificationSubject.fromObj(appointmentInstance);
+
+              // retrieve notifications of this subject (from normal model)
+              notifs = notificationsModel.getSubjectNotifications(subject!);
+            }
+
+            return Column(
+              children: [
+                Text(
+                  "Notifiche",
+                  style: Theme.of(context).textTheme.headline6,
+                ),
+
+                // paste all notifications
+                ...notifs.map((n) => NotificationItem(
                     notification: n,
                     onClickedRemove: clickedRemove
-              )).toList();
+                    )).toList(),
 
-          return Column(
-            children: [
-              Text(
-                "Notifiche",
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              ...notificationItems,
-              NotificationAddButton(onClick: clickedAdd),
-            ],
-          );
-        }
+                NotificationAddButton(onClick: clickedAdd),
+              ],
+            );
+          }
+        ),
       ),
     );
   }
 
   clickedRemove(BuildContext context, MyNotification n) async {
-    // debugPrint("todo: remove notication ${n.id!.toString()}");
+
+    if (applyOnSave) {
+      // If i have apply on save, i operate only on OnSave model
+      var model = NotificationsOnSaveModel.instance;
+      model.notificationsBuffer.remove(n);
+      model.notify();
+      return;
+    }
 
     NotificationsModel.instance.removeNotification(n);
 
@@ -117,7 +229,16 @@ class AppointmentNotificationInput extends StatelessWidget {
 
     // ------------------------------------------------------
     // build and add notification
-    
+
+    if (applyOnSave) {
+      // If i have apply on save, i operate only on OnSave model
+      var model = NotificationsOnSaveModel.instance;
+      model.notificationsBuffer.add(MyNotification(dateTime: d));
+      model.notify();
+      return;
+    }
+
+    // ... else I add and create it for real
     var notification = MyNotification(subject: subject, dateTime: d);
 
     await NotificationsModel.instance.addNotification(
@@ -242,7 +363,7 @@ String _getNotificationWhen(MyNotification n) {
     txt = dateFormat.format(n.dateTime);
   }
 
-  DateFormat hourFormat = DateFormat("hh:mm");
+  DateFormat hourFormat = DateFormat("HH:mm");
   txt += " ALLE " + hourFormat.format(n.dateTime);
 
   return txt;
