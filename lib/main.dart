@@ -2,11 +2,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:ippocrate/common/notifications_sample.dart';
-import 'package:ippocrate/screens/medicines_screen.dart';
 import 'package:ippocrate/services/notifications/notifications.dart';
 import 'package:path_provider/path_provider.dart';
 import 'common/screens_manager.dart';
 import 'common/utils.dart' as utils;
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,7 +47,15 @@ class MyApp extends StatelessWidget {
       routes: routes,
       theme: ThemeData(
         primaryColor: Colors.blueGrey.shade800
-      )
+      ),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('it', 'IT'),
+      ],
     );
   }
 }

@@ -196,6 +196,7 @@ class _IntakeIntervalInput extends StatelessWidget {
             Container(
               width: 100,
               child: DateTimePicker(
+                locale: const Locale('it', 'IT'),
                 type: DateTimePickerType.date,
                 dateLabelText: 'Da ',
                 initialValue: medicine.startDate.toString(),
@@ -241,6 +242,7 @@ class _IntakeIntervalInput extends StatelessWidget {
               width: 100,
               // margin: EdgeInsets.only(right: 20),
               child: DateTimePicker(
+                locale: const Locale('it', 'IT'),
                 type: DateTimePickerType.date,
                 dateLabelText: "a ",
                 initialValue: medicine.endDate != null ?

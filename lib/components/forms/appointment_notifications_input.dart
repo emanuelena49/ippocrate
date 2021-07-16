@@ -190,12 +190,14 @@ class AppointmentNotificationInput extends StatelessWidget {
     // get datetime
 
     // ask date
-    var today = getTodayDate();
+    var today = getTodayDate(),
+        pureDate = getPureDate(appointmentInstance.dateTime);
     DateTime? notificationDate = await showDatePicker(
         context: context,
-        initialDate: today,
+        initialDate: pureDate,
         firstDate: today,
-        lastDate: getPureDate(appointmentInstance.dateTime)
+        lastDate: pureDate,
+        locale: const Locale('it', 'IT'),
     );
     // debugPrint(notificationDate.toString());
 
@@ -205,7 +207,7 @@ class AppointmentNotificationInput extends StatelessWidget {
     // ask time
     TimeOfDay? notificationTime = await showTimePicker(
         context: context,
-        initialTime: TimeOfDay.fromDateTime(appointmentInstance.dateTime)
+        initialTime: TimeOfDay.fromDateTime(appointmentInstance.dateTime),
     );
     // debugPrint(notificationTime.toString());
 
