@@ -168,8 +168,11 @@ abstract class NotificationModelLogic extends Model {
     var notificationsToRemove = notifications.where((n) =>
         n.subject!.compare(subject));
 
-    for (var n in notificationsToRemove) {
-      await removeNotification(n, notify: false);
+    for (int i=0; i<notifications.length; i++) {
+      var n = notifications[i];
+      if (n.subject!.compare(subject)) {
+        await removeNotification(n, notify: false);
+      }
     }
 
     if (notify) notifyListeners();
