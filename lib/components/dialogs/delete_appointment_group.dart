@@ -8,6 +8,9 @@ import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/models/appointment_groups_model.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
 import 'package:ippocrate/models/medicines_model.dart';
+import 'package:ippocrate/services/appointment_search_algorithm.dart';
+import 'package:ippocrate/services/notifications/notifications.dart';
+import 'package:ippocrate/services/notifications/notifications_logic.dart';
 import 'package:ippocrate/services/ui_appointments_texts.dart';
 
 Future deleteAppointmentGroup(BuildContext context,
@@ -34,10 +37,14 @@ Future deleteAppointmentGroup(BuildContext context,
             ElevatedButton(
               onPressed: () async {
 
-                // delete all intakes
-                // (no need, i set ON DELETE CASCADE in SQL)
+                // get all the instances (i need them to remove notifications later)
+                List<AppointmentInstance> appInstances = searchAppointmentInstances(
+                  searchOptions: AppointmentsSearchOptions(
+                      types: [appointmentGroup]
+                  )
+                );
 
-                // delete the medicine
+                // delete the appointment group (and ON CASCADE the instances)
                 var appDb = AppointmentGroupsDBWorker();
                 await appDb.delete(appointmentGroup.id!);
 
@@ -51,6 +58,12 @@ Future deleteAppointmentGroup(BuildContext context,
                     content: Text("Gruppo appuntamenti eliminato"),
                   ),
                 );
+
+                // remove all notifications of every appointment instance
+                appInstances.forEach((i) {
+                  NotificationsModel.instance.removeAllNotifications(
+                      NotificationSubject.fromObj(i));
+                });
 
                 // (reload everything)
                 appointmentsInstancesModel.loadData(AppointmentInstancesDBWorker());

@@ -37,13 +37,13 @@ class GenericAddScreen extends StatelessWidget {
                     screensManager.loadScreen(context, Screen.APPOINTMENTS_ONE);
                   },
                   child: Padding(
-                    padding: EdgeInsets.all(50),
+                    padding: EdgeInsets.symmetric(vertical: 50),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
                       children: [
                         ImageIcon(AssetImage('assets/icons/appointment.png'),
-                          size: 55,),
+                          size: 50,),
                         Text("Nuovo Appuntamento",
                           style: Theme.of(context).textTheme.headline6,)
                       ],
@@ -66,12 +66,12 @@ class GenericAddScreen extends StatelessWidget {
                     screensManager.loadScreen(context, Screen.MEDICINES_ONE);
                   },
                   child: Padding(
-                    padding: EdgeInsets.all(50),
+                    padding: EdgeInsets.symmetric(vertical: 50),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ImageIcon(AssetImage('assets/icons/medicine.png'),
-                          size: 55,),
+                          size: 50,),
                         Text("Nuovo Medicinale",
                           style: Theme.of(context).textTheme.headline6,)
                       ],

@@ -8,6 +8,9 @@ import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/models/appointment_groups_model.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
 import 'package:ippocrate/models/medicines_model.dart';
+import 'package:ippocrate/services/appointment_search_algorithm.dart';
+import 'package:ippocrate/services/notifications/notifications.dart';
+import 'package:ippocrate/services/notifications/notifications_logic.dart';
 import 'package:ippocrate/services/ui_appointments_texts.dart';
 
 Future deleteAppointment(BuildContext context,
@@ -45,10 +48,14 @@ Future deleteAppointment(BuildContext context,
             ElevatedButton(
               onPressed: () async {
 
-                // delete all intakes
-                // (no need, i set ON DELETE CASCADE in SQL)
+                // get list of appointments of this type (need later)
+                List<AppointmentInstance> groupAppInstances = searchAppointmentInstances(
+                    searchOptions: AppointmentsSearchOptions(
+                        types: [appointmentInstance.appointment]
+                    )
+                );
 
-                // delete the medicine
+                // delete the appointment
                 var appInstDb = AppointmentInstancesDBWorker();
                 await appInstDb.delete(appointmentInstance.id!);
 
@@ -63,10 +70,22 @@ Future deleteAppointment(BuildContext context,
                   ),
                 );
 
+                // delete all the appointment notifications
+                NotificationsModel.instance.removeAllNotifications(
+                    NotificationSubject.fromObj(appointmentInstance)
+                );
+
+                var appGroupDb = AppointmentGroupsDBWorker();
+
+                // if appointment is the last of the group, remove also the group
+                if (groupAppInstances.length<=1) {
+                  await appGroupDb.delete(appointmentInstance.appointment.id!);
+                }
+
                 appointmentsInstancesModel.loadData(appInstDb);
 
                 // (reload even appointments types)
-                appointmentGroupsModel.loadData(AppointmentGroupsDBWorker());
+                appointmentGroupsModel.loadData(appGroupDb);
               },
               child: Text("Si, Elimina"),
             ),
