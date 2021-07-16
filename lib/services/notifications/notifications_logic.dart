@@ -94,7 +94,7 @@ abstract class NotificationModelLogic extends Model {
   ///  Call this in your override BEFORE you shedule the notification
   ///  (so you have an id)
   @mustCallSuper
-  addNotification(MyNotification notification) {
+  Future addNotification(MyNotification notification) async {
 
     if (notification.id==null) {
 
@@ -154,10 +154,16 @@ abstract class NotificationModelLogic extends Model {
   ///
   /// Call this before or after your override (it's up to you)
   @mustCallSuper
-  removeNotification(MyNotification notification, {bool notify: true}) {
-    for(int i=0; i<notifications.length; i++){
-      var n = notifications[i];
-      if (n.id == notification.id) notifications.remove(n);
-    }
+  Future removeNotification(MyNotification notification) async {
+
+    notifications.removeWhere((n) => n.id==notification.id);
+  }
+
+  /// Remove all [Notification]s associated to a certain
+  Future removeAllNotifications(NotificationSubject subject,
+      {bool notify: true}) async {
+
+    notifications.removeWhere((n) => n.subject!.compare(subject));
+    if (notify) notifyListeners();
   }
 }

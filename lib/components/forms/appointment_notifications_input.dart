@@ -100,15 +100,25 @@ class AppointmentNotificationInput extends StatelessWidget {
     // if null, just undo
     if (notificationTime == null) return;
 
+    // if datetime < now(), stop and print an error
+    DateTime d = notificationDate.add(Duration(
+        hours: notificationTime.hour, minutes: notificationTime.minute));
+
+    if (d.isBefore(DateTime.now())) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 2),
+          content: Text("Impossibile fissare una notifica per prima di adesso!"),
+        ),
+      );
+      return;
+    }
+
     // ------------------------------------------------------
     // build and add notification
     
-    var notification = MyNotification(
-      subject: subject,
-      dateTime: notificationDate.add(Duration(
-        hours: notificationTime.hour, minutes: notificationTime.minute
-      )),
-    );
+    var notification = MyNotification(subject: subject, dateTime: d);
 
     await NotificationsModel.instance.addNotification(
         notification, subjectAsObj: appointmentInstance);

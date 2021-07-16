@@ -20,7 +20,7 @@ class NotificationsModel extends NotificationModelLogic {
   addNotification(MyNotification notification, {bool notify: true, subjectAsObj}) async {
 
     // insert the notification in our local list (and generate a valid id)
-    super.addNotification(notification);
+    await super.addNotification(notification);
 
     // ----------------------------------------------------------------
     // now, schedule it
@@ -52,13 +52,15 @@ class NotificationsModel extends NotificationModelLogic {
   }
 
   @override
-  removeNotification(MyNotification notification, {bool notify: true}) async {
+  removeNotification(MyNotification notification, {bool notify: true,
+    bool unScheduleNotification: true}) async {
 
     // cancel it
-    await _flutterLocalNotificationsPlugin.cancel(notification.id!);
+    if (unScheduleNotification)
+      await _flutterLocalNotificationsPlugin.cancel(notification.id!);
 
     // remove from our local list
-    super.removeNotification(notification);
+    await super.removeNotification(notification);
 
     // notify listeners
     if (notify) notifyListeners();
@@ -133,8 +135,21 @@ class NotificationsModel extends NotificationModelLogic {
   }
 
   Future handleNotification(String? payload) async {
+
     if (payload != null) {
       debugPrint('notification payload: $payload');
+
+      try {
+
+        // get notification
+        MyNotification n = MyNotification.fromMap(json.decode(payload));
+
+        // remove it from list & notify
+        removeNotification(n, unScheduleNotification: false);
+
+      } catch (e) {
+        debugPrint(e.toString());
+      }
     }
   }
 }

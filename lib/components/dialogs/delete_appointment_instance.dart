@@ -8,6 +8,8 @@ import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/models/appointment_groups_model.dart';
 import 'package:ippocrate/models/medicine_intakes_model.dart';
 import 'package:ippocrate/models/medicines_model.dart';
+import 'package:ippocrate/services/notifications/notifications.dart';
+import 'package:ippocrate/services/notifications/notifications_logic.dart';
 import 'package:ippocrate/services/ui_appointments_texts.dart';
 
 Future deleteAppointment(BuildContext context,
@@ -45,10 +47,7 @@ Future deleteAppointment(BuildContext context,
             ElevatedButton(
               onPressed: () async {
 
-                // delete all intakes
-                // (no need, i set ON DELETE CASCADE in SQL)
-
-                // delete the medicine
+                // delete the appointment
                 var appInstDb = AppointmentInstancesDBWorker();
                 await appInstDb.delete(appointmentInstance.id!);
 
@@ -61,6 +60,11 @@ Future deleteAppointment(BuildContext context,
                     duration: Duration(seconds: 2),
                     content: Text("Appuntamento eliminato"),
                   ),
+                );
+
+                // delete all the appointment notifications
+                NotificationsModel.instance.removeAllNotifications(
+                    NotificationSubject.fromObj(appointmentInstance)
                 );
 
                 appointmentsInstancesModel.loadData(appInstDb);
