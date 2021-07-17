@@ -22,7 +22,7 @@ String getNotificationContent(subject) {
   switch (subject.runtimeType.toString()) {
     case "AppointmentInstance":
       subject as AppointmentInstance;
-      return "${getWhenAppointment(subject)}, non dimenticare il tuo appuntamento!";
+      return "${getWhenAppointment(subject, onlyAbsoluteDateTimes: true)}, non dimenticare il tuo appuntamento!";
     case "":
     // todo: implement...
       break;
