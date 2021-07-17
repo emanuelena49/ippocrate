@@ -5,16 +5,16 @@ import 'package:ippocrate/models/appointment_instances_model.dart';
 import 'package:ippocrate/models/appointment_groups_model.dart';
 import 'package:ippocrate/services/datetime.dart';
 
-String getWhenAppointment(AppointmentInstance appointmentInstance) {
+String getWhenAppointment(AppointmentInstance appointmentInstance, {DateTime? today, bool onlyAbsoluteDateTimes: false}) {
 
   String txt;
 
-  DateTime today = getTodayDate();
+  today = today ?? getTodayDate();
   DateTime dateOnly = getPureDate(appointmentInstance.dateTime);
 
-  if (dateOnly.isAtSameMomentAs(today)) {
+  if (dateOnly.isAtSameMomentAs(today) && !onlyAbsoluteDateTimes) {
     txt = "OGGI";
-  } else if (dateOnly.isAtSameMomentAs(today.add(Duration(days: 1)))) {
+  } else if (dateOnly.isAtSameMomentAs(today.add(Duration(days: 1))) && !onlyAbsoluteDateTimes) {
     txt = "DOMANI";
   } else {
     DateFormat dateFormat = DateFormat("dd/MM");
