@@ -93,6 +93,7 @@ class MedicineFormSubmitButton extends StatelessWidget {
 
           List<MedicineIntake> intakes = generateIntakesFromMedicine(
               medicine,
+              startDate: medicine.startDate,
               endDate: medicine.endDate!=null ?
                 medicine.endDate :
                 DateTime.now().add(Duration(days: 100))
