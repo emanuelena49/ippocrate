@@ -102,6 +102,8 @@ class MedicineFormSubmitButton extends StatelessWidget {
           for (var i in intakes) {
             await dbIntakes.create(i);
           }
+
+          debugPrint(intakes.toString());
         }
 
         // var x = await dbIntakes.getAll();
@@ -210,7 +212,7 @@ class _IntakeIntervalInput extends StatelessWidget {
 
                 onChanged: (val) {
                   if (val != null && val != "") {
-                    medicine.startDate = DateTime.parse(val);
+                    medicine.startDate = getPureDate(DateTime.parse(val));
                   }
                 },
 
@@ -255,7 +257,7 @@ class _IntakeIntervalInput extends StatelessWidget {
                     errorMaxLines: 3),
                 onChanged: (val) {
                   medicine.endDate = (val != null && val != "") ?
-                  DateTime.parse(val) : null;
+                  getPureDate(DateTime.parse(val)) : null;
                 },
                 validator: (val) {
 
