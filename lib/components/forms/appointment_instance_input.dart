@@ -231,7 +231,7 @@ class _AppointmentDateTimeInput extends StatelessWidget {
         initialValue: appointmentInstance.dateTime.toString(),
         initialDate: appointmentInstance.dateTime,
         initialTime: TimeOfDay(hour: 10, minute: 0),
-        firstDate: getTodayDate(),
+        firstDate: DateTime(2000), // getTodayDate(),
         lastDate: DateTime(2100),
         locale: const Locale('it', 'IT'),
         onChanged: (val) {

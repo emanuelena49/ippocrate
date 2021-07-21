@@ -196,7 +196,7 @@ class AppointmentNotificationInput extends StatelessWidget {
         context: context,
         initialDate: pureDate,
         firstDate: today,
-        lastDate: pureDate,
+        lastDate: DateTime(2100), // pureDate,
         locale: const Locale('it', 'IT'),
     );
     // debugPrint(notificationDate.toString());
