@@ -87,6 +87,7 @@ class _MedicinesListItem extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Card(
+      clipBehavior: Clip.antiAlias,
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       elevation: 8,
       color: Colors.greenAccent,

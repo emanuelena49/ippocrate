@@ -95,6 +95,7 @@ class _MedicinesIntakesListItem extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Card(
+      clipBehavior: Clip.antiAlias,
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
       elevation: 8,
       color: intake.getMissingIntakes()>0 ?

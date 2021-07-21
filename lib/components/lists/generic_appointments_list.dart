@@ -99,6 +99,7 @@ class AppointmentsListItem extends StatelessWidget {
     bool isMaybeMissed = appointmentInstance.isMaybeMissed;
 
     return Card(
+      clipBehavior: Clip.antiAlias,
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       elevation: 8,
       color: isDone ? Colors.white54 :
