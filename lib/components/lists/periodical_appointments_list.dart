@@ -132,6 +132,7 @@ class _PeriodicalAppointmentsListItem extends StatelessWidget {
       // color: nextInstance==null ? Colors.lightBlueAccent : Colors.white54,
 
       child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: () {
           appointmentGroupsModel.viewAppointmentGroup(appointment);
           screensManager.loadScreen(context, Screen.APPOINTMENTS_GROUP_ONE);

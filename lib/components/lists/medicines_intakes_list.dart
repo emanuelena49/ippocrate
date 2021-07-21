@@ -131,6 +131,7 @@ class _MedicinesIntakesListItem extends StatelessWidget {
           ),
         ],
         child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: () {
             medicinesModel.viewMedicine(intake.medicine, edit: false);
             screensManager.loadScreen(context, Screen.MEDICINES_ONE);

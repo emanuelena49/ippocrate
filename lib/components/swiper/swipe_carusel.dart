@@ -22,6 +22,7 @@ class SwipableCard extends StatelessWidget {
         vertical: 5, horizontal: 8
       ),
       child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.only(left: 18, right: 30),
