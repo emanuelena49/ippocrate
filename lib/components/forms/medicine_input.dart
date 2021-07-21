@@ -204,8 +204,7 @@ class _IntakeIntervalInput extends StatelessWidget {
                 dateLabelText: 'Da ',
                 initialValue: medicine.startDate.toString(),
                 initialDate: medicine.startDate,
-                firstDate: medicine.startDate.isBefore(getTodayDate()) ?
-                medicine.startDate : getTodayDate(),
+                firstDate: DateTime(2000), // medicine.startDate.isBefore(getTodayDate()) ? medicine.startDate : getTodayDate(),
                 lastDate: DateTime(2100),
                 decoration: const InputDecoration(
                     errorMaxLines: 3),
@@ -250,8 +249,7 @@ class _IntakeIntervalInput extends StatelessWidget {
                 dateLabelText: "a ",
                 initialValue: medicine.endDate != null ?
                 medicine.endDate!.toString() : "",
-                firstDate: medicine.startDate.isBefore(getTodayDate()) ?
-                medicine.startDate : getTodayDate(),
+                firstDate: DateTime(2000), // medicine.startDate.isBefore(getTodayDate()) ? medicine.startDate : getTodayDate(),
                 lastDate: DateTime(2100),
                 decoration: const InputDecoration(
                     errorMaxLines: 3),
