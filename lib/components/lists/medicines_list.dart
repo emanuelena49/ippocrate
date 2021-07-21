@@ -119,45 +119,54 @@ class _MedicinesListItem extends StatelessWidget {
           },
           child: Padding(
             padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // name and menu icon
-                Row(
-                  // crossAxisAlignment: CrossAxisAlignment.start,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                        child: Text(
-                          medicine.name,
-                          style: Theme.of(context).textTheme.headline5,
-                          overflow: TextOverflow.ellipsis,
+                    // name and menu icon
+                    Row(
+                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            child: Text(
+                              medicine.name,
+                              style: Theme.of(context).textTheme.headline5,
+                              overflow: TextOverflow.ellipsis,
+                            )
+                        ),
+                        // _MedicineItemMenu(medicine: medicine,),
+                      ],
+                    ),
+
+                    SizedBox(height: 5,),
+
+                    // interval + number of intakes
+                    Text(
+                      getIntakesPerDayText(medicine) + ", " + getIntervalText(medicine),
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+
+                    Container(
+                        height: 35,
+                        padding: EdgeInsets.only(bottom: 5),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              medicine.notes != null ? medicine.notes! : "",
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         )
                     ),
-                    // _MedicineItemMenu(medicine: medicine,),
                   ],
                 ),
-
-                SizedBox(height: 5,),
-
-                // interval + number of intakes
-                Text(
-                  getIntakesPerDayText(medicine) + ", " + getIntervalText(medicine),
-                  style: Theme.of(context).textTheme.subtitle2,
-                ),
-
-                Container(
-                    height: 35,
-                    padding: EdgeInsets.only(bottom: 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          medicine.notes != null ? medicine.notes! : "",
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    )
-                ),
+                Icon(
+                  Icons.arrow_left,
+                  color: Colors.black54,
+                )
               ],
             ),
           ),
