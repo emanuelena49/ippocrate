@@ -156,7 +156,7 @@ class _MedicinesListItem extends StatelessWidget {
                   ],
                 ),
                 Icon(
-                  Icons.arrow_left,
+                  Icons.swipe,
                   color: Colors.black54,
                 )
               ],

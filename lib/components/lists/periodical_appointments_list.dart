@@ -173,56 +173,54 @@ class _PeriodicalAppointmentsListItem extends StatelessWidget {
           ],
           child: Padding(
             padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  appointment.name,
-                  style: Theme.of(context).textTheme.headline5,
-                  overflow: TextOverflow.ellipsis,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      appointment.name,
+                      style: Theme.of(context).textTheme.headline5,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+
+                    SizedBox(height: 5,),
+
+                    // display frequency
+                    Text(getPeriodicalAppointmentFrequency(appointment)),
+
+                    // eventually display last time
+                    prevInstance!=null ?
+                    Text("${getPastAppointmentTime(prevInstance!)}") :
+                    Text(""),
+
+                    SizedBox(height: 15,),
+
+                    nextInstance!=null ?
+                        Text(
+                          "Prossimo prenotato: ${getWhenAppointment(nextInstance!)}",
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ) :
+                        ElevatedButton(
+                            onPressed: () {
+                              appointmentsInstancesModel.viewAppointment(
+                                  AppointmentInstance(
+                                      appointment: appointment,
+                                      dateTime: DateTime.now()
+                                  ), edit: true);
+                              screensManager.loadScreen(context,
+                                  Screen.APPOINTMENTS_ONE);
+                            },
+                            child: Text("PRENOTA ORA"),
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.black54,)
+                        )
+                  ],
                 ),
-
-                SizedBox(height: 25,),
-
-                Container(
-                  height: 45,
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // display frequency
-                              Text(getPeriodicalAppointmentFrequency(appointment)),
-
-                              // eventually display last time
-                              prevInstance!=null ?
-                                Text("${getPastAppointmentTime(prevInstance!)}") :
-                                SizedBox(height: 0,)
-                            ],
-                          )
-                      ),
-                      nextInstance!=null ?
-                          Text(
-                              "Prossimo prenotato:\n${getWhenAppointment(nextInstance!)}"
-                          ) :
-                          ElevatedButton(
-                              onPressed: () {
-                                appointmentsInstancesModel.viewAppointment(
-                                    AppointmentInstance(
-                                        appointment: appointment,
-                                        dateTime: DateTime.now()
-                                    ), edit: true);
-                                screensManager.loadScreen(context,
-                                    Screen.APPOINTMENTS_ONE);
-                              },
-                              child: Text("PRENOTA ORA"),
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.black54,)
-                          )
-                    ],
-                  ),
+                Icon(
+                  Icons.swipe,
+                  color: Colors.black54,
                 )
               ],
             ),
