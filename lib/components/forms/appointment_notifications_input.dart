@@ -326,6 +326,7 @@ class NotificationAddButton extends StatelessWidget {
         strokeWidth: 1,
         dashPattern: const [5, 5],
         child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: () {
             onClick(context);
           },

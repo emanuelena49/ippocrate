@@ -112,6 +112,7 @@ class _MedicinesListItem extends StatelessWidget {
           ),
         ],
         child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: () {
             viewMedicine(context, medicine);
           },
