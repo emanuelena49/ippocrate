@@ -156,8 +156,8 @@ class AppointmentsListItem extends StatelessWidget {
           ),
         ],
         child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: () {
-
             appointmentsInstancesModel.viewAppointment(
                 appointmentInstance, edit: false);
             screensManager.loadScreen(context, Screen.APPOINTMENTS_ONE);

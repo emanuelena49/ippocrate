@@ -27,6 +27,7 @@ class GenericAddScreen extends StatelessWidget {
                 color: Colors.lightBlueAccent,
                 margin: EdgeInsets.all(8),
                 child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () {
                     appointmentsInstancesModel.viewAppointment(
                       AppointmentInstance(
@@ -56,6 +57,7 @@ class GenericAddScreen extends StatelessWidget {
                 color: Colors.greenAccent,
                 margin: EdgeInsets.all(8),
                 child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
                   onTap: () {
                     medicinesModel.viewMedicine(
                         Medicine(
