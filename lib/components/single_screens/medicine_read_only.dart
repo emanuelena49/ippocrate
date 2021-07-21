@@ -112,8 +112,7 @@ class _MedicineHeading extends StatelessWidget {
       eventualIntake = res.isNotEmpty ? res.first : null;
     }
 
-    return ListTile(
-      title: Card(
+    return Card(
         elevation: 4,
         color: (medicineIntakesModel.loading ||
             (eventualIntake!=null && eventualIntake!.getMissingIntakes()>0)) ?
@@ -148,8 +147,7 @@ class _MedicineHeading extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
 
@@ -173,35 +171,31 @@ class _IntakesRow extends StatelessWidget {
 
       // build ui according to eventual intake
       return eventualIntake != null ?
-        Row(
+        Column(
           children: [
-            Expanded(
-                child: Text(
-                  getRemainingMedicineIntakes(eventualIntake!),
-                  style: Theme.of(context).textTheme.subtitle1,
-                )
+            Text(
+              getRemainingMedicineIntakes(eventualIntake!),
+              style: Theme.of(context).textTheme.subtitle1,
             ),
-            Expanded(
-                child: eventualIntake!.getMissingIntakes()>0 ?
+            eventualIntake!.getMissingIntakes()>0 ?
 
-                ElevatedButton(
-                    onPressed: () async {
-                      if (eventualIntake!.getMissingIntakes()>0) {
+            ElevatedButton(
+                onPressed: () async {
+                  if (eventualIntake!.getMissingIntakes()>0) {
 
-                        // perform one intake and save it
-                        eventualIntake!.doOneIntake();
-                        await intakesDb.update(eventualIntake!);
+                    // perform one intake and save it
+                    eventualIntake!.doOneIntake();
+                    await intakesDb.update(eventualIntake!);
 
-                        // no need of reloading everything, just notify
-                        medicineIntakesModel.notify();
-                      }
-                    },
-                    child: Text("PRENDI ADESSO"),
-                    style: ElevatedButton.styleFrom(primary: Colors.black54,)
-                ) :
+                    // no need of reloading everything, just notify
+                    medicineIntakesModel.notify();
+                  }
+                },
+                child: Text("PRENDI ADESSO"),
+                style: ElevatedButton.styleFrom(primary: Colors.black54,)
+            ) :
 
-                Text("Assunzioni completate", textAlign: TextAlign.center,)
-            ),
+            Text("Assunzioni completate!", textAlign: TextAlign.center,),
           ],
         ) :
 

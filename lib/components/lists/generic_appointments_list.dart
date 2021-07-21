@@ -99,6 +99,7 @@ class AppointmentsListItem extends StatelessWidget {
     bool isMaybeMissed = appointmentInstance.isMaybeMissed;
 
     return Card(
+      clipBehavior: Clip.antiAlias,
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       elevation: 8,
       color: isDone ? Colors.white54 :
@@ -164,38 +165,47 @@ class AppointmentsListItem extends StatelessWidget {
           },
           child: Padding(
             padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  appointmentInstance.appointment.name,
-                  style: Theme.of(context).textTheme.headline5,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      appointmentInstance.appointment.name,
+                      style: Theme.of(context).textTheme.headline5,
+                      overflow: TextOverflow.ellipsis,
+                    ),
 
-                SizedBox(height: 5,),
+                    SizedBox(height: 5,),
 
-                Text(
-                  getWhenAppointment(appointmentInstance) +
-                      (isDone ? " (già fatto)" : isMaybeMissed ?
-                      " (FORSE MANCATO!)" : ""),
-                  style: Theme.of(context).textTheme.subtitle2,
-                ),
+                    Text(
+                      getWhenAppointment(appointmentInstance) +
+                          (isDone ? " (già fatto)" : isMaybeMissed ?
+                          " (FORSE MANCATO!)" : ""),
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
 
-                Container(
-                    height: 35,
-                    padding: EdgeInsets.only(bottom: 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          appointmentInstance.notes != null ?
-                          appointmentInstance.notes! : "",
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    )
+                    Container(
+                        height: 35,
+                        padding: EdgeInsets.only(bottom: 5),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              appointmentInstance.notes != null ?
+                              appointmentInstance.notes! : "",
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        )
+                    ),
+                  ],
                 ),
+                Icon(
+                  Icons.swipe,
+                  color: Colors.black54,
+                )
               ],
             ),
           ),

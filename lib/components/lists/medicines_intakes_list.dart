@@ -95,6 +95,7 @@ class _MedicinesIntakesListItem extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Card(
+      clipBehavior: Clip.antiAlias,
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
       elevation: 8,
       color: intake.getMissingIntakes()>0 ?
@@ -138,47 +139,35 @@ class _MedicinesIntakesListItem extends StatelessWidget {
           },
           child: Padding(
             padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
-              // Medicine name
-              Text(
-                intake.medicine.name,
-                style: Theme.of(context).textTheme.headline5,
-                overflow: TextOverflow.ellipsis,
-              ),
-
-              // medicine time range
-              Text(
-                getIntervalText(intake.medicine),
-                style: Theme.of(context).textTheme.subtitle2,
-              ),
-
-              SizedBox(height: 10,),
-
-              // notes preview
-              Text(
-                intake.medicine.notes != null ? intake.medicine.notes! : "",
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-              ),
-
-              SizedBox(height: 15,),
-
-              // intakes done + do intake now button
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      getRemainingMedicineIntakes(intake),
-                      style: Theme.of(context).textTheme.subtitle1,
-                    )
+                  // Medicine name
+                  Text(
+                    intake.medicine.name,
+                    style: Theme.of(context).textTheme.headline5,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  Expanded(
-                    child: intake.getMissingIntakes()>0 ?
 
-                      ElevatedButton(
+                  // medicine time range
+                  Text(
+                    getIntervalText(intake.medicine),
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
+
+                  SizedBox(height: 15,),
+
+                  Text(
+                    getRemainingMedicineIntakes(intake),
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+
+                  intake.getMissingIntakes()>0 ?
+                    ElevatedButton(
                         onPressed: () async {
                           if (intake.getMissingIntakes()>0) {
 
@@ -190,14 +179,17 @@ class _MedicinesIntakesListItem extends StatelessWidget {
                         },
                         child: Text("PRENDI ADESSO"),
                         style: ElevatedButton.styleFrom(primary: Colors.black54,)
-                      ) :
+                    ) :
+                    Text("Assunzioni completate!")
 
-                    Text("Assunzioni completate", textAlign: TextAlign.center,)
-                  ),
                 ],
-              ),
-            ],
           ),
+                Icon(
+                  Icons.swipe,
+                  color: Colors.black54,
+                )
+              ],
+            ),
         ),
       ),
       ),
